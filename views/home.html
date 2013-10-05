@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="/stylesheets/css/bootstrap.min.css" media="screen" />
+    <style>
+        body {
+            padding-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<article id="content" style="display: none;" class="container">
+    <div class="row">
+        <!-- ko foreach: barn -->
+        <!-- ko if: type === 'light' -->
+            <!-- ko if: actionType === 'onoff' -->
+            <div style="margin-bottom: 10px;" data-bind="click: toggle" class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="btn btn-primary btn-block">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+                            <!-- ko if: isOn -->
+                            <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/images/light_bulb_on.png">
+                            <!-- /ko -->
+                            <!-- ko ifnot: isOn -->
+                            <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/images/light_bulb_off.png">
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                    <p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>
+                </div>
+            </div>
+            <!-- /ko -->
+        <!-- /ko -->
+        <!-- ko if: type === 'motion' -->
+        <div style="margin-bottom: 10px;" class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="btn btn-block" data-bind="css: { 'btn-success': isOn, 'btn-primary': isOff }" style="min-height: 210px;">
+                <h3 class="text-center" data-bind="text: name"></h3>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+    </div>
+</article>
+
+<div id="yup" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Pin</h4>
+            </div>
+            <div class="modal-body">
+               <form role="form">
+                   <div class="form-group">
+                       <label>Pin: </label>
+                       <input type="password" data-bind="value: pin">
+                   </div>
+                   <br>
+                   <div class="checkbox">
+                       <label>
+                           &nbsp;<input type="checkbox" data-bind="checked: remember"> Remember
+                       </label>
+                   </div>
+               </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btnYup" data-bind="click: yup" type="button" class="btn btn-primary">Ok</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+<script src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
+<script src="http://knockoutjs.com/downloads/knockout-3.0.0beta.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/app.js"></script>
+</html>

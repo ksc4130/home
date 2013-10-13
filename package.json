@@ -9,7 +9,11 @@
         "ejs": "*",
         "less-middleware": "*",
         "socket.io": "*",
+        "socket.io-client": "*",
         "connect": "*",
-        "cookie": "*"
+        "cookie": "*",
+        "passport": "*",
+        "passport.socketio": "*",
+        "mongodb": "*"
     }
 }

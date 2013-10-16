@@ -124,10 +124,11 @@ var workerProvider= new WorkerProvider('localhost', 27017);
 var serverWorkers = require('http').Server();
 var ioWorkers = require('socket.io').listen(serverWorkers);
 var workers = {};
+var deviceIdCnt = 0;
 
 ioWorkers.on('connection', function (socket) {
     socket.on('change', function (data) {
-        console.log('worker change', JSON.stringify(data));
+        console.log('worker change*************************', JSON.stringify(data));
         io.sockets.emit('change', data);
     });
 
@@ -178,9 +179,10 @@ ioWorkers.on('connection', function (socket) {
 
         for(i = 0; i < data.devices.length; i++) {
             console.log(data.devices[i]);
-            data.devices[i].socketId = socket.id;
+            data.devices[i].id = deviceIdCnt++;
             devices.push(data.devices[i]);
         }
+        socket.emit('devices', data.devices);
         io.sockets.emit('refresh');
     });
 });

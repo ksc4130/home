@@ -18,6 +18,12 @@ conn.on('initWorker', function (data) {
     })
 });
 
+conn.on('devices', function (data) {
+   for(var i = 0, il = data.length; i < il; i++) {
+       devices.push(device(data[i]));
+   }
+});
+
 conn.on('change', function (data) {
     console.log('change', util.inspect(data));
     var device;
@@ -37,35 +43,38 @@ conn.on('change', function (data) {
 });
 
 var devices = [
-    device('P8_8', {
-        name: 'Den',
-        actionType: 'onoff',
-        type: 'light',
-        state: 0,
-        isVisible: true
-    }),
-    device('P8_10', {
-        name: 'Garage Door',
-        actionType: 'momentary',
-        type: 'overheadDoor',
-        state: 0,
-        isVisible: true
-    }),
-    device('P8_12', {
-        name: 'Den switch',
-        actionType: 'switch',
-        type: 'light',
-        controls: 'P8_8'
-    })
+//    device('P8_8', {
+//        name: 'Den',
+//        actionType: 'onoff',
+//        type: 'light',
+//        state: 0,
+//        isVisible: true
+//    }),
+//    device('P8_10', {
+//        name: 'Garage Door',
+//        actionType: 'momentary',
+//        type: 'overheadDoor',
+//        state: 0,
+//        isVisible: true
+//    })
 ];
+
+var denSwitch = device('P8_12', {
+    name: 'Den switch',
+    actionType: 'switch',
+    type: 'light',
+    controls: 'P8_8'
+});
+
+denSwitch.on('switched', function () {
+    devices[0].toggle();
+});
 
 devices[0].on('change', function (d) {
     conn.emit('change', {id: d.id, state: d.state});
 });
 
-devices[2].on('switched', function () {
-   devices[0].toggle();
-});
+
 
 
 fs.exists('./meinfo.json', function (exists) {
@@ -88,7 +97,20 @@ fs.exists('./meinfo.json', function (exists) {
             }
         });
     } else {
-        conn.emit('initWorker', {secret: secret, devices: devices}, function(resp, data) {
+        conn.emit('initWorker', {secret: secret, devices: [device('P8_8', {
+            name: 'Den',
+            actionType: 'onoff',
+            type: 'light',
+            state: 0,
+            isVisible: true
+        }),
+            device('P8_10', {
+                name: 'Garage Door',
+                actionType: 'momentary',
+                type: 'overheadDoor',
+                state: 0,
+                isVisible: true
+            })]}, function(resp, data) {
             console.log('server sent resp code ' + resp);
         });
     }

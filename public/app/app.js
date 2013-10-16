@@ -22,6 +22,7 @@ var device = function (args) {
 
     self.toggle = function () {
         socket.emit('change', {
+            sId: self.sId,
             id: self.id,
             state: (1 - self.state())
         });

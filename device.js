@@ -48,7 +48,7 @@
 
         args = args || {};
 
-        self.id = idDeviceCnt++;
+        self.id = args.id || idDeviceCnt++;
         self.actionType = args.actionType;
         self.type = args.type;
         self.direction = (inputActionTypes.indexOf(self.actionType) > -1) ? 'in' :

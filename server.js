@@ -181,6 +181,7 @@ ioWorkers.on('connection', function (socket) {
             data.devices[i].socketId = socket.id;
             devices.push(data.devices[i]);
         }
+        io.sockets.emit('refresh');
     });
 });
 

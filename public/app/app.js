@@ -61,6 +61,13 @@ socket.on('init', function (data) {
     $('#content').show();
 });
 
+socket.on('refresh', function (data) {
+    socket.emit('yup', {
+        pin: self.pin(),
+        remember: self.remember()
+    });
+});
+
 socket.on('change', function (data) {
     console.log('change', data);
     var arr = vm.barn(),

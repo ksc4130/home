@@ -182,7 +182,7 @@ ioWorkers.on('connection', function (socket) {
 
         for(i = 0; i < data.devices.length; i++) {
             console.log(data.devices[i]);
-            devices[i].socketId = socket.id;
+            data.devices[i].socketId = socket.id;
             data.devices[i].id = deviceIdCnt++;
             devices.push(data.devices[i]);
         }

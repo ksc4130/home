@@ -80,13 +80,31 @@
                 if(args.actionType && args.actionType === 'switch') {
                     b.pinMode(self.pin, 'in');
 
-                    setInterval(self.switchCheck, self.freq);
+                    setInterval(function () {
+                        self.get(function(err, val) {
+                            if(val < self.state) {
+                                //self.toggle();
+                                self.pub('switched', self);
+                            }
+                            if(self.state !== val) {
+                                self.state = val;
+                                self.pub('change', self);
+                            }
+                        });
+                    }, self.freq);
                 } else if(args.actionType && args.actionType === 'sensor') {
                     if(bbbAnalogPins.indexOf(self.pin) < 0) {
                         b.pinMode(self.pin, 'in');
                     }
 
-                    setInterval(self.sensorCheck, self.freq);
+                    setInterval(function () {
+                        self.get(function(err, val) {
+                            if(self.state !== val) {
+                                self.state = val;
+                                self.pub('change', self);
+                            }
+                        });
+                    }, self.freq);
                 }
             }
         } else if(boardType === 'gpio') {

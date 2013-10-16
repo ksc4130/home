@@ -22,7 +22,7 @@ conn.on('devices', function (data) {
    for(var i = 0, il = data.length; i < il; i++) {
        (function (devIn) {
            console.log(devIn);
-           var dev = device(devIn);
+           var dev = device(devIn.pin, devIn);
            if(dev.name === 'Den') {
                dev.on('change', function (d) {
                    conn.emit('change', {id: d.id, state: d.state});
@@ -104,20 +104,22 @@ fs.exists('./meinfo.json', function (exists) {
             }
         });
     } else {
-        conn.emit('initWorker', {secret: secret, devices: [device('P8_8', {
+        conn.emit('initWorker', {secret: secret, devices: [
+            {
+                pin: 'P8_8',
             name: 'Den',
             actionType: 'onoff',
             type: 'light',
             state: 0,
             isVisible: true
-        }),
-            device('P8_10', {
+        },
+           {pin: 'P8_10',
                 name: 'Garage Door',
                 actionType: 'momentary',
                 type: 'overheadDoor',
                 state: 0,
                 isVisible: true
-            })]}, function(resp, data) {
+            }]}, function(resp, data) {
             console.log('server sent resp code ' + resp);
         });
     }

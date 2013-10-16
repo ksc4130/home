@@ -42,10 +42,10 @@
 
     device = function (pin, args) {
         if(this === global)
-            return new device(args);
+            return new device(pin, args);
 
         var self = this;
-console.log('args', args);
+
         args = args || {};
 
         self.id = idDeviceCnt++;

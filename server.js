@@ -109,7 +109,7 @@ io.sockets.on('connection', function (socket) {
             }
         }
         console.log('device', device);
-        if(device)
+        if(typeof device !== 'undefined' && device !== null)
             var w = workers[device.socketId];
 
             if(w) {

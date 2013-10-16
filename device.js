@@ -64,7 +64,7 @@
         self.subs = {};
 
         if(!self.direction) {
-            console.log('unknown action type unable to set direction');
+            console.log('unknown action type unable to set direction', self.actionType, self.direction);
             return self;
         }
 

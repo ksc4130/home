@@ -1,0 +1,89 @@
+.wrap {
+    overflow: hidden;
+    margin: 10px;
+}
+
+.tile, .tile-btn {
+    float: left;
+    position: relative;
+    /*width: 15.66%;*/
+    /*padding-bottom: 15.66%;*/
+    margin: .5%;
+    background-color: #ccc;
+}
+
+.tile-btn {
+    cursor: pointer;
+}
+
+.tile-btn:hover {
+    -webkit-box-shadow: 0 0 8px #000;
+    box-shadow: 0 0 8px #000;
+}
+
+.tile-btn:active {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.tile-content {
+    position: absolute;
+    padding: 5px;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    overflow: hidden;
+}
+.tile-content img {
+    width: 100%;
+}
+.tile-content .tile-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /*background: #000;*/
+    /*background: rgba(0, 0, 0, 0.5);*/
+    /*color: #FFF;*/
+    font-size: 1.35em;
+    padding: 10px;
+    text-align: center;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {
+    margin-bottom: 0;
+}
+@media only screen and (max-width : 480px) {
+    /* Smartphone view: 1 tile */
+    .tile, .tile-btn {
+        width: 49%;
+        padding-bottom: 49%;
+    }
+}
+@media only screen and (max-width : 670px) and (min-width : 480px) {
+    /* Tablet view: 2 tiles */
+    .tile, .tile-btn {
+        width: 32.3%;
+        padding-bottom: 32.3%;
+    }
+}
+@media only screen and (max-width : 992px) and (min-width : 670px) {
+    /* Tablet view: 2 tiles */
+    .tile, .tile-btn {
+        width: 24%;
+        padding-bottom: 24%;
+    }
+}
+
+@media only screen and (min-width : 992px) {
+    /* Medium desktop: 4 tiles */
+    .tile, .tile-btn {
+        width: 15.66%;
+        padding-bottom: 15.66%;
+    }
+}
+

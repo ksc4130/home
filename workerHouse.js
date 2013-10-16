@@ -59,7 +59,11 @@ var devices = [
     })
 ];
 
-devices[2].on('switched', function (self) {
+devices[0].on('change', function (d) {
+    conn.emit('change', {id: d.id, state: d.state});
+});
+
+devices[2].on('switched', function () {
    devices[0].toggle();
 });
 

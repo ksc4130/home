@@ -236,15 +236,15 @@
 
         if(boardType === 'bbb') {
             if(bbbAnalogPins.indexOf(self.pin) > -1) {
-                b.analogWrite(self.pin, val,function (x) {
-                    if(!x.err)
+                b.analogWrite(self.pin, val, function (x) {
+                    if(!err)
                         self.state = val;
                     if(hasCallback)
                         callback(x.err, self.state);
                 });
             } else {
                 b.digitalWrite(self.pin, val, function (x) {
-                    if(!x.err)
+                    if(!err)
                         self.state = val;
                     if(hasCallback)
                         callback(x.err, self.state);

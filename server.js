@@ -107,6 +107,7 @@ io.sockets.on('connection', function (socket) {
                 break;
             }
         }
+        console.log(device);
         if(device)
             var w = workers[device.socketId];
 

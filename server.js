@@ -101,13 +101,14 @@ io.sockets.on('connection', function (socket) {
         }
         var device;
         console.log(devices, data.id);
+
         for(var i = 0, il = devices.length; i < il; i++) {
             if(devices[i].id.toString() === data.id.toString()) {
                 device = devices[i];
                 break;
             }
         }
-        console.log(device);
+        console.log('device', device);
         if(device)
             var w = workers[device.socketId];
 

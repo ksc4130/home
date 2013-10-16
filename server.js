@@ -109,13 +109,13 @@ io.sockets.on('connection', function (socket) {
             }
         }
         console.log('device', device);
-        if(typeof device !== 'undefined' && device !== null)
+        if(typeof device !== 'undefined' && device !== null) {
             var w = workers[device.socketId];
 
             if(w) {
                 w.socket.emit('change', data);
             }
-        else
+        } else
             console.log("can't find device for id ", data.id);
     });
 

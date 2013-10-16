@@ -40,15 +40,35 @@
             <!-- ko if: type === 'motion' -->
             <div class="tile" data-bind="css: { 'bg-green': isOn}">
                 <div class="tile-content">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-                            <img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">
-                        </div>
-                    </div>
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
+                            <!--<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div data-bind="text: name" class="tile-title"></div>
                     <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
                 </div>
             </div>
+            <!-- /ko -->
+            <!-- ko if: type === 'overheadDoor' -->
+            <!-- ko if: actionType === 'momentary' -->
+            <div data-bind="click: toggle" class="tile-btn bg-blue">
+                <div class="tile-content">
+                    <!--<div class="row">-->
+                        <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
+                            <!--&lt;!&ndash; ko if: isOn &ndash;&gt;-->
+                            <!--<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">-->
+                            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+                            <!--&lt;!&ndash; ko ifnot: isOn &ndash;&gt;-->
+                            <!--<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_off.png">-->
+                            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <div data-bind="text: name" class="tile-title"></div>
+                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+                </div>
+            </div>
+            <!-- /ko -->
             <!-- /ko -->
         </div>
     </div>

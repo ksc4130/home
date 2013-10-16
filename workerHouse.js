@@ -19,7 +19,7 @@ conn.on('initWorker', function (data) {
 });
 
 conn.on('change', function (data) {
-   console.log('change', util.inspect(data));
+    console.log('change', util.inspect(data));
     var device;
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
@@ -30,61 +30,37 @@ conn.on('change', function (data) {
     if(device)
         device.toggle(data.state, function (x, d) {
             //if(d.isVisible)
-                conn.emit('change', {id: d.id, state: d.state});
+            conn.emit('change', {id: d.id, state: d.state});
         });
     else
         console.log("can't find device for id ", data.id);
 });
 
 var devices = [
-    device(27, {
-        name: 'Lights',
-        type: 'light',
+    device('P8_8', {
+        name: 'Den',
         actionType: 'onoff',
+        type: 'light',
         state: 0,
         isVisible: true
     }),
-    device(17, {
-        name: 'Flood Lights',
-        type: 'light',
-        actionType: 'onoff',
+    device('P8_10', {
+        name: 'Garage Door',
+        actionType: 'momentary',
+        type: 'overheadDoor',
         state: 0,
         isVisible: true
     }),
-    device(24, {
-        name: 'Motion',
-        type: 'motion',
-        //direction: 'in',
-        actionType: 'sensor',
-        //state: 0,
-        isVisible: true
-    }),
-    device(22, {
-        name: 'Flood Lights Switch',
-        type: 'light',
-        //direction: 'in',
+    device('P8_12', {
+        name: 'Den switch',
         actionType: 'switch',
-        controls: 17
-        //state: 0,
-        //isVisible: true
-    }),
-    device(23, {
-        name: 'Barn Lights Switch',
         type: 'light',
-        //direction: 'in',
-        actionType: 'switch',
-        controls: 27
-        //state: 0,
-        //isVisible: true
+        controls: 'P8_8'
     })
 ];
 
-devices[3].on('switched', function (self) {
-    devices[1].toggle();
-});
-
-devices[4].on('switched', function (self) {
-    devices[0].toggle();
+devices[2].on('switched', function (self) {
+   devices[0].toggle();
 });
 
 
@@ -114,4 +90,3 @@ fs.exists('./meinfo.json', function (exists) {
     }
 
 });
-

@@ -20,7 +20,13 @@ conn.on('initWorker', function (data) {
 
 conn.on('devices', function (data) {
    for(var i = 0, il = data.length; i < il; i++) {
-       devices.push(device(data[i]));
+       var dev = device(data[i]);
+       if(dev.name === 'Den') {
+           dev.on('change', function (d) {
+               conn.emit('change', {id: d.id, state: d.state});
+           });
+       }
+       devices.push(dev);
    }
 });
 
@@ -70,9 +76,7 @@ denSwitch.on('switched', function () {
     devices[0].toggle();
 });
 
-devices[0].on('change', function (d) {
-    conn.emit('change', {id: d.id, state: d.state});
-});
+
 
 
 

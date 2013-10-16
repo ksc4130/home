@@ -42,13 +42,25 @@ conn.on('change', function (data) {
             break;
         }
     }
-    if(device)
+
+    var device;
+    console.log(devices, data.id);
+
+    for(var i = 0, il = devices.length; i < il; i++) {
+        if(devices[i].id.toString() === data.id.toString()) {
+            device = devices[i];
+            break;
+        }
+    }
+    console.log('device', device);
+    if(typeof device !== 'undefined' && device !== null) {
         device.toggle(data.state, function (x, d) {
             //if(d.isVisible)
             conn.emit('change', {id: d.id, state: d.state});
         });
-    else
+    } else
         console.log("can't find device for id ", data.id);
+
 });
 
 var devices = [

@@ -63,8 +63,8 @@ socket.on('init', function (data) {
 
 socket.on('refresh', function (data) {
     socket.emit('yup', {
-        pin: self.pin(),
-        remember: self.remember()
+        pin: vm.pin(),
+        remember: vm.remember()
     });
 });
 

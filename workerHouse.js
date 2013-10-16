@@ -19,6 +19,7 @@ conn.on('initWorker', function (data) {
 });
 
 conn.on('devices', function (data) {
+    console.log(data);
    for(var i = 0, il = data.length; i < il; i++) {
        (function (devIn) {
            console.log(devIn);

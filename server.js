@@ -100,7 +100,7 @@ io.sockets.on('connection', function (socket) {
             return;
         }
         var device;
-        console.log(devices);
+        console.log(devices, data.id);
         for(var i = 0, il = devices.length; i < il; i++) {
             if(devices[i].id.toString() === data.id.toString()) {
                 device = devices[i];

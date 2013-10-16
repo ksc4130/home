@@ -45,7 +45,7 @@
             return new device(args);
 
         var self = this;
-
+console.log('args', args);
         args = args || {};
 
         self.id = idDeviceCnt++;

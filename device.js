@@ -84,7 +84,7 @@
                         self.get(function(err, val) {
                             if(val < self.state) {
                                 //self.toggle();
-                                console.log('sw', val, self);
+                                //console.log('sw', val, self);
                                 self.pub('switched', null, self);
                             }
                             if(self.state !== val) {

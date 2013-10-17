@@ -24,6 +24,7 @@ conn.on('devices', function (data) {
        console.log(dev.id, data[i].id);
        if(dev.name === 'Den') {
            dev.on('change', function (d) {
+               console.log('change***********');
                conn.emit('change', {id: d.id, state: d.state});
            });
        }

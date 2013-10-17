@@ -122,8 +122,8 @@ io.sockets.on('connection', function (socket) {
 });
 
 
-var WorkerProvider = require('./workerProvider').WorkerProvider;
-var workerProvider= new WorkerProvider('localhost', 27017);
+//var WorkerProvider = require('./workerProvider').WorkerProvider;
+//var workerProvider= new WorkerProvider('localhost', 27017);
 var serverWorkers = require('http').Server();
 var ioWorkers = require('socket.io').listen(serverWorkers);
 var workers = {};
@@ -132,6 +132,13 @@ var deviceIdCnt = 0;
 ioWorkers.on('connection', function (socket) {
     socket.on('change', function (data) {
         console.log('worker change*************************', JSON.stringify(data));
+        for(var i = 0, il = devices.length; i < il; i++) {
+            (function (dev) {
+                if(dev.id === data.id) {
+                    dev.state = data.state;
+                }
+            }(devices[i]));
+        }
         io.sockets.emit('change', data);
     });
 

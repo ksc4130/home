@@ -79,7 +79,7 @@ var denSwitch = device('P8_12', {
 });
 
 denSwitch.on('switched', function () {
-    console.log('switch');
+    console.log('switch', devices);
     for(var i = 0, il = devices.length; i < il; i++) {
         console.log(devices[i].pin, denSwitch.controls);
         if(devices[i].pin === denSwitch.controls) {

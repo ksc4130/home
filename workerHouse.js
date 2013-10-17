@@ -36,14 +36,6 @@ conn.on('devices', function (data) {
 conn.on('change', function (data) {
     console.log('change', util.inspect(data));
     var device;
-    for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].id === data.id) {
-            device = devices[i];
-            break;
-        }
-    }
-
-    var device;
 
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id.toString() === data.id.toString()) {
@@ -52,9 +44,9 @@ conn.on('change', function (data) {
         }
     }
     if(typeof device !== 'undefined' && device !== null) {
-        device.toggle(data.state, function (x, d) {
+        device.toggle(function (x, d) {
             //if(d.isVisible)
-            conn.emit('change', {id: d.id, state: d.state});
+            conn.emit('change', {id: device.id, state: d});
         });
     } else
         console.log("can't find device for id ", data.id);

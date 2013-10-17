@@ -151,11 +151,11 @@ ioWorkers.on('connection', function (socket) {
 //                });
 //            });
 
-        for(i = 0; i < devices.length; i++) {
+        for(var i = 0; i < devices.length; i++) {
             if(devices[i].socketId === socket.id)
-                devices.remove(devices[i]);
+                devices.splice(i, 1);
         }
-        
+
         io.sockets.emit('refresh');
     });
     socket.on('initWorker', function (data) {

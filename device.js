@@ -155,7 +155,6 @@
         var self = this;
 
         self[event] = self[event] || [];
-        console.log('on', event, callback);
         self[event].push(callback);
     };
 
@@ -171,7 +170,6 @@
 
     device.prototype.pub = function (event, err, args) {
         var self = this;
-        console.log(event, self.subs);
         if(self.subs[event]) {
             for(var i = 0, il = self.subs[event].length; i < il; i++) {
                 self.subs[event][i](err, args);

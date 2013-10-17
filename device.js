@@ -240,14 +240,14 @@
                     if(!err)
                         self.state = val;
                     if(hasCallback)
-                        callback(x.err, self.state);
+                        callback(err, self.state);
                 });
             } else {
                 b.digitalWrite(self.pin, val, function (err) {
                     if(!err)
                         self.state = val;
                     if(hasCallback)
-                        callback(x.err, self.state);
+                        callback(err, self.state);
                 });
             }
         } else if(boardType === 'gpio') {

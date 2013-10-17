@@ -78,7 +78,13 @@ var denSwitch = device('P8_12', {
 });
 
 denSwitch.on('switched', function () {
-    devices[0].toggle();
+    for(var i = 0, il = devices.length; i < il; i++) {
+        if(devices[i].pin === denSwitch.controls) {
+            devices[i].toggle(function (err, d) {
+                conn.emit('change', {id: devices[i].id, state: d});
+            });
+        }
+    }
 });
 
 

@@ -169,8 +169,8 @@
     };
 
     device.prototype.pub = function (event, err, args) {
-        console.log(event);
         var self = this;
+        console.log(event, self.subs);
         if(self.subs[event]) {
             for(var i = 0, il = self.subs[event].length; i < il; i++) {
                 self.subs[event][i](err, args);

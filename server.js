@@ -158,6 +158,7 @@ ioWorkers.on('connection', function (socket) {
 //                });
 //            });
         var a = [];
+
         for(var i = 0; i < devices.length; i++) {
             if(!devices[i].socketId === socket.id)
                 a.push(devices[i]);

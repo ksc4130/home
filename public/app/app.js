@@ -62,11 +62,13 @@ socket.on('init', function (data) {
     $('#content').show();
 });
 
-socket.on('refresh', function (data) {
-    socket.emit('yup', {
-        pin: vm.pin(),
-        remember: vm.remember()
-    });
+socket.on('remove', function (id) {
+    var arr = vm.barn(),
+        device = ko.utils.arrayFirst(arr, function (item) {
+            return item.id === id;
+        });
+    if(device)
+        vm.barn.remove(device);
 });
 
 socket.on('change', function (data) {

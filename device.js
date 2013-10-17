@@ -204,13 +204,13 @@
         }
     };
 
-    device.prototype.get = function (val, callback) {
+    device.prototype.get = function (callback) {
         var self = this,
             hasCallback = typeof callback === 'function';
 
         if(boardType === 'bbb') {
             if(bbbAnalogPins.indexOf(self.pin) > -1) {
-                b.analogRead(self.pin, val,function (x) {
+                b.analogRead(self.pin, function (x) {
                     if(!x.err)
                         self.state = x.value;
                     if(hasCallback)

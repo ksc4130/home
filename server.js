@@ -157,6 +157,8 @@ ioWorkers.on('connection', function (socket) {
         }
         devices = a;
         for(var s in io.sockets) {
+            if(!io.sockets[s].handshake)
+                continue;
             var sessId = sessionobj[cookie.parse(io.sockets[s].handshake.sessionID)];
             var yup = sessionobj[sessId];
             if(yup) {

@@ -150,14 +150,16 @@ ioWorkers.on('connection', function (socket) {
 //                    if(err) throw err;
 //                });
 //            });
-
+        var a = [];
         for(var i = 0; i < devices.length; i++) {
-            if(devices[i].socketId === socket.id)
-                devices.splice(i, 1);
+            if(!devices[i].socketId === socket.id)
+                a.push(devices[i]);
         }
+        devices = a;
 
         io.sockets.emit('refresh');
     });
+
     socket.on('initWorker', function (data) {
         var i,
             worker;

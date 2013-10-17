@@ -32,6 +32,7 @@ conn.on('devices', function (data) {
            devices.push(dev);
        }(data[i]));
    }
+    console.log(devices);
 });
 
 conn.on('change', function (data) {

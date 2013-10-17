@@ -74,7 +74,8 @@ var denSwitch = device('P8_12', {
     name: 'Den switch',
     actionType: 'switch',
     type: 'light',
-    controls: 'P8_8'
+    controls: 'P8_8',
+    freq: 20
 });
 
 denSwitch.on('switched', function () {

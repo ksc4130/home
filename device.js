@@ -109,7 +109,7 @@
                 }
             }
         } else if(boardType === 'gpio') {
-            self.gpio = gpio.export(pin, {
+            self.gpio = gpio.export(self.pin, {
                 direction: self.direction,
                 interval: 200,
                 ready: function() {

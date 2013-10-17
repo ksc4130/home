@@ -21,10 +21,10 @@ conn.on('initWorker', function (data) {
 conn.on('devices', function (data) {
    for(var i = 0, il = data.length; i < il; i++) {
        var dev = device(null, data[i]);
-       console.log(dev.id, data[i].id);
+
        if(dev.name === 'Den') {
            dev.on('change', function (d) {
-               console.log('change***********');
+               console.log('change***********', d);
                conn.emit('change', {id: d.id, state: d.state});
            });
        }
@@ -44,7 +44,6 @@ conn.on('change', function (data) {
     }
 
     var device;
-    console.log(devices, data.id);
 
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id.toString() === data.id.toString()) {
@@ -52,7 +51,6 @@ conn.on('change', function (data) {
             break;
         }
     }
-    console.log('device', device);
     if(typeof device !== 'undefined' && device !== null) {
         device.toggle(data.state, function (x, d) {
             //if(d.isVisible)

@@ -20,7 +20,7 @@ conn.on('initWorker', function (data) {
 
 conn.on('devices', function (data) {
    for(var i = 0, il = data.length; i < il; i++) {
-       var dev = new device(null, data[i]);
+       var dev = device(null, data[i]);
        console.log(dev.id, data[i].id);
        if(dev.name === 'Den') {
            dev.on('change', function (d) {

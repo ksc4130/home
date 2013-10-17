@@ -85,6 +85,8 @@
                             if(val < self.state) {
                                 //self.toggle();
                                 //console.log('sw', val, self);
+                                if(typeof self.switched !== 'undefined' && self.switched !== null)
+                                    self.switched();
                                 self.pub('switched', null, self);
                             }
                             if(self.state !== val) {

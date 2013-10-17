@@ -21,6 +21,7 @@ conn.on('initWorker', function (data) {
 conn.on('devices', function (data) {
    for(var i = 0, il = data.length; i < il; i++) {
        var dev = device(null, data[i]);
+       console.log(dev);
        if(dev.name === 'Den') {
            dev.on('change', function (d) {
                conn.emit('change', {id: d.id, state: d.state});
@@ -28,7 +29,7 @@ conn.on('devices', function (data) {
        }
        devices.push((function (de) {return de}(dev)));
    }
-    console.log(devices);
+    //console.log(devices);
 });
 
 conn.on('change', function (data) {

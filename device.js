@@ -155,6 +155,7 @@
         var self = this;
 
         self[event] = self[event] || [];
+        console.log('on', event, callback);
         self[event].push(callback);
     };
 

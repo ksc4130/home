@@ -211,24 +211,24 @@
         if(boardType === 'bbb') {
             if(bbbAnalogPins.indexOf(self.pin) > -1) {
                 b.analogRead(self.pin, function (x) {
-                    if(!x.err)
-                        self.state = x.value;
+                    //if(!x.err)
+                        //self.state = x.value;
                     if(hasCallback)
-                        callback(x.err, self.state);
+                        callback(x.err, x.value);
                 });
             } else {
                 b.digitalRead(self.pin, function (x) {
-                    if(!x.err)
-                        self.state = x.value;
+                    //if(!x.err)
+                        //self.state = x.value;
                     if(hasCallback)
-                        callback(x.err, self.state);
+                        callback(x.err, x.value);
                 });
             }
         } else if(boardType === 'gpio') {
-            if(!x.err)
-                self.state = self.gpio.value;
+            //if(!x.err)
+                //self.state = self.gpio.value;
             if(hasCallback)
-                callback(null, self.state);
+                callback(null, self.gpio.value);
         }
     };
 

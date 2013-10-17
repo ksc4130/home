@@ -70,7 +70,7 @@ socket.on('refresh', function (data) {
 });
 
 socket.on('change', function (data) {
-    console.log('change', data);
+    //console.log('change', data);
     var arr = vm.barn(),
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === data.id;

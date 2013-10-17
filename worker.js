@@ -115,25 +115,31 @@ var floodLightsSwitch = device(22, {
         //isVisible: true
     });
 
-floodLightsSwitch.on('switched', function (self) {
+floodLightsSwitch.switched = function () {
     for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].pin === floodLightsSwitch.controls) {
-            devices[i].toggle(function (err, d) {
-                conn.emit('change', {id: devices[i].id, state: d});
-            });
-        }
-    }
-});
+        (function (dev) {
+            if(dev.pin === floodLightsSwitch.controls) {
 
-barnLightSwitch.on('switched', function (self) {
-    for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].pin === barnLightSwitch.controls) {
-            devices[i].toggle(function (err, d) {
-                conn.emit('change', {id: devices[i].id, state: d});
-            });
-        }
+                dev.toggle(function (err, d) {
+                    conn.emit('change', {id: dev.id, state: d});
+                });
+            }
+        }(devices[i]));
     }
-});
+};
+
+barnLightSwitch.switched = function () {
+    for(var i = 0, il = devices.length; i < il; i++) {
+        (function (dev) {
+            if(dev.pin === barnLightSwitch.controls) {
+
+                dev.toggle(function (err, d) {
+                    conn.emit('change', {id: dev.id, state: d});
+                });
+            }
+        }(devices[i]));
+    }
+};
 
 
 fs.exists('./meinfo.json', function (exists) {

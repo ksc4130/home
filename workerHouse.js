@@ -82,7 +82,7 @@ denSwitch.switched = function () {
     for(var i = 0, il = devices.length; i < il; i++) {
         (function (dev) {
             if(dev.pin === denSwitch.controls) {
-                console.log('pin');
+
                 dev.toggle(function (err, d) {
                     conn.emit('change', {id: dev.id, state: d});
                 });

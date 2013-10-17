@@ -53,7 +53,7 @@
         self.type = args.type;
         self.direction = (inputActionTypes.indexOf(self.actionType) > -1) ? 'in' :
                             (outputActionTypes.indexOf(self.actionType) > -1) ? 'out' : null;
-        self.pin = pin;
+        self.pin = pin || (args.pin || '');
         self.name = args.name || 'untitled';
         self.state = args.state;
         self.controls = args.controls;

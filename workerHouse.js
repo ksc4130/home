@@ -19,18 +19,14 @@ conn.on('initWorker', function (data) {
 });
 
 conn.on('devices', function (data) {
-    console.log(data);
    for(var i = 0, il = data.length; i < il; i++) {
-       (function (devIn) {
-           console.log(devIn);
-           var dev = device(devIn.pin, devIn);
-           if(dev.name === 'Den') {
-               dev.on('change', function (d) {
-                   conn.emit('change', {id: d.id, state: d.state});
-               });
-           }
-           devices.push(dev);
-       }(data[i]));
+       var dev = device(null, data[i]);
+       if(dev.name === 'Den') {
+           dev.on('change', function (d) {
+               conn.emit('change', {id: d.id, state: d.state});
+           });
+       }
+       devices.push((function (de) {return de}(dev)));
    }
     console.log(devices);
 });

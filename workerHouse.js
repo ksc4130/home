@@ -78,6 +78,7 @@ var denSwitch = device('P8_12', {
     freq: 20
 });
 
+
 denSwitch.on('switched', function () {
     console.log('switch', devices);
     for(var i = 0, il = devices.length; i < il; i++) {

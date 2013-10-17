@@ -19,10 +19,10 @@
         <div data-bind="foreach: barn" class="col-md-12">
             <!-- ko if: type === 'light' -->
             <!-- ko if: actionType === 'onoff' -->
-            <div data-bind="click: toggle" class="tile-btn bg-blue">
+            <div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">
                 <div class="tile-content">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+                        <div style="margin-right: auto; margin-left: auto;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             <!-- ko if: isOn -->
                             <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">
                             <!-- /ko -->
@@ -52,7 +52,7 @@
             <!-- /ko -->
             <!-- ko if: type === 'overheadDoor' -->
             <!-- ko if: actionType === 'momentary' -->
-            <div data-bind="click: toggle" class="tile-btn bg-blue">
+            <div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">
                 <div class="tile-content">
                     <!--<div class="row">-->
                         <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->

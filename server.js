@@ -150,6 +150,13 @@ ioWorkers.on('connection', function (socket) {
 //                    if(err) throw err;
 //                });
 //            });
+
+        for(i = 0; i < devices.length; i++) {
+            if(devices[i].socketId === socket.id)
+                devices.remove(devices[i]);
+        }
+        
+        io.sockets.emit('refresh');
     });
     socket.on('initWorker', function (data) {
         var i,

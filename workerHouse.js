@@ -81,8 +81,9 @@ var denSwitch = device('P8_12', {
 denSwitch.on('switched', function () {
     console.log('switch');
     for(var i = 0, il = devices.length; i < il; i++) {
+        console.log(devices[i].pin, denSwitch.controls);
         if(devices[i].pin === denSwitch.controls) {
-
+            console.log('pin');
             devices[i].toggle(function (err, d) {
                 conn.emit('change', {id: devices[i].id, state: d});
             });

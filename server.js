@@ -156,8 +156,13 @@ ioWorkers.on('connection', function (socket) {
                 a.push(devices[i]);
         }
         devices = a;
-
-        io.sockets.emit('refresh');
+        for(var s in io.sockets) {
+            var sessId = sessionobj[cookie.parse(io.sockets[s].handshake.sessionID)];
+            var yup = sessionobj[sessId];
+            if(yup) {
+                io.sockets[s].emit('init', devices);
+            }
+        }
     });
 
     socket.on('initWorker', function (data) {

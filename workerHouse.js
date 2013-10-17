@@ -80,13 +80,14 @@ var denSwitch = device('P8_12', {
 
 denSwitch.switched = function () {
     for(var i = 0, il = devices.length; i < il; i++) {
-        console.log(devices[i].pin, denSwitch.controls);
-        if(devices[i].pin === denSwitch.controls) {
-            console.log('pin');
-            devices[i].toggle(function (err, d) {
-                conn.emit('change', {id: devices[i].id, state: d});
-            });
-        }
+        (function (dev) {
+            if(dev.pin === denSwitch.controls) {
+                console.log('pin');
+                dev.toggle(function (err, d) {
+                    conn.emit('change', {id: dev.id, state: d});
+                });
+            }
+        }(devices[i]));
     }
 }
 

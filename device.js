@@ -81,7 +81,9 @@
                     b.pinMode(self.pin, 'in');
 
                     setInterval(function () {
+                        console.log('sw');
                         self.get(function(err, val) {
+                            console.log('sw', val, self.state);
                             if(val < self.state) {
                                 //self.toggle();
                                 self.pub('switched', self);

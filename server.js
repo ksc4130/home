@@ -203,7 +203,7 @@ ioWorkers.on('connection', function (socket) {
             devices.push(data.devices[i]);
         }
         socket.emit('devices', data.devices);
-        io.sockets.emit('refresh');
+        //io.sockets.emit('refresh');
     });
 });
 

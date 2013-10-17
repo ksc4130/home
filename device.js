@@ -84,12 +84,12 @@
                         self.get(function(err, val) {
                             if(val < self.state) {
                                 //self.toggle();
-                                console.log('sw', val, self.state);
-                                self.pub('switched', self);
+                                console.log('sw', val, self);
+                                self.pub('switched', null, self);
                             }
                             if(self.state !== val) {
                                 self.state = val;
-                                self.pub('change', self);
+                                self.pub('change', null, self);
                             }
                         });
                     }, self.freq);
@@ -102,7 +102,7 @@
                         self.get(function(err, val) {
                             if(self.state !== val) {
                                 self.state = val;
-                                self.pub('change', self);
+                                self.pub('change', null, self);
                             }
                         });
                     }, self.freq);
@@ -132,11 +132,11 @@
         self.get(function(err, val) {
             if(val < self.state) {
                 //self.toggle();
-                self.pub('switched', self);
+                self.pub('switched', null, self);
             }
             if(self.state !== val) {
                 self.state = val;
-                self.pub('change', self);
+                self.pub('change', null, self);
             }
         });
     };
@@ -146,7 +146,7 @@
         self.get(function(err, val) {
             if(self.state !== val) {
                 self.state = val;
-                self.pub('change', self);
+                self.pub('change', null, self);
             }
         });
     };
@@ -169,6 +169,7 @@
     };
 
     device.prototype.pub = function (event, err, args) {
+        console.log(event);
         var self = this;
         if(self.subs[event]) {
             for(var i = 0, il = self.subs[event].length; i < il; i++) {

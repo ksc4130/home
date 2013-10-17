@@ -255,7 +255,7 @@
             self.gpio.set(val, function () {
                 self.state = self.gpio.value;
                 if(hasCallback)
-                    callback(x.err, self.state);
+                    callback(null, self.state);
             });
         }
     };

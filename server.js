@@ -78,6 +78,12 @@ io.sockets.on('connection', function (socket) {
     else
         socket.emit('yup', false);
 
+    socket.on('disconnect', function() {
+        if(clients.indexOf(socket) > -1) {
+            clients.remove(socket);
+        }
+    });
+
     socket.on('yup', function (data) {
         data = data || {};
         yup = (data.pin === pin);
@@ -177,6 +183,7 @@ ioWorkers.on('connection', function (socket) {
         }
         devices = a;
         workers[socket.id] = null;
+        console.log('remove clients', clients);
         for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
             clients[ic].emit('remove', toRemove);
         }

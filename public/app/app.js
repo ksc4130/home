@@ -67,7 +67,7 @@ socket.on('remove', function (data) {
         device,
         isArr = (data instanceof Array),
         cnt = 0;
-        console.log('data', data);
+        console.log('remove', data);
         ko.utils.arrayForEach(arr, function (item) {
             console.log(item);
             if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
@@ -75,13 +75,15 @@ socket.on('remove', function (data) {
             }
             cnt++;
         });
+    vm.devices.valueHasMutated();
 });
 
 socket.on('add', function (data) {
+    console.log('add', data);
     ko.utils.arrayForEach(data, function (item) {
         vm.devices.push(device(item));
     });
-
+    vm.devices.valueHasMutated();
 });
 
 socket.on('change', function (data) {

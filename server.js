@@ -108,7 +108,7 @@ io.sockets.on('connection', function (socket) {
                 break;
             }
         }
-        console.log('device', device);
+        //console.log('device', device);
         if(typeof device !== 'undefined' && device !== null) {
             var w = workers[device.socketId];
 
@@ -132,7 +132,7 @@ var deviceIdCnt = 0;
 ioWorkers.on('connection', function (socket) {
     socket.emit('initWorker');
     socket.on('change', function (data) {
-        console.log('worker change*************************', JSON.stringify(data));
+        //console.log('worker change*************************', JSON.stringify(data));
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {
@@ -169,23 +169,25 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('initWorker', function (data) {
-        var i,
-            worker;
+        if(data.secret === secret) {
+            var i,
+                worker;
 
-        workers[socket.id] = {
-            socket: socket
-        };
+            workers[socket.id] = {
+                socket: socket
+            };
 
-        for(i = 0; i < data.devices.length; i++) {
-            (function (sId, id) {
-                console.log(data.devices[i]);
-                data.devices[i].socketId = sId;
-                data.devices[i].id = id;
-                devices.push(data.devices[i]);
-            }(socket.id, deviceIdCnt++));
+            for(i = 0; i < data.devices.length; i++) {
+                (function (sId, id) {
+                    console.log(data.devices[i]);
+                    data.devices[i].socketId = sId;
+                    data.devices[i].id = id;
+                    devices.push(data.devices[i]);
+                }(socket.id, deviceIdCnt++));
+            }
+            socket.emit('devices', data.devices);
+            //io.sockets.emit('refresh');
         }
-        socket.emit('devices', data.devices);
-        //io.sockets.emit('refresh');
     });
 });
 

@@ -202,7 +202,7 @@ ioWorkers.on('connection', function (socket) {
             }
             socket.emit('devices', data.devices);
             for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
-                clients[ic].emit('add', toRemove);
+                clients[ic].emit('add', data.devices);
             }
             //io.sockets.emit('refresh');
         }

@@ -68,13 +68,16 @@ socket.on('remove', function (data) {
         isArr = (data instanceof Array),
         cnt = 0;
         console.log('remove', data);
-        ko.utils.arrayForEach(arr, function (item) {
-            console.log(item);
-            if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
-                vm.devices.remove(item);
-            }
-            cnt++;
+        ko.utils.arrayRemoveItem(arr, function (item) {
+            return (isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id);
         });
+//        ko.utils.arrayForEach(arr, function (item) {
+//            console.log(item);
+//            if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
+//                vm.devices.remove(item);
+//            }
+//            cnt++;
+//        });
     //vm.devices.valueHasMutated();
 });
 

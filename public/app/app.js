@@ -74,25 +74,6 @@ socket.on('remove', function (data) {
             }
             cnt++;
         });
-        for(var i = 0, il = data.length; i < il; i++) {
-
-            device = ko.utils.arrayFirst(arr, function (item) {
-                return item.id === id;
-            });
-            if(device)
-                vm.devices.remove(device);
-        device = ko.utils.arrayFirst(arr, function (item) {
-                return item.id === id;
-            });
-        if(device)
-            vm.devices.remove(device);
-
-    var arr = vm.devices(),
-        device = ko.utils.arrayFirst(arr, function (item) {
-            return item.id === id;
-        });
-    if(device)
-        vm.devices.remove(device);
 });
 
 socket.on('change', function (data) {

@@ -65,33 +65,21 @@ socket.on('init', function (data) {
 socket.on('remove', function (data) {
     var arr = vm.devices(),
         nArr,
-        device,
-        isArr = (data instanceof Array),
-        cnt = 0;
-        console.log('remove', data);
-        nArr = ko.utils.arrayFilter(arr, function (item) {
-                return (isArr && data.indexOf(item.id) <= -1) || (!isArr && data.id !== item.id);
-            });
-//        ko.utils.arrayForEach(arr, function (item) {
-//            console.log(item);
-//            if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
-//                vm.devices.remove(item);
-//            }
-//            cnt++;
-//        });
+        isArr = (data instanceof Array);
+
+    nArr = ko.utils.arrayFilter(arr, function (item) {
+        return (isArr && data.indexOf(item.id) <= -1) || (!isArr && data.id !== item.id);
+    });
     vm.devices(nArr);
 });
 
 socket.on('add', function (data) {
-    console.log('add', data);
     ko.utils.arrayForEach(data, function (item) {
         vm.devices.push(device(item));
     });
-    //vm.devices.valueHasMutated();
 });
 
 socket.on('change', function (data) {
-    //console.log('change', data);
     var arr = vm.devices(),
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === data.id;

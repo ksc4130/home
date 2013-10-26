@@ -75,7 +75,7 @@ socket.on('remove', function (data) {
             }
             cnt++;
         });
-    vm.devices.valueHasMutated();
+    //vm.devices.valueHasMutated();
 });
 
 socket.on('add', function (data) {
@@ -83,7 +83,7 @@ socket.on('add', function (data) {
     ko.utils.arrayForEach(data, function (item) {
         vm.devices.push(device(item));
     });
-    vm.devices.valueHasMutated();
+    //vm.devices.valueHasMutated();
 });
 
 socket.on('change', function (data) {

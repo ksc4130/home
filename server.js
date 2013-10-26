@@ -130,7 +130,9 @@ var workers = {};
 var deviceIdCnt = 0;
 
 ioWorkers.on('connection', function (socket) {
+
     socket.emit('initWorker');
+
     socket.on('change', function (data) {
         //console.log('worker change*************************', JSON.stringify(data));
         for(var i = 0, il = devices.length; i < il; i++) {
@@ -158,14 +160,19 @@ ioWorkers.on('connection', function (socket) {
 //                    if(err) throw err;
 //                });
 //            });
-        var a = [];
+        var a = [],
+            toRemove = [];
 
         for(var i = 0; i < devices.length; i++) {
-            if(devices[i].socketId !== socket.id)
+            if(devices[i].socketId !== socket.id) {
                 a.push(devices[i]);
+            } else {
+                toRemove.push(devices[i].id);
+            }
         }
         devices = a;
         workers[socket.id] = null;
+        io.sockets.emit('remove', toRemove);
     });
 
     socket.on('initWorker', function (data) {

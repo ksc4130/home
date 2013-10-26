@@ -33,7 +33,7 @@ var device = function (args) {
 var $yup = $('#yup');
 var vm = new function () {
     var self = this;
-    self.barn = ko.observableArray([]);
+    self.devices = ko.observableArray([]);
     self.pin = ko.observable();
     self.remember = ko.observable();
 
@@ -57,23 +57,47 @@ socket.on('init', function (data) {
         return device(item);
     });
     vm.pin(undefined);
-    vm.barn(mapped);
+    vm.devices(mapped);
 
     $('#content').show();
 });
 
-socket.on('remove', function (id) {
-    var arr = vm.barn(),
+socket.on('remove', function (data) {
+    var arr = vm.devices(),
+        device,
+        isArr = (data instanceof Array),
+        cnt = 0;
+
+        ko.utils.arrayForEach(arr, function (item) {
+            if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
+                arr.splice(cnt, 1);
+            }
+            cnt++;
+        });
+        for(var i = 0, il = data.length; i < il; i++) {
+
+            device = ko.utils.arrayFirst(arr, function (item) {
+                return item.id === id;
+            });
+            if(device)
+                vm.devices.remove(device);
+        device = ko.utils.arrayFirst(arr, function (item) {
+                return item.id === id;
+            });
+        if(device)
+            vm.devices.remove(device);
+
+    var arr = vm.devices(),
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === id;
         });
     if(device)
-        vm.barn.remove(device);
+        vm.devices.remove(device);
 });
 
 socket.on('change', function (data) {
     //console.log('change', data);
-    var arr = vm.barn(),
+    var arr = vm.devices(),
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === data.id;
         });

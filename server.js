@@ -150,7 +150,7 @@ ioWorkers.on('connection', function (socket) {
             return;
 
         //var id = workers[socket.id].id;
-        workers[socket.id] = null;
+//        workers[socket.id] = null;
 //            workerProvider.findById(id, function (err, w) {
 //                if(err) throw err;
 //                w.socketId = null;
@@ -161,19 +161,11 @@ ioWorkers.on('connection', function (socket) {
         var a = [];
 
         for(var i = 0; i < devices.length; i++) {
-            if(!devices[i].socketId === socket.id)
+            if(devices[i].socketId !== socket.id)
                 a.push(devices[i]);
         }
         devices = a;
-        for(var s in io.sockets) {
-            if(!io.sockets[s].handshake)
-                continue;
-            var sessId = sessionobj[cookie.parse(io.sockets[s].handshake.sessionID)];
-            var yup = sessionobj[sessId];
-            if(yup) {
-                io.sockets[s].emit('init', devices);
-            }
-        }
+        workers[socket.id] = null;
     });
 
     socket.on('initWorker', function (data) {

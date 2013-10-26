@@ -80,7 +80,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function() {
         if(clients.indexOf(socket) > -1) {
-            clients.remove(socket);
+            clients.splice(clients.indexOf(socket), 1);
         }
     });
 

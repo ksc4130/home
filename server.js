@@ -63,7 +63,7 @@ io.set('authorization', function (handshakeData, accept) {
 });
 
 
-var clients = {};
+var clients = [];
 var devices = [];
 
 io.sockets.on('connection', function (socket) {
@@ -78,8 +78,6 @@ io.sockets.on('connection', function (socket) {
     else
         socket.emit('yup', false);
 
-
-
     socket.on('yup', function (data) {
         data = data || {};
         yup = (data.pin === pin);
@@ -88,7 +86,11 @@ io.sockets.on('connection', function (socket) {
         if(yup) {
             sessionobj[sessId] = data.remember || false;
             socket.emit('init', devices);
+            clients.push(socket);
         } else {
+            if(clients.indexOf(socket) > -1) {
+                clients.remove(socket);
+            }
             sessionobj[sessId] = false;
             socket.emit('yup', false);
         }
@@ -96,6 +98,9 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('change', function (data) {
         if(!yup) {
+            if(clients.indexOf(socket) > -1) {
+                clients.remove(socket);
+            }
             socket.emit('yup', false);
             return;
         }
@@ -190,6 +195,7 @@ ioWorkers.on('connection', function (socket) {
                     data.devices[i].socketId = sId;
                     data.devices[i].id = id;
                     devices.push(data.devices[i]);
+
                 }(socket.id, deviceIdCnt++));
             }
             socket.emit('devices', data.devices);

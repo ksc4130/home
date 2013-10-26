@@ -67,13 +67,18 @@ socket.on('remove', function (data) {
         device,
         isArr = (data instanceof Array),
         cnt = 0;
-
+        console.log('data', data);
         ko.utils.arrayForEach(arr, function (item) {
+            console.log(item);
             if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
                 arr.splice(cnt, 1);
             }
             cnt++;
         });
+});
+
+socket.on('add', function (data) {
+    device(data);
 });
 
 socket.on('change', function (data) {

@@ -64,13 +64,14 @@ socket.on('init', function (data) {
 
 socket.on('remove', function (data) {
     var arr = vm.devices(),
+        nArr,
         device,
         isArr = (data instanceof Array),
         cnt = 0;
         console.log('remove', data);
-        ko.utils.arrayRemoveItem(arr, function (item) {
-            return (isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id);
-        });
+        nArr = ko.utils.arrayFilter(arr, function (item) {
+                return (isArr && data.indexOf(item.id) <= -1) || (!isArr && data.id !== item.id);
+            });
 //        ko.utils.arrayForEach(arr, function (item) {
 //            console.log(item);
 //            if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
@@ -78,7 +79,7 @@ socket.on('remove', function (data) {
 //            }
 //            cnt++;
 //        });
-    vm.devices.valueHasMutated();
+    vm.devices(nArr);
 });
 
 socket.on('add', function (data) {

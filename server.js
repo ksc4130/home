@@ -176,32 +176,13 @@ ioWorkers.on('connection', function (socket) {
             socket: socket
         };
 
-//        if(data.id && typeof data.id === 'string') {
-//            //check db
-//            workerProvider.findById(data.id, function (err, worker) {
-//                if(err) throw err;
-//
-//                worker = worker || {};
-//                worker.socketId = socket.id;
-//                workerProvider.save(worker, function (err, w) {
-//                    if(err) throw err;
-//
-//                    socket.emit('initWorker', {id: w._id});
-//                });
-//            });
-//        } else {
-//            workerProvider.save({socketId: socket.id}, function (err, w) {
-//                if(err) throw err;
-//
-//                socket.emit('initWorker', {id: w._id});
-//            });
-//        }
-
         for(i = 0; i < data.devices.length; i++) {
-            console.log(data.devices[i]);
-            data.devices[i].socketId = socket.id;
-            data.devices[i].id = deviceIdCnt++;
-            devices.push(data.devices[i]);
+            (function (sId, id) {
+                console.log(data.devices[i]);
+                data.devices[i].socketId = sId;
+                data.devices[i].id = id;
+                devices.push(data.devices[i]);
+            }(socket.id, deviceIdCnt++));
         }
         socket.emit('devices', data.devices);
         //io.sockets.emit('refresh');

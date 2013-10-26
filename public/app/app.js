@@ -78,7 +78,9 @@ socket.on('remove', function (data) {
 });
 
 socket.on('add', function (data) {
-    device(data);
+    ko.utils.arrayForEach(data, function (item) {
+        device(item);
+    });
 });
 
 socket.on('change', function (data) {

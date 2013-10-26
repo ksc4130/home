@@ -71,7 +71,7 @@ socket.on('remove', function (data) {
         ko.utils.arrayForEach(arr, function (item) {
             console.log(item);
             if((isArr && data.indexOf(item.id) > -1) || (!isArr && data.id === item.id)) {
-                arr.remove(item);
+                vm.devices.remove(item);
             }
             cnt++;
         });

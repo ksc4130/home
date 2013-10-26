@@ -78,7 +78,7 @@ socket.on('remove', function (data) {
 //            }
 //            cnt++;
 //        });
-    //vm.devices.valueHasMutated();
+    vm.devices.valueHasMutated();
 });
 
 socket.on('add', function (data) {

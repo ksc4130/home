@@ -86,7 +86,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('yup', function (data) {
         data = data || {};
         yup = (data.pin === pin);
-        //console.log('yup', JSON.stringify(data));
+        console.log('yup', JSON.stringify(data));
 
         if(yup) {
             sessionobj[sessId] = data.remember || false;

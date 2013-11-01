@@ -53,9 +53,7 @@ io.set('authorization', function (handshakeData, accept) {
         if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
             return accept('Cookie is invalid.', false);
         }
-
     } else {
-
         return accept('No cookie transmitted.', false);
     }
 

@@ -144,7 +144,7 @@ ioWorkers.on('connection', function (socket) {
     socket.emit('initWorker');
 
     socket.on('change', function (data) {
-        //console.log('worker change*************************', JSON.stringify(data));
+        console.log('worker change*************************', JSON.stringify(data));
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {

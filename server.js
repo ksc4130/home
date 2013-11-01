@@ -148,7 +148,7 @@ ioWorkers.on('connection', function (socket) {
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {
-                    dev.state = data.state;
+                    dev.value = data.value;
                 }
             }(devices[i]));
         }

@@ -8,23 +8,23 @@ var device = function (args) {
 
     self.id = args.id;
     self.name = args.name || 'unknown';
-    self.state = ko.observable(args.state || 0);
+    self.value = ko.observable(args.value || 0);
     self.type = args.type || 'light';
     self.actionType = args.actionType || 'onoff';
 
     self.isOn = ko.computed(function () {
-        return self.state() === 1;
+        return self.value() === 1;
     });
 
     self.isOff = ko.computed(function () {
-        return self.state() === 0;
+        return self.value() === 0;
     });
 
     self.toggle = function () {
         socket.emit('change', {
             sId: self.sId,
             id: self.id,
-            state: (1 - self.state())
+            value: (1 - self.value())
         });
     };
 
@@ -85,7 +85,7 @@ socket.on('change', function (data) {
             return item.id === data.id;
         });
     if(device)
-        device.state(data.state);
+        device.value(data.value);
 });
 
 $(function () {

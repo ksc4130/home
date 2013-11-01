@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {
     var sessId = cookie.parse(socket.handshake.sessionID);
     var yup = sessionobj[sessId];
 
-    console.log(sessId, yup);
+    console.log('session id', sessId, yup);
 
     if(yup)
         socket.emit('init', devices);
@@ -88,7 +88,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('yup', function (data) {
         data = data || {};
         yup = (data.pin === pin);
-        console.log('yup', JSON.stringify(data));
+        //console.log('yup', JSON.stringify(data));
 
         if(yup) {
             sessionobj[sessId] = data.remember || false;
@@ -112,7 +112,7 @@ io.sockets.on('connection', function (socket) {
             return;
         }
         var device;
-        console.log(devices, data.id);
+        //console.log(devices, data.id);
 
         for(var i = 0, il = devices.length; i < il; i++) {
             if(devices[i].id.toString() === data.id.toString()) {
@@ -158,7 +158,7 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        console.log('Got disconnect!');
+        console.log('worker disconnect!');
 
         if(!workers[socket.id])
             return;
@@ -184,7 +184,7 @@ ioWorkers.on('connection', function (socket) {
         }
         devices = a;
         workers[socket.id] = null;
-        console.log('remove clients', clients);
+        //console.log('remove clients', clients);
         for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
             clients[ic].emit('remove', toRemove);
         }
@@ -201,7 +201,7 @@ ioWorkers.on('connection', function (socket) {
 
             for(i = 0; i < data.devices.length; i++) {
                 (function (sId, id) {
-                    console.log(data.devices[i]);
+                    //console.log(data.devices[i]);
                     data.devices[i].socketId = sId;
                     data.devices[i].id = id;
                     devices.push(data.devices[i]);

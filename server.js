@@ -9,6 +9,13 @@ var secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';
 
 var util = require('util');
 
+var bcrypt = require('bcrypt');
+bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash('pass', salt, function(err, hash) {
+        console.log('pass', hash);
+    });
+});
+
 
 var app = express();
 

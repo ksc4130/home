@@ -43,12 +43,15 @@ var io = require('socket.io').listen(server);
 var pin = '41300048';
 
 io.set('authorization', function (handshakeData, accept) {
-    console.log('********************', handshakeData.headers.cookie);
+
     if (handshakeData.headers.cookie) {
 
         handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
         handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], secret);
+
+        console.log('********************', handshakeData.headers.cookie);
+        console.log('********************', handshakeData.sessionID);
 
         if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
             return accept('Cookie is invalid.', false);

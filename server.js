@@ -70,7 +70,8 @@ var devices = [];
 io.sockets.on('connection', function (socket) {
     var mac = socket.handshake.address;
 
-    var sessId = cookie.parse(socket.handshake.sessionID);
+    var sessId = socket.handshake.sessionID;
+    console.log('*********connection', mac, sessId);
     var yup = sessionobj[sessId];
 
     console.log('session id', sessId, yup);

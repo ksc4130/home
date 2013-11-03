@@ -43,7 +43,7 @@ var io = require('socket.io').listen(server);
 var pin = '41300048';
 
 io.set('authorization', function (handshakeData, accept) {
-
+    console.log('********************', handshakeData.headers.cookie);
     if (handshakeData.headers.cookie) {
 
         handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);

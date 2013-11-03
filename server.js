@@ -72,7 +72,7 @@ io.sockets.on('connection', function (socket) {
 
     console.log('session id', sessId, yup);
 
-    if(yup)
+    if(yup === true)
         socket.emit('init', devices);
     else
         socket.emit('yup', false);
@@ -88,7 +88,7 @@ io.sockets.on('connection', function (socket) {
         yup = (data.pin === pin);
         console.log('yup', JSON.stringify(data));
 
-        if(yup) {
+        if(yup === true) {
             sessionobj[sessId] = data.remember || false;
             socket.emit('init', devices);
             clients.push(socket);
@@ -102,7 +102,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
-        if(!yup) {
+        if(yup !== true) {
             if(clients.indexOf(socket) > -1) {
                 clients.remove(socket);
             }

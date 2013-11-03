@@ -42,6 +42,25 @@ var sessionobj = {};
 var io = require('socket.io').listen(server);
 var pin = '41300048';
 
+io.configure('production', function(){
+    io.enable('browser client minification');
+    io.enable('browser client etag');
+    io.enable('browser client gzip');
+    io.set('log level', 1);
+
+    io.set('transports', [
+        'websocket'
+        , 'flashsocket'
+        , 'htmlfile'
+        , 'xhr-polling'
+        , 'jsonp-polling'
+    ]);
+});
+
+//io.configure('development', function(){
+//    io.set('transports', ['websocket']);
+//});
+
 io.set('authorization', function (handshakeData, accept) {
 
     if (handshakeData.headers.cookie) {
@@ -142,6 +161,21 @@ var serverWorkers = require('http').Server();
 var ioWorkers = require('socket.io').listen(serverWorkers);
 var workers = {};
 var deviceIdCnt = 0;
+
+ioWorkers.configure('production', function(){
+    ioWorkers.enable('browser client minification');
+    ioWorkers.enable('browser client etag');
+    ioWorkers.enable('browser client gzip');
+    ioWorkers.set('log level', 1);
+
+    ioWorkers.set('transports', [
+        'websocket'
+        , 'flashsocket'
+        , 'htmlfile'
+        , 'xhr-polling'
+        , 'jsonp-polling'
+    ]);
+});
 
 ioWorkers.on('connection', function (socket) {
 

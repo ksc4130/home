@@ -85,6 +85,7 @@ socket.on('change', function (data) {
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === data.id;
         });
+    console.log(data.value);
     if(device)
         device.value(data.value);
 });

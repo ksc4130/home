@@ -195,6 +195,7 @@ ioWorkers.on('connection', function (socket) {
                 if(dev.id === data.id) {
                     dev.isHeat = data.isHeat;
                     dev.isCool = data.isCool;
+                    dev.value = data.value;
                 }
             }(devices[i]));
         }

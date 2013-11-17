@@ -101,6 +101,7 @@ socket.on('thermo', function (data) {
     if(device) {
         device.isCool(data.isCool);
         device.isHeat(data.isHeat);
+        device.value(data.value);
     }
 });
 

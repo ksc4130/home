@@ -188,8 +188,21 @@ ioWorkers.on('connection', function (socket) {
 
     socket.emit('initWorker');
 
+    socket.on('thermo', function (data) {
+        console.log('worker thermo*************************', JSON.stringify(data));
+        for(var i = 0, il = devices.length; i < il; i++) {
+            (function (dev) {
+                if(dev.id === data.id) {
+                    dev.isHeat = data.isHeat;
+                    dev.isCool = data.isCool;
+                }
+            }(devices[i]));
+        }
+        io.sockets.emit('thermo', data);
+    });
+
     socket.on('change', function (data) {
-        console.log('worker change*************************', JSON.stringify(data));
+        //console.log('worker change*************************', JSON.stringify(data));
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {

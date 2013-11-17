@@ -9,6 +9,8 @@ var device = function (args) {
     self.id = args.id;
     self.name = args.name || 'unknown';
     self.value = ko.observable(args.value || 0);
+    self.isCool = ko.observable(args.isCool || false);
+    self.isHeat = ko.observable(args.isHeat || false);
     self.type = args.type || 'light';
     self.actionType = args.actionType || 'onoff';
 
@@ -88,6 +90,18 @@ socket.on('change', function (data) {
     console.log(data.value);
     if(device)
         device.value(data.value);
+});
+
+socket.on('thermo', function (data) {
+    console.log('thermo', data);
+    var arr = vm.devices(),
+        device = ko.utils.arrayFirst(arr, function (item) {
+            return item.id === data.id;
+        });
+    if(device) {
+        device.isCool(data.isCool);
+        device.isHeat(data.isHeat);
+    }
 });
 
 $(function () {

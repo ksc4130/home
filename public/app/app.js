@@ -82,12 +82,12 @@ socket.on('add', function (data) {
 });
 
 socket.on('change', function (data) {
-    console.log('change', data);
+    //console.log('change', data);
     var arr = vm.devices(),
         device = ko.utils.arrayFirst(arr, function (item) {
             return item.id === data.id;
         });
-    console.log(data.value);
+    //console.log(data.value);
     if(device)
         device.value(data.value);
 });

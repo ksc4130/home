@@ -281,7 +281,7 @@ ioWorkers.on('connection', function (socket) {
                         dev.setTrigger = function (trigger) {
                             if(workers[socket.id]) {
                                 dev.trigger = trigger;
-                                workers[socket.id].socket.emit('setTrigger', trigger);
+                                workers[socket.id].socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                             }
                         };
                     }(data.devices[i]));

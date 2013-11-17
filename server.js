@@ -131,6 +131,22 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
+    socket.on('setTrigger', function (data) {
+        var device;
+
+        for(var i = 0, il = devices.length; i < il; i++) {
+            if(devices[i].id.toString() === data.id.toString()) {
+                device = devices[i];
+                break;
+            }
+        }
+
+        if(typeof device !== 'undefined' && device !== null) {
+            device.setTrigger(data.trigger);
+        } else
+            console.log("can't find device for id ", data.id);
+    });
+
     socket.on('change', function (data) {
         if(yup !== true) {
             if(clients.indexOf(socket) > -1) {
@@ -189,7 +205,7 @@ ioWorkers.on('connection', function (socket) {
     socket.emit('initWorker');
 
     socket.on('thermo', function (data) {
-        console.log('worker thermo*************************', JSON.stringify(data));
+        //console.log('worker thermo*************************', JSON.stringify(data));
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {
@@ -261,6 +277,12 @@ ioWorkers.on('connection', function (socket) {
                     //console.log(data.devices[i]);
                     data.devices[i].socketId = sId;
                     data.devices[i].id = id;
+                    data.devices[i].setTrigger = function (trigger) {
+                        if(workers[socket.id]) {
+                            data.devices[i].trigger = trigger;
+                            workers[socket.id].socket.emit('setTrigger', trigger);
+                        }
+                    };
                     devices.push(data.devices[i]);
 
                 }(socket.id, deviceIdCnt++));

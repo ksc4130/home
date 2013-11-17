@@ -277,12 +277,14 @@ ioWorkers.on('connection', function (socket) {
                     //console.log(data.devices[i]);
                     data.devices[i].socketId = sId;
                     data.devices[i].id = id;
-                    data.devices[i].setTrigger = function (trigger) {
-                        if(workers[socket.id]) {
-                            data.devices[i].trigger = trigger;
-                            workers[socket.id].socket.emit('setTrigger', trigger);
-                        }
-                    };
+                    (function (dev) {
+                        dev.setTrigger = function (trigger) {
+                            if(workers[socket.id]) {
+                                dev.trigger = trigger;
+                                workers[socket.id].socket.emit('setTrigger', trigger);
+                            }
+                        };
+                    }(data.devices[i]));
                     devices.push(data.devices[i]);
 
                 }(socket.id, deviceIdCnt++));

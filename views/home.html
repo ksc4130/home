@@ -66,7 +66,7 @@
             </div>
             <!-- /ko -->
             <!-- ko if: type === 'temp' -->
-            <div class="tile bg-purple" data-bind="css: {'bg-blue': isCool, 'bg-red': isHeat}">
+            <div class="tile bg-purple" data-bind="click: $root.editThermo, css: {'bg-blue': isCool, 'bg-red': isHeat}">
                 <div class="tile-content">
                     <i style="z-index: 2;" class="fa-cog"></i>
                     <!--<div class="row">-->

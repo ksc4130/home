@@ -14,7 +14,7 @@ var device = function (args) {
     self.trigger = ko.observable(args.trigger || false);
     self.highThreshold = ko.observable(args.highThreshold || false);
     self.lowThreshold = ko.observable(args.highThreshold || false);
-    self.tyoe = args.type || 'light';
+    self.type = args.type || 'light';
     self.actionType = args.actionType || 'onoff';
 
     self.isOn = ko.computed(function () {

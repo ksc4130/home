@@ -33,6 +33,14 @@ var device = function (args) {
         });
     };
 
+    self.setTrigger = function (d) {
+        socket.emit('setTrigger', {
+            id: self.id,
+            trigger: self.trigger()
+        });
+        $('#thermoEdit').modal('hide');
+    };
+
     return self;
 };
 var $yup = $('#yup');
@@ -41,6 +49,7 @@ var vm = new function () {
     self.devices = ko.observableArray([]);
     self.pin = ko.observable();
     self.remember = ko.observable();
+    self.curThermo = ko.observable();
 
     self.yup = function () {
         $yup.modal('hide');
@@ -49,6 +58,11 @@ var vm = new function () {
             pin: self.pin(),
             remember: self.remember()
         });
+    };
+
+    self.editThermo = function (d) {
+        self.curThermo(d);
+        $('#thermoEdit').modal('show');
     };
 };
 socket.on('yup', function (data) {

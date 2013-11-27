@@ -137,6 +137,7 @@
 </div><!-- /.modal -->
 
 <div id="thermoEdit" class="modal fade">
+    <!-- ko with: curThermo -->
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -145,27 +146,18 @@
             </div>
             <div class="modal-body">
                 <form role="form">
-                    <!--<div class="form-group">-->
-                    <!--<label>Email: </label>-->
-                    <!--<input type="text" data-bind="value: email">-->
-                    <!--</div>-->
                     <div class="form-group">
-                        <label>Pin: </label>
-                        <input type="password" data-bind="value: pin">
-                    </div>
-                    <br>
-                    <div class="checkbox">
-                        <label>
-                            &nbsp;<input type="checkbox" data-bind="checked: remember"> Remember
-                        </label>
+                    <label>Temp: </label>
+                    <input type="text" data-bind="value: trigger">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btnThermoEdit" data-bind="click: yup" type="button" class="btn btn-primary">Ok</button>
+                <button id="btnThermoEdit" data-bind="click: setTrigger" type="button" class="btn btn-primary">Ok</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+    <!-- /ko -->
 </div><!-- /.modal -->
 
 </body>

@@ -210,6 +210,8 @@ ioWorkers.configure('production', function(){
 ioWorkers.on('connection', function (socket) {
 
     socket.emit('initWorker');
+    if(clients.length > 0)
+        socket.emit('transmit', true);
 
     socket.on('thermo', function (data) {
         //console.log('worker thermo*************************', JSON.stringify(data));

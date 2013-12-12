@@ -94,6 +94,10 @@ var clients = [];
 var devices = [];
 
 io.sockets.on('connection', function (socket) {
+    //tell workers to transmit
+    ioWorkers.sockets.emit('transmit', true);
+
+
     var mac = socket.handshake.address;
 
     var sessId = socket.handshake.sessionID;
@@ -110,6 +114,9 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function() {
         if(clients.indexOf(socket) > -1) {
             clients.splice(clients.indexOf(socket), 1);
+        }
+        if(clients.length <= 0) {
+            io.sockets.emit('transmit', false);
         }
     });
 

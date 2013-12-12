@@ -19,7 +19,7 @@ bcrypt.genSalt(10, function(err, salt) {
 
 var app = express();
 
-app.set('port', process.env.PORT || 4130);
+app.set('port', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());

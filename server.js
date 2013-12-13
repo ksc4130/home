@@ -1,10 +1,17 @@
 var express = require('express');
 var routes = require('./routes');
 var http = require('http');
+var https = require('https');
 var path = require('path');
 var cookie  = require('cookie');
 var connect = require('connect');
+var fs = require('fs');
 var secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';
+var options = {
+    key: fs.readFileSync('./privatekey.pem'),
+    cert: fs.readFileSync('./certificate.pem'),
+    requestCert: true
+};
 
 
 var util = require('util');
@@ -18,8 +25,10 @@ bcrypt.genSalt(10, function(err, salt) {
 
 
 var app = express();
+var httpApp = express();
 
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 443);
+app.set('httpPort', process.env.PORT || 80);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon());
@@ -38,15 +47,24 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+httpApp.get('*', function (req, res) {
+    res.redirect('https://' + req.host + req.originalUrl);
+});
+
+var httpServer = http.createServer(httpApp).listen(app.get('httpPort'), function(){
+    console.log('Express server listening on port ' + app.get('httpPort'));
+});
+
 app.get('/', routes.index);
 //app.get('/users', user.list);
 
-var server = http.createServer(app).listen(app.get('port'), function(){
+
+var server = https.createServer(options, app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
 var sessionobj = {};
-var io = require('socket.io').listen(server);
+var io = require('socket.io').listen(server, {secure: true});
 var pin = '41300048';
 
 io.configure('production', function(){
@@ -96,7 +114,6 @@ var devices = [];
 io.sockets.on('connection', function (socket) {
     //tell workers to transmit
     ioWorkers.sockets.emit('transmit', true);
-
 
     var mac = socket.handshake.address;
 
@@ -285,7 +302,7 @@ ioWorkers.on('connection', function (socket) {
                 (function (sId, id) {
                     //console.log(data.devices[i]);
                     data.devices[i].socketId = sId;
-                    data.devices[i].id = id;
+                    //data.devices[i].id = id;
                     (function (dev) {
                         dev.setTrigger = function (trigger) {
                             if(workers[socket.id]) {

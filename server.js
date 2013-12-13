@@ -146,9 +146,15 @@ io.sockets.on('connection', function (socket) {
     console.log('session id', sessId, yup);
 
     if(yup === true)
-        socket.emit('init', devices);
+        socket.emit('init', {
+            isSignedId: true,
+            devices: devices
+        });
     else
-        socket.emit('yup', false);
+        socket.emit('init', {
+            isSignedId: false,
+            devices: []
+        });
 
     socket.on('disconnect', function() {
         if(clients.indexOf(socket) > -1) {
@@ -172,11 +178,18 @@ io.sockets.on('connection', function (socket) {
                     db.save('users', {email: email, pass: hash}, function (err, oId) {
                         if(err) {
                             //register failed
-                            socket.emit('registerFailed');
+                            //socket.emit('registerFailed');
+                            socket.emit('init', {
+                                isSignedIn: false,
+                                devices: []
+                            });
                         } else {
                             //register failed
                             clients[socket.id].email = email;
-                            socket.emit('registered', oId);
+                            socket.emit('init', {
+                                isSignedIn: true,
+                                devices: devices
+                            });
                         }
                     });
                 });

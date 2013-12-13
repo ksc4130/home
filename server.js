@@ -1,11 +1,14 @@
-var express = require('express');
-var routes = require('./routes');
-var http = require('http');
-var https = require('https');
-var path = require('path');
-var cookie  = require('cookie');
-var connect = require('connect');
-var fs = require('fs');
+var express = require('express')
+    ,routes = require('./routes')
+    , http = require('http')
+    , https = require('https')
+    , path = require('path')
+    , cookie  = require('cookie')
+    , connect = require('connect')
+    , fs = require('fs')
+    , bcrypt = require('bcrypt');
+
+
 var secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';
 var options = {
     key: fs.readFileSync('./privatekey.pem'),
@@ -13,10 +16,6 @@ var options = {
     requestCert: true
 };
 
-
-var util = require('util');
-
-var bcrypt = require('bcrypt');
 bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash('pass', salt, function(err, hash) {
         console.log('pass', hash);
@@ -292,30 +291,30 @@ ioWorkers.on('connection', function (socket) {
     socket.on('initWorker', function (data) {
         if(data.secret === secret) {
             var i,
-                worker;
+                worker,
+                workerDev;
 
             workers[socket.id] = {
-                socket: socket
+                socket: socket,
+                devices: []
             };
 
             for(i = 0; i < data.devices.length; i++) {
-                (function (sId, id) {
-                    //console.log(data.devices[i]);
-                    data.devices[i].socketId = sId;
-                    //data.devices[i].id = id;
+                (function (sId) {
                     (function (dev) {
+                        dev.socketId = sId;
                         dev.setTrigger = function (trigger) {
                             if(workers[socket.id]) {
                                 dev.trigger = trigger;
                                 workers[socket.id].socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                             }
                         };
+                        workers[socket.id].devices.push(dev);
+                        devices.push(dev);
                     }(data.devices[i]));
-                    devices.push(data.devices[i]);
-
-                }(socket.id, deviceIdCnt++));
+                }(socket.id));
             }
-            socket.emit('devices', data.devices);
+            socket.emit('devices', workers[socket.id].devices);
             for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
                 clients[ic].emit('add', data.devices);
             }

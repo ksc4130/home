@@ -1,9 +1,6 @@
 var socket,
     vm,
-    devices = [
-        {name: 'one', type: 'light', actionType: 'onoff', value: 0},
-        {name: 'two'}
-    ];
+    devices = [];
 
 socket = io.connect(window.location.origin);
 
@@ -11,6 +8,18 @@ socket.on('init', function (data) {
     data.isInit= true;
     console.log('init', data);
     vm.set(data);
+});
+
+socket.on('change', function (data) {
+    //console.log('change', data);
+    for(var i = 0, il = devices.length; i < il; i++) {
+        if(devices[i].id === data.id) {
+            vm.set('devices[' + i + '].value', data.value);
+            //(function (device) {
+                //device.value = data.value;
+            //}(devices[i]));
+        }
+    }
 });
 
 vm = new Ractive({
@@ -33,12 +42,18 @@ vm = new Ractive({
     }
 });
 
+vm.on('editThermo', function (e) {
+    var d = e.context;
+
+
+});
+
 vm.on('toggle', function (e) {
     var d = e.context;
 
     socket.emit('change', {
         id: d.id,
-        value: Math.abs(1 - d.value)
+        value: (1 - d.value)
     });
 });
 

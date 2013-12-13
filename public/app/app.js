@@ -2,26 +2,6 @@ var socket,
     vm,
     devices = [];
 
-socket = io.connect(window.location.origin);
-
-socket.on('init', function (data) {
-    data.isInit= true;
-    console.log('init', data);
-    vm.set(data);
-});
-
-socket.on('change', function (data) {
-    //console.log('change', data);
-    for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].id === data.id) {
-            vm.set('devices[' + i + '].value', data.value);
-            //(function (device) {
-                //device.value = data.value;
-            //}(devices[i]));
-        }
-    }
-});
-
 vm = new Ractive({
     el: '#content',
     template: '#tmpl',
@@ -67,6 +47,26 @@ vm.on('register', function (e) {
     var d = e.context;
 
     socket.emit('register', d);
+});
+
+socket = io.connect(window.location.origin);
+
+socket.on('init', function (data) {
+    data.isInit= true;
+    console.log('init', data);
+    vm.set(data);
+});
+
+socket.on('change', function (data) {
+    //console.log('change', data);
+    for(var i = 0, il = devices.length; i < il; i++) {
+        if(devices[i].id === data.id) {
+            vm.set('devices[' + i + '].value', data.value);
+            //(function (device) {
+            //device.value = data.value;
+            //}(devices[i]));
+        }
+    }
 });
 
 //var device = function (args) {

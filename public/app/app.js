@@ -8,6 +8,7 @@ var socket,
 socket = io.connect(window.location.origin);
 
 socket.on('init', function (data) {
+    data.isInit= true;
     console.log('init', data);
     vm.set(data);
 });

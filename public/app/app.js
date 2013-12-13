@@ -2,6 +2,8 @@ var socket,
     vm,
     devices = [];
 
+socket = io.connect(window.location.origin);
+
 vm = new Ractive({
     el: '#content',
     template: '#tmpl',
@@ -30,7 +32,10 @@ vm.on('editThermo', function (e) {
 
 vm.on('toggle', function (e) {
     var d = e.context;
-
+    console.log({
+        id: d.id,
+        value: (1 - d.value)
+    });
     socket.emit('change', {
         id: d.id,
         value: (1 - d.value)
@@ -48,8 +53,6 @@ vm.on('register', function (e) {
 
     socket.emit('register', d);
 });
-
-socket = io.connect(window.location.origin);
 
 socket.on('init', function (data) {
     data.isInit= true;

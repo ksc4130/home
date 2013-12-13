@@ -47,6 +47,7 @@ if ('development' == app.get('env')) {
 }
 
 httpApp.get('*', function (req, res) {
+    console.log('redirecting to https');
     res.redirect('https://' + req.host + req.originalUrl);
 });
 
@@ -93,8 +94,8 @@ io.set('authorization', function (handshakeData, accept) {
 
         handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], secret);
 
-        console.log('********************', handshakeData.headers.cookie);
-        console.log('********************', handshakeData.sessionID);
+        //console.log('********************', handshakeData.headers.cookie);
+        //console.log('********************', handshakeData.sessionID);
 
         if (handshakeData.cookie['express.sid'] == handshakeData.sessionID) {
             return accept('Cookie is invalid.', false);

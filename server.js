@@ -209,6 +209,7 @@ io.sockets.on('connection', function (socket) {
                             isSignedIn: false,
                             devices: []
                         });
+                        return;
                     }
 
                     sessionobj[sessId] = args.remember;

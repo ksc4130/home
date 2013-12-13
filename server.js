@@ -120,9 +120,9 @@ var findUser = function (email, pass, cb) {
                     return;
                 }
                 if(count > 0) {
-                    cb(null, null);
-                } else {
                     cb(null, cursor.object());
+                } else {
+                    cb(null, null);
                 }
             }
         );

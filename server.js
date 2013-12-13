@@ -177,7 +177,7 @@ io.sockets.on('connection', function (socket) {
                 });
             } else {
                 bcrypt.hash(args.password, args.email + secret, function(err, hash) {
-                    db.save('users', {email: email, pass: hash}, function (err, oId) {
+                    db.save('users', {email: args.email, pass: hash}, function (err, oId) {
                         if(err) {
                             //register failed
                             //socket.emit('registerFailed');

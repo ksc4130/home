@@ -215,6 +215,8 @@ io.sockets.on('connection', function (socket) {
                         return;
                     }
 
+                    clients[socket.id] = clients[socket.id] || {};
+                    clients[socket.id].email = args.email;
                     sessionobj[sessId] = args.remember;
 
                     //successful login
@@ -260,6 +262,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
+        console.log('change');
         if(yup !== true) {
             if(clients.indexOf(socket) > -1) {
                 clients.remove(socket);
@@ -269,7 +272,7 @@ io.sockets.on('connection', function (socket) {
         }
         var device;
         //console.log(devices, data.id);
-
+        console.log('change a');
         for(var i = 0, il = devices.length; i < il; i++) {
             if(devices[i].id.toString() === data.id.toString()) {
                 device = devices[i];

@@ -15,77 +15,77 @@
     </style>
 </head>
 <body>
-<article id="content" style="display: none;" class="container">
-    <div class="row">
-        <div data-bind="foreach: devices" class="col-md-12">
-            <!-- ko if: type === 'light' -->
-            <!-- ko if: actionType === 'onoff' -->
-            <div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">
-                <div class="tile-content">
-                    <div class="row">
-                        <div style="margin-right: auto; margin-left: auto; width: 60%;">
-                            <!-- ko if: isOn -->
-                            <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">
-                            <!-- /ko -->
-                            <!-- ko ifnot: isOn -->
-                            <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_off.png">
-                            <!-- /ko -->
-                        </div>
-                    </div>
-                    <div data-bind="text: name" class="tile-title"></div>
-                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+<script id="tmpl" type="text/html">
+    {{#isInit}}
+        {{#isSignedIn}}
+            <div class="row">
+                <div class="col-lg-12">
+                    {{#devices: i}}
+                    {{#(actionType === 'onoff')}}
+                    {{>onoff}}
+                    {{/light}}
+                    {{/devices}}
                 </div>
             </div>
-            <!-- /ko -->
-            <!-- ko if: actionType === 'sensor' -->
-            <div class="tile bg-blue">
-                <div class="tile-content">
-                    <!--<div class="row">-->
-                    <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
-                    <!--<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <h2 class="text-center" style="padding-top: 15%;" data-bind="text: value"></h2>
-                    <div data-bind="text: name" class="tile-title"></div>
-                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+        {{/isSignedIn}}
+        {{^isSignedIn}}
+
+        {{/isSignedIn}}
+    {{/isInit}}
+
+    <!-- {{>signIn}} -->
+            {{#login}}
+    <div style="margin: 50px auto;">
+        <form role="form">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Email</label>
+                <input type="email" value="{{email}}" class="form-control" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" value="{{password}}" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input checked="{{remember}}" type="checkbox"> Remember
+                </label>
+            </div>
+            <button type="button" on-tap="login" class="btn btn-default">Login</button>
+            <button type="button" on-tap="register" class="btn btn-default">Register</button>
+        </form>
+    </div>
+            {{/login}}
+   <!-- {{/signIn}} -->
+
+
+
+    <!-- {{>onoff}} -->
+    <div on-tap="toggle" style="color: #fff;" class="tile-btn bg-blue">
+        <div class="tile-content">
+            <div class="row">
+                <div style="margin-right: auto; margin-left: auto; width: 60%;">
+                    {{#(type === 'light')}}
+                    <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/{{value === 1 ? 'light_bulb_on.png' : 'light_bulb_off.png'}}">
+                    {{/light}}
                 </div>
             </div>
-            <!-- /ko -->
-            <!-- /ko -->
-            <!-- ko if: type === 'motion' -->
-            <div class="tile" data-bind="css: { 'bg-green': isOn}">
-                <div class="tile-content">
+            <div class="tile-title">{{name}}</div>
+            <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+        </div>
+    </div>
+    <!-- {{/onoff}} -->
+</script>
+
+<!--style="display: none;"-->
+<article id="content"  class="container">
+    <!--<div class="row">-->
+        <!--<div data-bind="foreach: devices" class="col-md-12">-->
+            <!--&lt;!&ndash; ko if: type === 'light' &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: actionType === 'onoff' &ndash;&gt;-->
+            <!--<div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">-->
+                <!--<div class="tile-content">-->
                     <!--<div class="row">-->
-                        <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
-                            <!--<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <div data-bind="text: name" class="tile-title"></div>
-                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
-                </div>
-            </div>
-            <!-- /ko -->
-            <!-- ko if: type === 'temp' -->
-            <div class="tile-btn bg-purple" data-bind="click: $root.editThermo, css: {'bg-blue': isCool, 'bg-red': isHeat}">
-                <div class="tile-content">
-                    <i style="z-index: 2;" class="fa fa-cog"></i>
-                    <!--<div class="row">-->
-                    <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
-                    <!--<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <h2 class="text-center" style="padding-top: 15%;" data-bind="text: value() + '&deg;'"></h2>
-                    <div data-bind="text: name" class="tile-title"></div>
-                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
-                </div>
-            </div>
-            <!-- /ko -->
-            <!-- ko if: type === 'overheadDoor' -->
-            <!-- ko if: actionType === 'momentary' -->
-            <div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">
-                <div class="tile-content">
-                    <!--<div class="row">-->
-                        <!--<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">-->
+                        <!--<div style="margin-right: auto; margin-left: auto; width: 60%;">-->
                             <!--&lt;!&ndash; ko if: isOn &ndash;&gt;-->
                             <!--<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">-->
                             <!--&lt;!&ndash; /ko &ndash;&gt;-->
@@ -94,14 +94,76 @@
                             <!--&lt;!&ndash; /ko &ndash;&gt;-->
                         <!--</div>-->
                     <!--</div>-->
-                    <div data-bind="text: name" class="tile-title"></div>
-                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
-                </div>
-            </div>
-            <!-- /ko -->
-            <!-- /ko -->
-        </div>
-    </div>
+                    <!--<div data-bind="text: name" class="tile-title"></div>-->
+                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: actionType === 'sensor' &ndash;&gt;-->
+            <!--<div class="tile bg-blue">-->
+                <!--<div class="tile-content">-->
+                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<h2 class="text-center" style="padding-top: 15%;" data-bind="text: value"></h2>-->
+                    <!--<div data-bind="text: name" class="tile-title"></div>-->
+                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: type === 'motion' &ndash;&gt;-->
+            <!--<div class="tile" data-bind="css: { 'bg-green': isOn}">-->
+                <!--<div class="tile-content">-->
+                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div data-bind="text: name" class="tile-title"></div>-->
+                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: type === 'temp' &ndash;&gt;-->
+            <!--<div class="tile-btn bg-purple" data-bind="click: $root.editThermo, css: {'bg-blue': isCool, 'bg-red': isHeat}">-->
+                <!--<div class="tile-content">-->
+                    <!--<i style="z-index: 2;" class="fa fa-cog"></i>-->
+                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<h2 class="text-center" style="padding-top: 15%;" data-bind="text: value() + '&deg;'"></h2>-->
+                    <!--<div data-bind="text: name" class="tile-title"></div>-->
+                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: type === 'overheadDoor' &ndash;&gt;-->
+            <!--&lt;!&ndash; ko if: actionType === 'momentary' &ndash;&gt;-->
+            <!--<div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">-->
+                <!--<div class="tile-content">-->
+                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash; ko if: isOn &ndash;&gt;&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash; /ko &ndash;&gt;&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash; ko ifnot: isOn &ndash;&gt;&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_off.png">&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash; /ko &ndash;&gt;&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--<div data-bind="text: name" class="tile-title"></div>-->
+                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+            <!--&lt;!&ndash; /ko &ndash;&gt;-->
+        <!--</div>-->
+    <!--</div>-->
 </article>
 
 <div id="yup" class="modal fade">
@@ -161,9 +223,14 @@
 </div><!-- /.modal -->
 
 </body>
-<script src="/scripts/jquery-2.0.3.js"></script>
+<script type="text/javascript"   src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        document.write(unescape("%3Cscript src='/scripts/jquery-2.0.3.min.js'" + "%3E%3C/script%3E"));
+    }
+</script>
 <script src="/scripts/bootstrap.min.js"></script>
-<script src="/scripts/knockout-3.0.0rc.js"></script>
+<script src="/scripts/ractive-0.3.7.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/app/app.js"></script>
 </html>

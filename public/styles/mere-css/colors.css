@@ -1,55 +1,70 @@
 .bg-light-green {
+  color: #fff;
   background-color: #99b433;
 }
 .bg-green {
+  color: #fff;
   background-color: #00a300;
 }
 .bg-dark-green {
+  color: #fff;
   background-color: #1e7145;
 }
 .bg-magenta {
+  color: #fff;
   background-color: #ff0097;
 }
 .bg-light-purple {
+  color: #fff;
   background-color: #9f00a7;
 }
 .bg-purple {
+  color: #fff;
   background-color: #7e3878;
 }
 .bg-dark-purple {
+  color: #fff;
   background-color: #603cba;
 }
 .bg-darken {
+  color: #fff;
   background-color: #1d1d1d;
 }
 .bg-teal {
+  color: #fff;
   background-color: #00aba9;
 }
 .bg-light-blue {
   background-color: #eff4ff;
 }
 .bg-blue {
+  color: #fff;
   background-color: #2d89ef;
 }
 .bg-dark-blue {
+  color: #fff;
   background-color: #2b5797;
 }
 .bg-yellow {
+  color: #fff;
   background-color: #ffc40d;
 }
 .bg-orange {
+  color: #fff;
   background-color: #e3a21a;
 }
 .bg-dark-orange {
+  color: #fff;
   background-color: #da532c;
 }
 .bg-red {
+  color: #fff;
   background-color: #ee1111;
 }
 .bg-dark-red {
+  color: #fff;
   background-color: #b91d47;
 }
 .bg-white {
   background-color: #ffffff;
 }
-

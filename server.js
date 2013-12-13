@@ -1,13 +1,15 @@
 var express = require('express')
-    ,routes = require('./routes')
+    , routes = require('./routes')
     , http = require('http')
     , https = require('https')
     , path = require('path')
     , cookie  = require('cookie')
     , connect = require('connect')
     , fs = require('fs')
-    , bcrypt = require('bcrypt');
+    , bcrypt = require('bcrypt')
+    , ejdb = require('ejdb');
 
+var db = ejdb.open('home', ejdb.DEFAULT_OPEN_MODE);
 
 var secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';
 var options = {
@@ -107,6 +109,26 @@ io.set('authorization', function (handshakeData, accept) {
     accept(null, true);
 });
 
+var findUser = function (email, pass, cb) {
+    bcrypt.hash(pass, email + secret, function(err, hash) {
+        db.find('users',
+            {email: email, pass: hash},
+            function (err, cursor, count) {
+                if(err) {
+                    console.error(err);
+                    cb(err, null);
+                    return;
+                }
+                if(count > 0) {
+                    cb(null, null);
+                } else {
+                    cb(null, cursor.object());
+                }
+            }
+        );
+    });
+};
+
 
 var clients = [];
 var devices = [];
@@ -135,6 +157,55 @@ io.sockets.on('connection', function (socket) {
         if(clients.length <= 0) {
             io.sockets.emit('transmit', false);
         }
+    });
+
+    socket.on('register', function (email, pass) {
+        clients[socket.id] = clients[socket.id] || {};
+        clients[socket.id].email = email;
+
+        findUser(email, pass, function (err, user) {
+            if(!user || err) {
+                //register failed account exists
+                socket.emit('registerFailed');
+            } else {
+                bcrypt.hash(pass, email + secret, function(err, hash) {
+                    db.save('users', {email: email, pass: hash}, function (err, oId) {
+                        if(err) {
+                            //register failed
+                            socket.emit('registerFailed');
+                        } else {
+                            //register failed
+                            clients[socket.id].email = email;
+                            socket.emit('registered', oId);
+                        }
+                    });
+                });
+            }
+        });
+    });
+
+    socket.on('login', function (args) {
+       console.log('login', args);
+            findUser(args.email, args.password,
+                function (err, user) {
+                    if(err || !user) {
+                        //failed login
+                        console.log('failed login ', (err || ''));
+                        //socket.init('loginFailed');
+                        socket.emit('init', {
+                            isSignedIn: false,
+                            devices: []
+                        });
+                    }
+
+                    sessionobj[sessId] = args.remember;
+
+                    //successful login
+                    socket.emit('init', {
+                        isSignedIn: true,
+                        devices: devices
+                    });
+                });
     });
 
     socket.on('yup', function (data) {

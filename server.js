@@ -165,16 +165,18 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('register', function (email, pass) {
-        clients[socket.id] = clients[socket.id] || {};
-        clients[socket.id].email = email;
-
-        findUser(email, pass, function (err, user) {
-            if(!user || err) {
+    socket.on('register', function (args) {
+        console.log('reg');
+        findUser(args.email, args.password, function (err, user) {
+            if(user || err) {
                 //register failed account exists
-                socket.emit('registerFailed');
+                //socket.emit('registerFailed');
+                socket.emit('init', {
+                    isSignedIn: false,
+                    devices: []
+                });
             } else {
-                bcrypt.hash(pass, email + secret, function(err, hash) {
+                bcrypt.hash(args.password, args.email + secret, function(err, hash) {
                     db.save('users', {email: email, pass: hash}, function (err, oId) {
                         if(err) {
                             //register failed
@@ -184,8 +186,9 @@ io.sockets.on('connection', function (socket) {
                                 devices: []
                             });
                         } else {
-                            //register failed
-                            clients[socket.id].email = email;
+                            clients[socket.id] = clients[socket.id] || {};
+                            clients[socket.id].email = args.email;
+
                             socket.emit('init', {
                                 isSignedIn: true,
                                 devices: devices

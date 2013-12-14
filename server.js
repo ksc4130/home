@@ -391,7 +391,7 @@ ioWorkers.on('connection', function (socket) {
 //        for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
 //            clients[ic].emit('remove', toRemove);
 //        }
-        io.sockets.emit('add', toRemove);
+        io.sockets.emit('remove', toRemove);
     });
 
     socket.on('initWorker', function (data) {

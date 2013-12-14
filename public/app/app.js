@@ -52,6 +52,7 @@ vm.on('login', function (e) {
     var d = e.context;
 
     socket.emit('login', d);
+    vm.set('login.password', '');
 });
 
 vm.on('register', function (e) {

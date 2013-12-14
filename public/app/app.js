@@ -55,10 +55,10 @@ vm.on('register', function (e) {
 });
 
 socket.on('init', function (data) {
-    data.isInit= true;
     console.log('init', data);
     data = data || {};
     vm.set('isSignedIn', data.isSignedIn);
+    vm.set('isInit', true);
     if(data.devices && data.devices.length > 0) {
         for(var i = 0, il = data.devices.length; i < il; i++) {
             devices.push(data.devices[i]);

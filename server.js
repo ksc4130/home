@@ -147,12 +147,12 @@ io.sockets.on('connection', function (socket) {
 
     if(yup === true)
         socket.emit('init', {
-            isSignedId: true,
+            isSignedIn: true,
             devices: devices
         });
     else
         socket.emit('init', {
-            isSignedId: false,
+            isSignedIn: false,
             devices: []
         });
 

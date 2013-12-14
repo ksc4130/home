@@ -100,7 +100,6 @@ socket.on('change', function (data) {
         if(devices[i].id === data.id) {
             console.log('change', data);
             vm.set('devices[' + i + '].value', data.value);
-            vm.update();
         }
     }
 });

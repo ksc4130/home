@@ -38,24 +38,26 @@
 
     <!-- {{>signIn}} -->
             {{#login}}
-    <div style="margin: 50px auto;">
-        <form role="form">
-            <div class="form-group">
-                <label for="exampleInputEmail1">Email</label>
-                <input type="email" value="{{email}}" class="form-control" id="email" placeholder="Enter email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" value="{{password}}" class="form-control" id="exampleInputPassword1" placeholder="Password">
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input checked="{{remember}}" type="checkbox"> Remember
-                </label>
-            </div>
-            <button type="button" on-tap="login" class="btn btn-default">Login</button>
-            <button type="button" on-tap="register" class="btn btn-default">Register</button>
-        </form>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <form role="form">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" value="{{email}}" class="form-control" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" value="{{password}}" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input checked="{{remember}}" type="checkbox"> Remember
+                    </label>
+                </div>
+                <button type="button" on-tap="login" class="btn btn-default">Login</button>
+                <button type="button" on-tap="register" class="btn btn-default">Register</button>
+            </form>
+        </div>
     </div>
             {{/login}}
    <!-- {{/signIn}} -->

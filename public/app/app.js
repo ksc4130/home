@@ -27,7 +27,7 @@ vm = new Ractive({
 vm.on('editThermo', function (e) {
     var d = e.context;
 
-
+    $('#thermoEdit').modal('show');
 });
 
 vm.on('toggle', function (e) {

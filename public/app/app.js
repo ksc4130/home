@@ -95,9 +95,10 @@ socket.on('remove', function (data) {
 });
 
 socket.on('change', function (data) {
-    console.log('change', data);
+
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
+            console.log('change', data);
             vm.set('devices[' + i + '].value', data.value);
         }
     }
@@ -106,6 +107,7 @@ socket.on('change', function (data) {
 socket.on('thermo', function (data) {
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
+            console.log('thermo', data);
             vm.set('devices[' + i + '].value', data.value);
             vm.set('devices[' + i + '].isCool', data.isCool);
             vm.set('devices[' + i + '].isHeat', data.isHeat);

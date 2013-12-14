@@ -78,7 +78,6 @@ socket.on('add', function (data) {
         for(var i = 0, il = data.length; i < il; i++) {
             devices.push(data[i]);
         }
-        vm.update();
     }
 });
 

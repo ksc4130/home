@@ -168,6 +168,12 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
+    socket.on('addWorker', function (data) {
+        if(!yup) {
+
+        }
+    });
+
     socket.on('register', function (args) {
         console.log('reg');
         findUser(args.email, args.password, function (err, user) {

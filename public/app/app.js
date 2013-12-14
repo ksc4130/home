@@ -72,6 +72,26 @@ socket.on('init', function (data) {
     }
 });
 
+socket.on('add', function (data) {
+    if(data && data.length > 0) {
+        for(var i = 0, il = data.length; i < il; i++) {
+            devices.push(data[i]);
+        }
+    }
+});
+
+socket.on('remove', function (data) {
+    if(data && data.length > 0) {
+        for(var i = 0, il = data.length; i < il; i++) {
+            for(var id = 0, ild = devices.length; id < ild; id++) {
+                if(devices[id].id === data[i].id) {
+                    devices.splice(id, 1);
+                }
+            }
+        }
+    }
+});
+
 socket.on('change', function (data) {
     console.log('change', data);
     for(var i = 0, il = devices.length; i < il; i++) {

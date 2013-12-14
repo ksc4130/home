@@ -78,6 +78,7 @@ socket.on('add', function (data) {
         for(var i = 0, il = data.length; i < il; i++) {
             devices.push(data[i]);
         }
+        vm.update();
     }
 });
 
@@ -95,7 +96,6 @@ socket.on('remove', function (data) {
 });
 
 socket.on('change', function (data) {
-
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
             console.log('change', data);

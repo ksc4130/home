@@ -159,7 +159,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function() {
         if(!sessionobj[sessId])
             sessionobj[sessId] = undefined;
-        
+
         if(clients.indexOf(socket) > -1) {
             clients.splice(clients.indexOf(socket), 1);
         }
@@ -178,6 +178,7 @@ io.sockets.on('connection', function (socket) {
                     isSignedIn: false,
                     devices: []
                 });
+                sessionobj[sessId] = undefined;
             } else {
                 bcrypt.hash(args.password, args.email + secret, function(err, hash) {
                     db.save('users', {email: args.email, pass: hash}, function (err, oId) {
@@ -189,6 +190,7 @@ io.sockets.on('connection', function (socket) {
                                 devices: []
                             });
                         } else {
+                            sessionobj[sessId] = args.remember || false;
                             clients[socket.id] = clients[socket.id] || {};
                             clients[socket.id].email = args.email;
 
@@ -215,12 +217,13 @@ io.sockets.on('connection', function (socket) {
                             isSignedIn: false,
                             devices: []
                         });
+                        sessionobj[sessId] = undefined;
                         return;
                     }
 
                     clients[socket.id] = clients[socket.id] || {};
                     clients[socket.id].email = args.email;
-                    sessionobj[sessId] = args.remember;
+                    sessionobj[sessId] = args.remember || false;
 
                     //successful login
                     socket.emit('init', {

@@ -76,25 +76,17 @@ socket.on('change', function (data) {
     console.log('change', data);
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
-            console.log('change a', 'devices[' + i + '].value', data.value);
             vm.set('devices[' + i + '].value', data.value);
-            //(function (device) {
-            //device.value = data.value;
-            //}(devices[i]));
         }
     }
 });
 
 socket.on('thermo', function (data) {
-    console.log('thermo', data);
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
             vm.set('devices[' + i + '].value', data.value);
             vm.set('devices[' + i + '].isCool', data.isCool);
             vm.set('devices[' + i + '].isHeat', data.isHeat);
-            //(function (device) {
-            //device.value = data.value;
-            //}(devices[i]));
         }
     }
 });

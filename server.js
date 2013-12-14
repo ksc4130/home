@@ -234,23 +234,23 @@ io.sockets.on('connection', function (socket) {
                 });
     });
 
-    socket.on('yup', function (data) {
-        data = data || {};
-        yup = (data.pin === pin);
-        console.log('yup', JSON.stringify(data));
-
-        if(yup === true) {
-            sessionobj[sessId] = data.remember || false;
-            socket.emit('init', devices);
-            clients.push(socket);
-        } else {
-            if(clients.indexOf(socket) > -1) {
-                clients.remove(socket);
-            }
-            sessionobj[sessId] = false;
-            socket.emit('yup', false);
-        }
-    });
+//    socket.on('yup', function (data) {
+//        data = data || {};
+//        yup = (data.pin === pin);
+//        console.log('yup', JSON.stringify(data));
+//
+//        if(yup === true) {
+//            sessionobj[sessId] = data.remember || false;
+//            socket.emit('init', devices);
+//            clients.push(socket);
+//        } else {
+//            if(clients.indexOf(socket) > -1) {
+//                clients.remove(socket);
+//            }
+//            sessionobj[sessId] = false;
+//            socket.emit('yup', false);
+//        }
+//    });
 
     socket.on('setTrigger', function (data) {
         var device;

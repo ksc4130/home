@@ -35,6 +35,7 @@
             {{>signIn}}
         {{/isSignedIn}}
     {{/isInit}}
+            {{>thermo}}
 
     <!-- {{>signIn}} -->
             {{#login}}
@@ -91,6 +92,7 @@
     </div>
     <!-- {{/thermo}} -->
 
+            <!-- {{>thermoEdit}} -->
     <div id="thermoEdit" class="modal fade">
         <!-- ko with: curThermo -->
         <div class="modal-dialog">
@@ -114,6 +116,7 @@
         </div><!-- /.modal-dialog -->
         <!-- /ko -->
     </div><!-- /.modal -->
+    <!-- {{/thermoEdit}}
 </script>
 
 <!--style="display: none;"-->

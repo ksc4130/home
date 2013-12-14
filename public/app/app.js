@@ -38,9 +38,9 @@ vm = (new function () {
         });
     };
 
-    self.login = function () {
+    self.login = function (d) {
         socket.emit('login', ko.toJS(d));
-        self.login.password('');
+        self.loginModel.password('');
     };
 
     self.register = function (d) {

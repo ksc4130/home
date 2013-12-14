@@ -97,8 +97,10 @@ socket.on('remove', function (data) {
 });
 
 socket.on('change', function (data) {
+    console.log('change');
     ko.utils.arrayForEach(vm.devices(), function (item) {
         if(data.id === item.id) {
+            console.log('change', data.id, item.id, item.value(), data.value);
             item.value(data.value);
         }
     });

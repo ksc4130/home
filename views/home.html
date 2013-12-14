@@ -23,8 +23,8 @@
         <!-- ko if: isSignedIn -->
             <div class="row">
                 <div data-bind="foreach: devices" class="col-lg-12">
-                    <!-- ko if: (actionType() === 'onoff') -->
-                        <!-- ko if: (type() === 'light') -->
+                    <!-- ko if: (actionType === 'onoff') -->
+                        <!-- ko if: (type === 'light') -->
                         <div data-bind="click: $root.toggle" style="color: #fff;" class="tile-btn bg-blue">
                             <div class="tile-content">
                                 <div class="row">

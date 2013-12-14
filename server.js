@@ -141,7 +141,7 @@ io.sockets.on('connection', function (socket) {
 
     var sessId = socket.handshake.sessionID;
     console.log('*********connection', mac, sessId);
-    var yup = sessionobj[sessId] !== undefined;
+    var yup = sessionobj[sessId];
 
     console.log('session id', sessId, yup);
 
@@ -190,6 +190,7 @@ io.sockets.on('connection', function (socket) {
                                 devices: []
                             });
                         } else {
+                            yup = true;
                             sessionobj[sessId] = args.remember || false;
                             clients[socket.id] = clients[socket.id] || {};
                             clients[socket.id].email = args.email;
@@ -220,7 +221,7 @@ io.sockets.on('connection', function (socket) {
                         sessionobj[sessId] = undefined;
                         return;
                     }
-
+                    yup = true;
                     clients[socket.id] = clients[socket.id] || {};
                     clients[socket.id].email = args.email;
                     sessionobj[sessId] = args.remember || false;

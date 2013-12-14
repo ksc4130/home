@@ -73,6 +73,7 @@ socket.on('init', function (data) {
 });
 
 socket.on('add', function (data) {
+    console.log('add', data);
     if(data && data.length > 0) {
         for(var i = 0, il = data.length; i < il; i++) {
             devices.push(data[i]);
@@ -81,6 +82,7 @@ socket.on('add', function (data) {
 });
 
 socket.on('remove', function (data) {
+    console.log('remove', data);
     if(data && data.length > 0) {
         for(var i = 0, il = data.length; i < il; i++) {
             for(var id = 0, ild = devices.length; id < ild; id++) {

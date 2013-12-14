@@ -388,9 +388,10 @@ ioWorkers.on('connection', function (socket) {
         devices = a;
         workers[socket.id] = null;
         //console.log('remove clients', clients);
-        for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
-            clients[ic].emit('remove', toRemove);
-        }
+//        for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
+//            clients[ic].emit('remove', toRemove);
+//        }
+        io.sockets.emit('add', data.devices);
     });
 
     socket.on('initWorker', function (data) {
@@ -420,9 +421,10 @@ ioWorkers.on('connection', function (socket) {
                 }(socket.id));
             }
             socket.emit('devices', workers[socket.id].devices);
-            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
-                clients[ic].emit('add', data.devices);
-            }
+            io.sockets.emit('add', data.devices);
+//            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
+//                clients[ic].emit('add', data.devices);
+//            }
             //io.sockets.emit('refresh');
         }
     });

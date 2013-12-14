@@ -57,14 +57,20 @@ vm.on('register', function (e) {
 socket.on('init', function (data) {
     data.isInit= true;
     console.log('init', data);
-    vm.set(data);
+    data = data || {};
+    vm.set('isSignedIn', data.isSignedIn);
+    if(data.devices && data.devices.length > 0) {
+        for(var i = 0, il = data.devices.length; i < il; i++) {
+            devices.push(data.devices[i]);
+        }
+    }
 });
 
 socket.on('change', function (data) {
     console.log('change', data);
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
-            console.log('changea', 'devices[' + i + '].value', data.value);
+            console.log('change a', 'devices[' + i + '].value', data.value);
             vm.set('devices[' + i + '].value', data.value);
             //(function (device) {
             //device.value = data.value;

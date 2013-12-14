@@ -141,7 +141,7 @@ io.sockets.on('connection', function (socket) {
 
     var sessId = socket.handshake.sessionID;
     console.log('*********connection', mac, sessId);
-    var yup = sessionobj[sessId];
+    var yup = sessionobj[sessId] !== undefined;
 
     console.log('session id', sessId, yup);
 
@@ -157,6 +157,9 @@ io.sockets.on('connection', function (socket) {
         });
 
     socket.on('disconnect', function() {
+        if(!sessionobj[sessId])
+            sessionobj[sessId] = undefined;
+        
         if(clients.indexOf(socket) > -1) {
             clients.splice(clients.indexOf(socket), 1);
         }

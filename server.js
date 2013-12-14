@@ -268,7 +268,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
-        console.log('change');
+        console.log('change', sessionobj[sessId], yup);
         if(yup !== true) {
             if(clients.indexOf(socket) > -1) {
                 clients.remove(socket);

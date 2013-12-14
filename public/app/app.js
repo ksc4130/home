@@ -113,9 +113,6 @@ socket.on('thermo', function (data) {
 });
 
 $(function () {
-    $yup.modal({
-        show: false
-    });
     ko.applyBindings(vm);
 });
 

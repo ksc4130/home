@@ -61,9 +61,10 @@ socket.on('init', function (data) {
 });
 
 socket.on('change', function (data) {
-    //console.log('change', data);
+    console.log('change', data);
     for(var i = 0, il = devices.length; i < il; i++) {
         if(devices[i].id === data.id) {
+            console.log('changea', 'devices[' + i + '].value', data.value);
             vm.set('devices[' + i + '].value', data.value);
             //(function (device) {
             //device.value = data.value;

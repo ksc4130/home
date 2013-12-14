@@ -32,7 +32,8 @@ vm.on('editThermo', function (e) {
 
 vm.on('setTrigger', function (e) {
     var d = e.context;
-    socket.emit('curThermo', d);
+    socket.emit('setTrigger', d);
+    $('#thermoEdit').modal('hide');
 });
 
 vm.on('toggle', function (e) {

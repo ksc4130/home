@@ -84,11 +84,14 @@ socket.on('remove', function (data) {
     console.log('remove', data);
     if(data && data.length > 0) {
         for(var i = 0, il = data.length; i < il; i++) {
-            for(var id = 0, ild = devices.length; id < ild; id++) {
-                if(devices[id] && devices[id].id === data[i]) {
-                    devices.splice(id, 1);
-                }
-            }
+            vm.devices.remove(function (item) {
+                return item.id === data[i];
+            });
+//            for(var id = 0, ild = devices.length; id < ild; id++) {
+//                if(devices[id] && devices[id].id === data[i]) {
+//                    devices.splice(id, 1);
+//                }
+//            }
         }
     }
 });

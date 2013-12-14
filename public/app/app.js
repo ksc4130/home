@@ -114,6 +114,7 @@ socket.on('thermo', function (data) {
 
 $(function () {
     ko.applyBindings(vm);
+    $('#content').show();
 });
 
 //var device = function (args) {

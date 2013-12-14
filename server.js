@@ -254,7 +254,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('setTrigger', function (data) {
         var device;
-
+        console.log('set trigger', data);
         for(var i = 0, il = devices.length; i < il; i++) {
             if(devices[i].id.toString() === data.id.toString()) {
                 device = devices[i];

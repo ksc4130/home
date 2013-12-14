@@ -50,13 +50,13 @@ vm = (new function () {
 
 function addDevice(dev) {
     dev.value = ko.observable(dev.value);
-    if(devices[i].actionType === 'thermo') {
+    if(dev.actionType === 'thermo') {
         dev.trigger = ko.observable(dev.trigger);
         dev.isHeat = ko.observable(dev.isHeat);
         dev.isCool = ko.observable(dev.isCool);
     }
 
-    devices.push(dev);
+    vm.devices.push(dev);
 }
 
 socket.on('init', function (data) {

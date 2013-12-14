@@ -52,9 +52,11 @@
             </div>
         <!-- /ko -->
 
-            <div data-bind="ifnot: isSignedIn" class="row">
+        <!-- ko ifnot: isSignedIn  -->
+            <!-- ko with: loginModel -->
+            <div class="row">
                 <div class="col-lg-4 col-lg-offset-4">
-                    <form data-bind="with: login" role="form">
+                    <form role="form">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" data-bind="value: email" class="form-control" id="email" placeholder="Enter email">
@@ -73,6 +75,8 @@
                     </form>
                 </div>
             </div>
+            <!-- /ko -->
+        <!-- /ko -->
     <!-- /ko -->
 
     <div id="thermoEdit" class="modal fade">

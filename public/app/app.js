@@ -10,7 +10,7 @@ vm = (new function () {
     self.isInit = ko.observable(false);
     self.isSignedIn = ko.observable(false);
     self.devices = ko.observableArray([]);
-    self.login = {
+    self.loginModel = {
         email: ko.observable(),
         password: ko.observable(),
         remember: ko.observable()

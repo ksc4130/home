@@ -355,10 +355,11 @@ ioWorkers.on('connection', function (socket) {
             (function (dev) {
                 if(dev.id === data.id) {
                     dev.value = data.value;
-                    io.sockets.emit('change', dev);
+
                 }
             }(devices[i]));
         }
+        io.sockets.emit('change', data);
     });
 
     socket.on('disconnect', function() {

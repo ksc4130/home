@@ -26,8 +26,13 @@ vm = new Ractive({
 
 vm.on('editThermo', function (e) {
     var d = e.context;
-
+    vm.set('curThermo', d);
     $('#thermoEdit').modal('show');
+});
+
+vm.on('setTrigger', function (e) {
+    var d = e.context;
+    socket.emit('curThermo', d);
 });
 
 vm.on('toggle', function (e) {

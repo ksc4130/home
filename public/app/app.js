@@ -4,71 +4,69 @@ var socket,
 
 socket = io.connect(window.location.origin);
 
-vm = new Ractive({
-    el: '#content',
-    template: '#tmpl',
-    //noIntro: true, // disable transitions during initial render
+vm = (new function () {
+    var self = this;
 
-    data: {
-        isInit: false,
-        isSignedIn: false,
-        devices: devices,
-        pin: '',
-        remember: false,
-        curThermo: {},
-        login: {
-           email: '',
-           password: '',
-           remember: false
-        }
+    self.isInit = ko.observable(false);
+    self.isSignedIn = ko.observable(false);
+    self.devices = ko.observableArray([]);
+    self.login = {
+        email: ko.observable(),
+        password: ko.observable(),
+        remember: ko.observable()
+    };
+    self.curThermo = ko.observable();
+
+    self.editThermo = function (d) {
+        self.curThermo(d);
+        $('#thermoEdit').modal('show');
+    };
+
+    self.setTrigger = function (d) {
+        socket.emit('setTrigger', ko.toJS(self.curThermo));
+        $('#thermoEdit').modal('hide');
+    };
+
+    self.toggle = function (d) {
+        console.log({
+            id: d.id,
+            value: (1 - d.value())
+        });
+        socket.emit('change', {
+            id: d.id,
+            value: (1 - d.value())
+        });
+    };
+
+    self.login = function () {
+        socket.emit('login', ko.toJS(d));
+        self.login.password('');
+    };
+
+    self.register = function (d) {
+        socket.emit('register', ko.toJS(d));
+    };
+});
+
+function addDevice(dev) {
+    dev.value = ko.observable(dev.value);
+    if(devices[i].actionType === 'thermo') {
+        dev.trigger = ko.observable(dev.trigger);
+        dev.isHeat = ko.observable(dev.isHeat);
+        dev.isCool = ko.observable(dev.isCool);
     }
-});
 
-vm.on('editThermo', function (e) {
-    var d = e.context;
-    vm.set('curThermo', d);
-    $('#thermoEdit').modal('show');
-});
-
-vm.on('setTrigger', function (e) {
-    var d = e.context;
-    socket.emit('setTrigger', d.curThermo);
-    $('#thermoEdit').modal('hide');
-});
-
-vm.on('toggle', function (e) {
-    var d = e.context;
-    console.log({
-        id: d.id,
-        value: (1 - d.value)
-    });
-    socket.emit('change', {
-        id: d.id,
-        value: (1 - d.value)
-    });
-});
-
-vm.on('login', function (e) {
-    var d = e.context;
-
-    socket.emit('login', d);
-    vm.set('login.password', '');
-});
-
-vm.on('register', function (e) {
-    var d = e.context;
-
-    socket.emit('register', d);
-});
+    devices.push(dev);
+}
 
 socket.on('init', function (data) {
     console.log('init', data);
     data = data || {};
-    vm.set('isSignedIn', data.isSignedIn);
-    vm.set('isInit', true);
+    vm.isSignedIn(data.isSignedIn);
+    vm.isInit(true);
     if(data.devices && data.devices.length > 0) {
         for(var i = 0, il = data.devices.length; i < il; i++) {
-            devices.push(data.devices[i]);
+            addDevice(data.devices[i]);
         }
     }
 });
@@ -77,8 +75,7 @@ socket.on('add', function (data) {
     console.log('add', data);
     if(data && data.length > 0) {
         for(var i = 0, il = data.length; i < il; i++) {
-            devices.push(data[i]);
-            vm.update('devices');
+            addDevice(data[i]);
         }
     }
 });
@@ -97,23 +94,29 @@ socket.on('remove', function (data) {
 });
 
 socket.on('change', function (data) {
-    for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].id === data.id) {
-            console.log('change', data);
-            vm.set('devices[' + i + '].value', data.value);
+    ko.utils.arrayForEach(vm.devices(), function (item) {
+        if(data.id === item.id) {
+            item.value(data.value);
         }
-    }
+    });
 });
 
 socket.on('thermo', function (data) {
-    for(var i = 0, il = devices.length; i < il; i++) {
-        if(devices[i].id === data.id) {
-            console.log('thermo', data);
-            vm.set('devices[' + i + '].value', data.value);
-            vm.set('devices[' + i + '].isCool', data.isCool);
-            vm.set('devices[' + i + '].isHeat', data.isHeat);
+    ko.utils.arrayForEach(vm.devices(), function (item) {
+        if(data.id === item.id) {
+            item.value(data.value);
+            item.isCool(data.isCool);
+            item.isHeat(data.isHeat);
+            item.trigger(data.trigger);
         }
-    }
+    });
+});
+
+$(function () {
+    $yup.modal({
+        show: false
+    });
+    ko.applyBindings(vm);
 });
 
 //var device = function (args) {
@@ -239,9 +242,3 @@ socket.on('thermo', function (data) {
 //    }
 //});
 //
-//$(function () {
-//    $yup.modal({
-//        show: false
-//    });
-//    ko.applyBindings(vm);
-//});

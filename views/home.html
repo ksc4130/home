@@ -15,84 +15,68 @@
     </style>
 </head>
 <body>
-<script id="tmpl" type="text/html">
-    {{#isInit}}
-        {{#isSignedIn}}
+
+
+<!--style="display: none;"-->
+<article id="content"  class="container">
+    <!-- ko if: isInit -->
+        <!-- ko if: isSignedIn -->
             <div class="row">
-                <div class="col-lg-12">
-                    {{#devices: i}}
-                    {{#(actionType === 'onoff')}}
-                    {{>onoff}}
-                    {{/light}}
-                    {{#(actionType === 'thermo')}}
-                    {{>thermo}}
-                    {{/thermo}}
-                    {{/devices}}
+                <div data-bind="foreach: devices" class="col-lg-12">
+                    <!-- ko if: (actionType() === 'onoff') -->
+                        <!-- ko if: (type() === 'light') -->
+                        <div data-bind="click: $root.toggle" style="color: #fff;" class="tile-btn bg-blue">
+                            <div class="tile-content">
+                                <div class="row">
+                                    <div style="margin-right: auto; margin-left: auto; width: 60%;">
+                                        <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/{{value === 1 ? 'light_bulb_on.png' : 'light_bulb_off.png'}}">
+                                    </div>
+                                </div>
+                                <div class="tile-title">{{name}}</div>
+                                <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+                            </div>
+                        </div>
+                        <!-- /ko --> <!-- light -->
+                    <!-- /ko --> <!-- onoff -->
+                    <!-- ko if: (actionType === 'thermo') -->
+                        <div class="tile-btn {{isCool ? 'bg-blue' : isHeat ? 'bg-red' : 'bg-purple'}}" on-tap="editThermo">
+                            <div class="tile-content">
+                                <i style="z-index: 2;" class="fa fa-cog"></i>
+                                <h2 class="text-center" style="padding-top: 15%;">{{value}}&deg;</h2>
+                                <div class="tile-title">{{name}}</div>
+                                <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+                            </div>
+                        </div>
+                    <!-- /ko --> <!-- thermo -->
                 </div>
             </div>
-        {{/isSignedIn}}
-        {{^isSignedIn}}
-            {{>signIn}}
-        {{/isSignedIn}}
-            {{>thermoEdit}}
-    {{/isInit}}
+        <!-- /ko -->
 
-    <!-- {{>signIn}} -->
-            {{#login}}
-    <div class="row">
-        <div class="col-lg-4 col-lg-offset-4">
-            <form role="form">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email</label>
-                    <input type="email" value="{{email}}" class="form-control" id="email" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" value="{{password}}" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                </div>
-                <div class="checkbox">
-                    <label>
-                        <input checked="{{remember}}" type="checkbox"> Remember
-                    </label>
-                </div>
-                <button type="button" on-tap="login" class="btn btn-primary">Login</button>
-                <button type="button" on-tap="register" class="btn btn-default">Register</button>
-            </form>
-        </div>
-    </div>
-            {{/login}}
-   <!-- {{/signIn}} -->
-
-
-
-    <!-- {{>onoff}} -->
-    {{#(type === 'light')}}
-    <div on-tap="toggle" style="color: #fff;" class="tile-btn bg-blue">
-        <div class="tile-content">
-            <div class="row">
-                <div style="margin-right: auto; margin-left: auto; width: 60%;">
-                    <img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/{{value === 1 ? 'light_bulb_on.png' : 'light_bulb_off.png'}}">
-                </div>
+        <!-- ko ifnot: isSignedIn  -->
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-4">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email</label>
+                        <input type="email" value="{{email}}" class="form-control" id="email" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" value="{{password}}" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input checked="{{remember}}" type="checkbox"> Remember
+                        </label>
+                    </div>
+                    <button type="button" on-tap="login" class="btn btn-primary">Login</button>
+                    <button type="button" on-tap="register" class="btn btn-default">Register</button>
+                </form>
             </div>
-            <div class="tile-title">{{name}}</div>
-            <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
         </div>
-    </div>
-    {{/light}}
-    <!-- {{/onoff}} -->
+        <!-- /ko -->
+    <!-- /ko -->
 
-    <!-- {{>thermo}} -->
-    <div class="tile-btn {{isCool ? 'bg-blue' : isHeat ? 'bg-red' : 'bg-purple'}}" on-tap="editThermo">
-        <div class="tile-content">
-        <i style="z-index: 2;" class="fa fa-cog"></i>
-        <h2 class="text-center" style="padding-top: 15%;">{{value}}&deg;</h2>
-        <div class="tile-title">{{name}}</div>
-        <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
-        </div>
-    </div>
-    <!-- {{/thermo}} -->
-
-            <!-- {{>thermoEdit}} -->
     <div id="thermoEdit" class="modal fade">
         <!-- ko with: curThermo -->
         <div class="modal-dialog">
@@ -116,11 +100,9 @@
         </div><!-- /.modal-dialog -->
         <!-- /ko -->
     </div><!-- /.modal -->
-    <!-- {{/thermoEdit}} -->
-</script>
 
-<!--style="display: none;"-->
-<article id="content"  class="container">
+
+
     <!--<div class="row">-->
         <!--<div data-bind="foreach: devices" class="col-md-12">-->
             <!--&lt;!&ndash; ko if: type === 'light' &ndash;&gt;-->
@@ -249,7 +231,7 @@
     }
 </script>
 <script src="/scripts/bootstrap.min.js"></script>
-<script src="/scripts/ractive-0.3.7.min.js"></script>
+<script src="/scripts/knockout-3.0.0.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/app/app.js"></script>
 </html>

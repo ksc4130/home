@@ -342,6 +342,7 @@ ioWorkers.on('connection', function (socket) {
                     dev.isHeat = data.isHeat;
                     dev.isCool = data.isCool;
                     dev.value = data.value;
+                    dev.trigger = data.trigger;
                 }
             }(devices[i]));
         }

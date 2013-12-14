@@ -53,29 +53,29 @@
         <!-- /ko -->
 
         <!-- ko ifnot: isSignedIn  -->
-        <!-- ko with: login -->
-        <div class="row">
-            <div class="col-lg-4 col-lg-offset-4">
-                <form role="form">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" data-bind="value: email" class="form-control" id="email" placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" data-bind="value: password" class="form-control" id="password" placeholder="Password">
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input data-bind="checked: remember" type="checkbox"> Remember
-                        </label>
-                    </div>
-                    <button type="button" data-bind="click: $root.login" class="btn btn-primary">Login</button>
-                    <button type="button" data-bind="click: $root.register" class="btn btn-default">Register</button>
-                </form>
+            <!-- ko with: login -->
+            <div class="row">
+                <div class="col-lg-4 col-lg-offset-4">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" data-bind="value: email" class="form-control" id="email" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" data-bind="value: password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input data-bind="checked: remember" type="checkbox"> Remember
+                            </label>
+                        </div>
+                        <button type="button" data-bind="click: $root.login" class="btn btn-primary">Login</button>
+                        <button type="button" data-bind="click: $root.register" class="btn btn-default">Register</button>
+                    </form>
+                </div>
             </div>
-        </div>
-        <!-- /ko -->
+            <!-- /ko -->
         <!-- /ko -->
     <!-- /ko -->
 

@@ -86,7 +86,7 @@ socket.on('remove', function (data) {
     if(data && data.length > 0) {
         for(var i = 0, il = data.length; i < il; i++) {
             for(var id = 0, ild = devices.length; id < ild; id++) {
-                if(devices[id].id === data[i].id) {
+                if(devices[id].id === data[i]) {
                     devices.splice(id, 1);
                 }
             }

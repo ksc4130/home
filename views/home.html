@@ -192,7 +192,7 @@
 
     <!-- ko view: addworker-->
     <div class="container">
-        <form class="form-signin" data-bind="with: workerModel, event: {'submit': $root.login}" role="form">
+        <form class="form-signin" data-bind="with: workerModel, event: {'submit': $root.addWorker}" role="form">
             <h2 class="form-signin-heading text-center">Add Worker</h2>
             <input type="text" data-bind="live: name" class="form-control no-bottom" placeholder="Name" required="" autofocus="">
             <input type="text" data-bind="live: workerId" class="form-control" placeholder="Worker Id" required="">

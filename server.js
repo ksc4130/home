@@ -141,13 +141,14 @@ io.sockets.on('connection', function (socket) {
     var updateSession = function (sess, cb) {
         sess = sess || client.session;
         cb = cb || function () {};
-        db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
-            if(err || !found) {
-                db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
-            } else {
-                db.userSessions.update({sessId: client.session.sessId}, {$set: sess}, cb);
-            }
-        });
+        db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
+//        db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
+//            if(err || !found) {
+//                db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
+//            } else {
+//                db.userSessions.update({sessId: client.session.sessId}, {$set: sess}, cb);
+//            }
+//        });
 
     };
 

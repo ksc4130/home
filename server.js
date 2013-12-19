@@ -417,7 +417,7 @@ ioWorkers.on('connection', function (socket) {
         device.value = data.value;
         device.trigger = data.trigger;
 
-        var found = ko.util.arrayFilter(clients, function (client) {
+        var found = ko.utils.arrayFilter(clients, function (client) {
             return client.session.isAuth && client.session.workers
                 && ko.utils.arrayFirst(client.session.workers, function (item) {
                 return item.workerId === device.workerId;
@@ -447,7 +447,7 @@ ioWorkers.on('connection', function (socket) {
 
         device.value = data.value;
 
-        var found = ko.util.arrayFilter(clients, function (client) {
+        var found = ko.utils.arrayFilter(clients, function (client) {
             return client.session.isAuth && client.session.workers
                 && ko.utils.arrayFirst(client.session.workers, function (item) {
                 return item.workerId === device.workerId;

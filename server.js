@@ -386,7 +386,7 @@ ioWorkers.configure('production', function(){
 });
 
 ioWorkers.on('connection', function (socket) {
-
+    var worker;
     socket.emit('initWorker');
 
     socket.on('thermo', function (data) {
@@ -489,7 +489,7 @@ ioWorkers.on('connection', function (socket) {
     socket.on('initWorker', function (data) {
         if(data.secret === secret) {
             var i,
-                worker = {},
+                //worker = {},
                 workerDev;
 
             workers[socket.id] = worker;

@@ -403,30 +403,63 @@ ioWorkers.on('connection', function (socket) {
 
     socket.on('thermo', function (data) {
         //console.log('worker thermo*************************', JSON.stringify(data));
-        for(var i = 0, il = devices.length; i < il; i++) {
-            (function (dev) {
-                if(dev.id === data.id) {
-                    dev.isHeat = data.isHeat;
-                    dev.isCool = data.isCool;
-                    dev.value = data.value;
-                    dev.trigger = data.trigger;
-                }
-            }(devices[i]));
+        var device = ko.utils.arrayFirst(devices, function (item) {
+            return item.id = data.id;
+        });
+
+        if(!device) {
+            console.log("couldn't find device");
+            return;
         }
-        io.sockets.emit('thermo', data);
+
+        device.isHeat = data.isHeat;
+        device.isCool = data.isCool;
+        device.value = data.value;
+        device.trigger = data.trigger;
+
+        var found = ko.util.arrayFilter(clients, function (client) {
+            return client.session.isAuth && client.session.workers
+                && ko.utils.arrayFirst(client.session.workers, function (item) {
+                return item.workerId === device.workerId;
+            });
+        });
+
+        ko.utils.arrayForEach(found, function (item) {
+            item.socket.emit('thermo', {
+                id: device.id,
+                isHeat: device.isHeat,
+                isCool: device.isCool,
+                value: device.value,
+                trigger: device.trigger
+            });
+        });
     });
 
     socket.on('change', function (data) {
-        //console.log('worker change*************************', data.id, data.value);
-        for(var i = 0, il = devices.length; i < il; i++) {
-            (function (dev) {
-                if(dev.id === data.id) {
-                    dev.value = data.value;
+        var device = ko.utils.arrayFirst(devices, function (item) {
+            return item.id = data.id;
+        });
 
-                }
-            }(devices[i]));
+        if(!device) {
+            console.log("couldn't find device");
+            return;
         }
-        io.sockets.emit('change', data);
+
+        device.value = data.value;
+
+        var found = ko.util.arrayFilter(clients, function (client) {
+            return client.session.isAuth && client.session.workers
+                && ko.utils.arrayFirst(client.session.workers, function (item) {
+                return item.workerId === device.workerId;
+            });
+        });
+
+        ko.utils.arrayForEach(found, function (item) {
+            item.socket.emit('change', {
+                id: device.id,
+                value: device.value
+            });
+        });
     });
 
     socket.on('disconnect', function() {

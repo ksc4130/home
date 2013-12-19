@@ -98,7 +98,7 @@ io.set('authorization', function (handshakeData, accept) {
 
         handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-        handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['kyngster.sid'], secret);
+        handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['kyngster.sid'], globals.secret);
 
         //console.log('********************', handshakeData.headers.cookie);
         //console.log('********************', handshakeData.sessionID);
@@ -464,7 +464,7 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('initWorker', function (data) {
-        if(data.secret === secret) {
+        if(data.secret === globals.secret) {
             var i,
                 //worker = {},
                 workerDev;

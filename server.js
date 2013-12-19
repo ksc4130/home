@@ -312,12 +312,12 @@ io.sockets.on('connection', function (socket) {
         if(!client.isAuth) {
             return;
         }
-        console.log('addWorker', data);
+        console.log('************************addWorker', data);
         if(!ko.utils.arrayFirst(client.session.workers, function (item) {
             return item.workerId === data.workerId;
         })) {
             client.session.workers.push(data);
-            userRepo.updateUser({_id: client.session.userId, workers: client.session.workers});
+            userRepo.updateUser({email: client.session.email, workers: client.session.workers});
         }
     });
 

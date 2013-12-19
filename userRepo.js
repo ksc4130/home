@@ -10,11 +10,8 @@ module.exports = new function () {
         , db = require("mongojs").connect(globals.dbName, globals.collections);
 
     updateUser = function (user, cb) {
-        sess = sess || client.session;
         cb = cb || function () {};
-        var id = user._id;
-        delete user._id;
-        db.users.update({_id: db.ObjectId(id)} , user, { upsert: true }, cb);
+        db.users.update({email: user.email} , user, { upsert: true }, cb);
     };
 
     findUser = function (email, password, cb) {

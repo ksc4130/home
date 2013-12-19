@@ -386,7 +386,7 @@ ioWorkers.configure('production', function(){
 });
 
 ioWorkers.on('connection', function (socket) {
-    var worker;
+    var worker = {};
     socket.emit('initWorker');
 
     socket.on('thermo', function (data) {

@@ -122,6 +122,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     if(!client) {
+        console.log('!client');
         client = {
             socketId: socket.id,
             socket: socket,
@@ -133,6 +134,7 @@ io.sockets.on('connection', function (socket) {
             }
         };
     } else {
+        console.log('client', client);
         client.session.remove = false;
     }
 
@@ -161,11 +163,13 @@ io.sockets.on('connection', function (socket) {
 
     db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
         if(found) {
+            console.log('found', found);
             found.remove = client.session.remove;
             client.session = found;
         }
         var secondsDiff = moment().diff(client.session.lastAccess);
         if(secondsDiff > 360000 && !client.session.remember) {
+            console.log('expired');
             client.session.isAuth = false;
             client.session.userId = null;
             client.session.isAuth = false;

@@ -455,8 +455,8 @@ ioWorkers.on('connection', function (socket) {
     socket.on('disconnect', function() {
         console.log('worker disconnect!');
 
-        if(!workers[socket.id])
-            return;
+        //if(!workers[socket.id])
+            //return;
 
         //var id = workers[socket.id].id;
 //        workers[socket.id] = null;

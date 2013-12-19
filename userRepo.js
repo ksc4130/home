@@ -3,10 +3,19 @@ module.exports = new function () {
         ,findUser
         , createUser
         , checkEmail
+        , updateUser
         , globals = require('./globals')
         , bcrypt = require('bcrypt')
         , ko = require('knockout')
         , db = require("mongojs").connect(globals.dbName, globals.collections);
+
+    updateUser = function (user, cb) {
+        sess = sess || client.session;
+        cb = cb || function () {};
+        var id = user._id;
+        delete user._id;
+        db.users.update({_id: db.ObjectId(id)} , user, { upsert: true }, cb);
+    };
 
     findUser = function (email, password, cb) {
         bcrypt.genSalt(10, function(err, salt) {
@@ -64,5 +73,6 @@ module.exports = new function () {
     self.findUser = findUser;
     self.createUser = createUser;
     self.checkEmail = checkEmail;
+    self.updateUser = updateUser;
     return self;
 };

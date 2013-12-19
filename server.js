@@ -157,7 +157,8 @@ io.sockets.on('connection', function (socket) {
             session: {
                 sessId: socket.handshake.sessionID,
                 isAuth: false,
-                remove: false
+                remove: false,
+                workers: []
             }
         };
     } else {
@@ -216,7 +217,14 @@ io.sockets.on('connection', function (socket) {
             lname: loginModel.lname,
             dob: loginModel.dob,
             error: loginModel.error,
-            devices: client.session.isAuth ? devices : []
+            devices: client.session.isAuth && loginModel.workers.length > 0 ? ko.util.arrayFilter(devices, function (device) {
+                return ko.utils.arrayFirst(loginModel.workers, function (item) {
+                   return item.workerId === device.workerId;
+                });
+            }) : [],
+            workers: loginModel.workers.length > 0 ? ko.utils.arrayMap(loginModel.workers, function (item) {
+                return {_d: item._id, name: item.name};
+            }) : []
         };
     };
 
@@ -226,6 +234,7 @@ io.sockets.on('connection', function (socket) {
         sess.isAuth = false;
         sess.email = null;
         sess.remember = false;
+        client.session.workers = [];
     };
 
     var loginUser = function (err, loginModel, user, cb) {
@@ -238,6 +247,7 @@ io.sockets.on('connection', function (socket) {
             client.session.isAuth = true;
             client.session.email = loginModel.email;
             client.session.remember = loginModel.remember || false;
+            client.session.workers = user.workers || [];
         }
         loginModel.confirmPassword = null;
         loginModel.password = null;
@@ -251,7 +261,6 @@ io.sockets.on('connection', function (socket) {
         client.session.remove = true;
         client.session.lastAccess = new Date();
         updateSession(null, function (err, saved) {
-            console.log('desconect', client.session.lastAccess, saved);
             if(client.session.remove)
                 ko.utils.arrayRemoveItem(clients, client);
         });
@@ -300,8 +309,15 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('addWorker', function (data) {
-        if(client.isAuth) {
-
+        if(!client.isAuth) {
+            return;
+        }
+        console.log('addWorker', data);
+        if(!ko.utils.arrayFirst(client.session.workers, function (item) {
+            return item.workerId === data.workerId;
+        })) {
+            client.session.workers.push(data);
+            userRepo.updateUser({_id: client.session.userId, workers: client.session.workers});
         }
     });
 

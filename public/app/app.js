@@ -101,6 +101,20 @@ var Vm = function () {
         error: ko.observable()
     };
 
+    self.workerModel = {
+        name: ko.observable(),
+        workerId: ko.observable()
+    };
+
+    self.workers = ko.observableArray([]);
+
+    self.addWorker = function () {
+        socket.emit('addWorker', ko.toJS(self.workerModel), function (err, data) {
+            if(!err && data)
+                self.workers.push(data);
+        });
+    };
+
     self.loginModel.passwordsDontMatch = ko.computed(function () {
         return this.password() !== this.confirmPassword()
     }, self.loginModel).extend({throttle: 250});

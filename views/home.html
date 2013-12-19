@@ -188,7 +188,21 @@
             </div>
         <!-- /ko -->
     </div>
+    <!-- /ko --><!-- end home -->
+
+    <!-- ko view: addWorker-->
+    <div class="container">
+        <form class="form-signin" data-bind="with: workerModel, event: {'submit': $root.login}" role="form">
+            <h2 class="form-signin-heading text-center">kyngster.com</h2>
+            <input type="text" data-bind="live: name" class="form-control no-bottom" placeholder="Email address" required="" autofocus="">
+            <input type="text" data-bind="value: password" class="form-control" placeholder="Password" required="">
+            <span class="text-danger" data-bind="text: error"></span>
+
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+        </form>
+    </div>
     <!-- /ko -->
+
 
     <div id="thermoEdit" class="modal fade">
         <!-- ko with: curThermo -->

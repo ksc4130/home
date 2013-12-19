@@ -331,9 +331,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('setTrigger', function (data) {
         if(!client.session.isAuth)
             return;
-        var device;
-        console.log('set trigger', data);
-        device = ko.utils.arrayFirst(devices, function (item) {
+        var device = ko.utils.arrayFirst(devices, function (item) {
            return item.id.toString() === data.id.toString()
         });
 
@@ -346,11 +344,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('change', function (data) {
         if(!client.session.isAuth)
             return;
-        console.log('change', sessionobj[sessId], yup);
 
         var device;
-        //console.log(devices, data.id);
-        console.log('change a');
         device = ko.utils.arrayFirst(devices, function (item) {
             return item.id.toString() === data.id.toString()
         });

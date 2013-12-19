@@ -442,7 +442,7 @@ ioWorkers.on('connection', function (socket) {
             });
         });
 
-        console.log('******************** clients found', found, device.workerId, device.name, device.id, device.value);
+        //console.log('******************** clients found', found, device.workerId, device.name, device.id, device.value);
 
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('change', {
@@ -517,7 +517,7 @@ ioWorkers.on('connection', function (socket) {
                         worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                     }
                 };
-
+                console.log('***********************************************************', data.id);
                 devices.push(dev);
                 ko.utils.arrayForEach(found, function (item) {
                    item.socket.emit('add', {

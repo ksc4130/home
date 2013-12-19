@@ -322,6 +322,7 @@ io.sockets.on('connection', function (socket) {
             return item.workerId === data.workerId;
         })) {
             client.session.workers.push(data);
+            updateSession();
             userRepo.updateUser({email: client.session.email, workers: client.session.workers});
         }
     });

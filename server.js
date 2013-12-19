@@ -7,11 +7,15 @@ var express = require('express')
     , connect = require('connect')
     , fs = require('fs')
     , bcrypt = require('bcrypt')
-    , ejdb = require('ejdb');
+    , ko = require('knockout')
+    , db = require("mongojs").connect(globals.dbName, globals.collections)
+    , userRepo = require('./models/userRepo')
+    , SessionStore = require('connect-mongo')(express)
+    , sessionStore = new SessionStore({db: globals.dbName})
+    , moment = require('moment')
+    , globals = require('./globals');
 
-var db = ejdb.open('home', ejdb.DEFAULT_OPEN_MODE);
 
-var secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';
 var options = {
     key: fs.readFileSync('./privatekey.pem'),
     cert: fs.readFileSync('./certificate.pem'),
@@ -37,8 +41,13 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({secret: secret, key: 'express.sid'}));
 
+app.use(express.session({secret: globals.secret, key: 'kyngster.sid', store: sessionStore,
+    cookie : {
+        //secure : true//,
+        //maxAge: 5184000000 // 2 months
+    }
+}));
 app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -94,7 +103,7 @@ io.set('authorization', function (handshakeData, accept) {
 
         handshakeData.cookie = cookie.parse(handshakeData.headers.cookie);
 
-        handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['express.sid'], secret);
+        handshakeData.sessionID = connect.utils.parseSignedCookie(handshakeData.cookie['kyngster.sid'], secret);
 
         //console.log('********************', handshakeData.headers.cookie);
         //console.log('********************', handshakeData.sessionID);
@@ -135,37 +144,158 @@ var devices = [];
 
 io.sockets.on('connection', function (socket) {
     //tell workers to transmit
-    ioWorkers.sockets.emit('transmit', true);
 
-    var mac = socket.handshake.address;
+    var client = ko.utils.arrayFirst(clients, function (item) {
+        return item.sessId === socket.id;
+    });
 
-    var sessId = socket.handshake.sessionID;
-    console.log('*********connection', mac, sessId);
-    var yup = sessionobj[sessId];
+    if(!client) {
+        client = {
+            socketId: socket.id,
+            socket: socket,
+            session: {
+                sessId: socket.handshake.sessionID,
+                isAuth: false,
+                remove: false
+            }
+        };
+    } else {
+        client.session.remove = false;
+    }
 
-    console.log('session id', sessId, yup);
+    var updateSession = function (sess, cb) {
+        sess = sess || client.session;
+        cb = cb || function () {};
+        db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
+    };
 
-    if(yup === true)
-        socket.emit('init', {
-            isSignedIn: true,
-            devices: devices
-        });
-    else
-        socket.emit('init', {
-            isSignedIn: false,
-            devices: []
-        });
-
-    socket.on('disconnect', function() {
-        if(!sessionobj[sessId])
-            sessionobj[sessId] = undefined;
-
-        if(clients.indexOf(socket) > -1) {
-            clients.splice(clients.indexOf(socket), 1);
+    var checkTransmit = function () {
+        if(ko.utils.first(clients, function (item) {
+           return item.session.isAuth;
+        })) {
+            ioWorkers.sockets.emit('transmit', true);
+        } else {
+            ioWorkers.sockets.emit('transmit', false);
         }
-        if(clients.length <= 0) {
-            io.sockets.emit('transmit', false);
+    };
+
+    db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
+        if(found) {
+            found.remove = client.session.remove;
+            client.session = found;
         }
+        var secondsDiff = moment().diff(client.session.lastAccess);
+        if(secondsDiff > 360000 && !client.session.remember) {
+            client.session.isAuth = false;
+            client.session.userId = null;
+            client.session.isAuth = false;
+            client.session.email = null;
+            client.session.remember = false;
+        }
+        updateSession(null, function (err, saved) {
+            if(!found) {
+                updateSession(null, function (err, found) {
+                    client.session._id = found._id;
+                });
+            }
+            if(clients.indexOf(client) <= -1)
+                clients.push(client);
+
+            checkTransmit();
+            socket.emit('init', cleanLoginModel(client.session));
+        });
+    });
+
+    var cleanLoginModel = function (loginModel) {
+        return {
+            isAuth:  typeof loginModel.isAuth === 'function' ? loginModel.isAuth() : loginModel.isAuth,
+            remember: loginModel.remember,
+            email: loginModel.email,
+            fname: loginModel.fname,
+            lname: loginModel.lname,
+            dob: loginModel.dob,
+            error: loginModel.error,
+            devices: client.isAuth ? devices : []
+        };
+    };
+
+    var clearSession = function (sess) {
+        sess = sess || client.session;
+        sess.userId = null;
+        sess.isAuth = false;
+        sess.email = null;
+        sess.remember = false;
+    };
+
+    var loginUser = function (err, loginModel, user, cb) {
+        if(err || !user) {
+            clearSession();
+            loginModel.error = 'Unable to find email and password combo.';
+        } else {
+            loginModel.error = null;
+            client.session.userId = user._id;
+            client.session.isAuth = true;
+            client.session.email = loginModel.email;
+            client.session.remember = loginModel.remember || false;
+        }
+        loginModel.confirmPassword = null;
+        loginModel.password = null;
+        loginModel.isAuth = client.session.isAuth;
+        updateSession();
+        checkTransmit();
+        cb(loginModel.error, cleanLoginModel(loginModel));
+    };
+
+    socket.on('disconnect', function () {
+        client.session.remove = true;
+        client.session.lastAccess = new Date();
+        updateSession(null, function (err, saved) {
+            console.log('desconect', client.session.lastAccess, saved);
+            if(client.session.remove)
+                ko.utils.arrayRemoveItem(clients, client);
+        });
+        checkTransmit();
+    });
+
+    socket.on('login', function (loginModel, cb) {
+        userRepo.findUser(loginModel.email, loginModel.password,
+            function (err, user) {
+                loginUser(err, loginModel, user, cb);
+            });
+    });
+
+    socket.on('logoff', function (cb) {
+        clearSession();
+        checkTransmit();
+        updateSession(null, function (err, saved) {
+            cb(!err);
+        })
+    });
+
+    socket.on('register', function (loginModel, cb) {
+        userRepo.checkEmail(loginModel.email,
+            function (err, user) {
+                if(err || user) {
+                    //failed login
+                    clearSession();
+                    updateSession();
+                    loginModel.error = 'Email has already been registered.';
+                    loginModel.password = null;
+                    loginModel.confirmPassword = null;
+                    loginModel.isAuth = client.isAuth;
+                    cb(loginModel.error, cleanLoginModel(loginModel));
+                } else {
+                    userRepo.createUser({
+                        email: loginModel.email,
+                        password: loginModel.password,
+                        fname: loginModel.fname,
+                        lname: loginModel.lname,
+                        dob: loginModel.dob
+                    }, function (err, user) {
+                        loginUser(err, loginModel, user, cb);
+                    });
+                }
+            });
     });
 
     socket.on('addWorker', function (data) {
@@ -173,90 +303,6 @@ io.sockets.on('connection', function (socket) {
 
         }
     });
-
-    socket.on('register', function (args) {
-        console.log('reg');
-        findUser(args.email, args.password, function (err, user) {
-            if(user || err) {
-                //register failed account exists
-                //socket.emit('registerFailed');
-                socket.emit('init', {
-                    isSignedIn: false,
-                    devices: []
-                });
-                sessionobj[sessId] = undefined;
-            } else {
-                bcrypt.hash(args.password, args.email + secret, function(err, hash) {
-                    db.save('users', {email: args.email, pass: hash}, function (err, oId) {
-                        if(err) {
-                            //register failed
-                            //socket.emit('registerFailed');
-                            socket.emit('init', {
-                                isSignedIn: false,
-                                devices: []
-                            });
-                        } else {
-                            yup = true;
-                            sessionobj[sessId] = args.remember || false;
-                            clients[socket.id] = clients[socket.id] || {};
-                            clients[socket.id].email = args.email;
-
-                            socket.emit('init', {
-                                isSignedIn: true,
-                                devices: devices
-                            });
-                        }
-                    });
-                });
-            }
-        });
-    });
-
-    socket.on('login', function (args) {
-       console.log('login', args);
-            findUser(args.email, args.password,
-                function (err, user) {
-                    if(err || !user) {
-                        //failed login
-                        console.log('failed login ', (err || ''));
-                        //socket.init('loginFailed');
-                        socket.emit('init', {
-                            isSignedIn: false,
-                            devices: []
-                        });
-                        sessionobj[sessId] = undefined;
-                        return;
-                    }
-                    yup = true;
-                    clients[socket.id] = clients[socket.id] || {};
-                    clients[socket.id].email = args.email;
-                    sessionobj[sessId] = args.remember || false;
-
-                    //successful login
-                    socket.emit('init', {
-                        isSignedIn: true,
-                        devices: devices
-                    });
-                });
-    });
-
-//    socket.on('yup', function (data) {
-//        data = data || {};
-//        yup = (data.pin === pin);
-//        console.log('yup', JSON.stringify(data));
-//
-//        if(yup === true) {
-//            sessionobj[sessId] = data.remember || false;
-//            socket.emit('init', devices);
-//            clients.push(socket);
-//        } else {
-//            if(clients.indexOf(socket) > -1) {
-//                clients.remove(socket);
-//            }
-//            sessionobj[sessId] = false;
-//            socket.emit('yup', false);
-//        }
-//    });
 
     socket.on('setTrigger', function (data) {
         var device;

@@ -6,11 +6,68 @@
     <title></title>
     <link rel="stylesheet" href="/styles/css/bootstrap.min.css" media="screen" >
     <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/css/datepicker.css" media="screen" >
     <link rel="stylesheet" href="/styles/mere-css/tiles.css">
     <link rel="stylesheet" href="/styles/mere-css/colors.css">
     <style>
         body {
             padding-top: 40px;
+        }
+
+        .hidden{
+            display:none;
+        }
+
+        body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #eee;
+        }
+
+        .form-signin {
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        .form-signin .form-signin-heading,
+        .form-signin .checkbox {
+            margin-bottom: 10px;
+        }
+        .form-signin .checkbox {
+            font-weight: normal;
+        }
+        .form-signin .form-control {
+            position: relative;
+            font-size: 16px;
+            height: auto;
+            padding: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        .form-signin .form-control:focus {
+            z-index: 2;
+        }
+
+            /*.form-signin input[type="text"] {*/
+            /*margin-bottom: -1px;*/
+            /*border-bottom-left-radius: 0;*/
+            /*border-bottom-right-radius: 0;*/
+            /*}*/
+            /*.form-signin input[type="password"] {*/
+            /*margin-bottom: 10px;*/
+            /*border-top-left-radius: 0;*/
+            /*border-top-right-radius: 0;*/
+            /*}*/
+
+        .form-signin input {
+            margin-bottom: 10px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .form-signin input.no-bottom {
+            margin-bottom: -1px;
         }
     </style>
 </head>
@@ -18,9 +75,102 @@
 
 
 
-<article id="content" style="display: none;"  class="container">
-    <!-- ko if: isInit -->
-        <!-- ko if: isSignedIn -->
+<article id="content" style="display: none;">
+        <!-- ko view: login -->
+        <article class="container">
+            <form class="form-signin" data-bind="with: loginModel, event: {'submit': $root.login}" role="form">
+                <h2 class="form-signin-heading text-center">kyngster.com</h2>
+                <input type="text" data-bind="live: email" class="form-control no-bottom" placeholder="Email address" required="" autofocus="">
+                <input type="password" data-bind="value: password" class="form-control" placeholder="Password" required="">
+                <span class="text-danger" data-bind="text: error"></span>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="checkbox">
+                            <input type="checkbox" data-bind="checked: remember" value="remember-me"> Remember me
+                        </label>
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="checkbox">
+                            <small><a href="#register">Register</a></small>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+        </article>
+        <!-- /ko -->
+
+        <!-- ko view: register -->
+        <article class="container">
+            <form class="form-signin" data-bind="with: loginModel, event: {'submit': $root.register}" role="form">
+                <h2 class="form-signin-heading text-center">kyngster.com</h2>
+                <input type="text" data-bind="live: email" class="form-control" placeholder="Email address" required="" autofocus="">
+                <input type="password" data-bind="live: password" class="form-control" placeholder="Password" required>
+                <div class="form-group" data-bind="css: {'has-error': passwordsDontMatch}">
+                    <input type="password" data-bind="live: confirmPassword" class="form-control" placeholder="Confirm Password" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" data-bind="live: fname" class="form-control" placeholder="First Name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" data-bind="live: lname" class="form-control" placeholder="Last Name" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" data-bind="datepicker: dob" class="form-control" placeholder="Birth Date" required>
+                </div>
+
+                <span class="text-danger" data-bind="text: error"></span>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="checkbox">
+                            <input type="checkbox" data-bind="checked: remember" value="remember-me"> Remember me
+                        </label>
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="checkbox">
+                            <small><a href="#login">Sign In</a></small>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+            </form>
+        </article>
+        <!-- /ko -->
+
+    <!-- ko if: loginModel.isAuth -->
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">kyngster.com</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#home">Home</a></li>
+                <li><a href="#addworker">Add Worker</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a data-bind="click: logoff" href="#">Sign out</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+
+        <!-- ko view: home -->
+    <div class="container">
             <div class="row">
                 <div data-bind="foreach: devices" class="col-lg-12">
                     <!-- ko if: (actionType === 'onoff') -->
@@ -77,6 +227,7 @@
             </div>
             <!-- /ko -->
         <!-- /ko -->
+    </div>
     <!-- /ko -->
 
     <div id="thermoEdit" class="modal fade">
@@ -103,127 +254,7 @@
         <!-- /ko -->
     </div><!-- /.modal -->
 
-
-
-    <!--<div class="row">-->
-        <!--<div data-bind="foreach: devices" class="col-md-12">-->
-            <!--&lt;!&ndash; ko if: type === 'light' &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: actionType === 'onoff' &ndash;&gt;-->
-            <!--<div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">-->
-                <!--<div class="tile-content">-->
-                    <!--<div class="row">-->
-                        <!--<div style="margin-right: auto; margin-left: auto; width: 60%;">-->
-                            <!--&lt;!&ndash; ko if: isOn &ndash;&gt;-->
-                            <!--<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">-->
-                            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-                            <!--&lt;!&ndash; ko ifnot: isOn &ndash;&gt;-->
-                            <!--<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_off.png">-->
-                            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div data-bind="text: name" class="tile-title"></div>-->
-                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: actionType === 'sensor' &ndash;&gt;-->
-            <!--<div class="tile bg-blue">-->
-                <!--<div class="tile-content">-->
-                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<h2 class="text-center" style="padding-top: 15%;" data-bind="text: value"></h2>-->
-                    <!--<div data-bind="text: name" class="tile-title"></div>-->
-                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: type === 'motion' &ndash;&gt;-->
-            <!--<div class="tile" data-bind="css: { 'bg-green': isOn}">-->
-                <!--<div class="tile-content">-->
-                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div data-bind="text: name" class="tile-title"></div>-->
-                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: type === 'temp' &ndash;&gt;-->
-            <!--<div class="tile-btn bg-purple" data-bind="click: $root.editThermo, css: {'bg-blue': isCool, 'bg-red': isHeat}">-->
-                <!--<div class="tile-content">-->
-                    <!--<i style="z-index: 2;" class="fa fa-cog"></i>-->
-                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
-                    <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto; visibility: hidden;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<h2 class="text-center" style="padding-top: 15%;" data-bind="text: value() + '&deg;'"></h2>-->
-                    <!--<div data-bind="text: name" class="tile-title"></div>-->
-                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: type === 'overheadDoor' &ndash;&gt;-->
-            <!--&lt;!&ndash; ko if: actionType === 'momentary' &ndash;&gt;-->
-            <!--<div data-bind="click: toggle" style="color: #fff;" class="tile-btn bg-blue">-->
-                <!--<div class="tile-content">-->
-                    <!--&lt;!&ndash;<div class="row">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash; ko if: isOn &ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_on.png">&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash; /ko &ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash; ko ifnot: isOn &ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;<img style="display: block; margin-left: auto; margin-right: auto;" class="img-responsive" src="/img/light_bulb_off.png">&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash; /ko &ndash;&gt;&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div data-bind="text: name" class="tile-title"></div>-->
-                    <!--&lt;!&ndash;<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>&ndash;&gt;-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-            <!--&lt;!&ndash; /ko &ndash;&gt;-->
-        <!--</div>-->
-    <!--</div>-->
 </article>
-
-<!--<div id="yup" class="modal fade">-->
-    <!--<div class="modal-dialog">-->
-        <!--<div class="modal-content">-->
-            <!--<div class="modal-header">-->
-                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                <!--<h4 class="modal-title">Pin</h4>-->
-            <!--</div>-->
-            <!--<div class="modal-body">-->
-                <!--<form role="form">-->
-                    <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<label>Email: </label>&ndash;&gt;-->
-                        <!--&lt;!&ndash;<input type="text" data-bind="value: email">&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div class="form-group">-->
-                        <!--<label>Pin: </label>-->
-                        <!--<input type="password" data-bind="value: pin">-->
-                    <!--</div>-->
-                    <!--<br>-->
-                    <!--<div class="checkbox">-->
-                        <!--<label>-->
-                            <!--&nbsp;<input type="checkbox" data-bind="checked: remember"> Remember-->
-                        <!--</label>-->
-                    <!--</div>-->
-                <!--</form>-->
-            <!--</div>-->
-            <!--<div class="modal-footer">-->
-                <!--<button id="btnYup" data-bind="click: yup" type="button" class="btn btn-primary">Ok</button>-->
-            <!--</div>-->
-        <!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
-    <!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
-<!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
 
 </body>
 <script type="text/javascript"   src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -234,6 +265,10 @@
 </script>
 <script src="/scripts/bootstrap.min.js"></script>
 <script src="/scripts/knockout-3.0.0.js"></script>
+<script src="/scripts/knockout.punches.min.js"></script>
+<script src="/scripts/knockout.validation.min.js"></script>
+<script src="/scripts/director.min.js"></script>
+<script src="/scripts/bootstrap-datepicker.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="/app/app.js"></script>
 </html>

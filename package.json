@@ -7,7 +7,6 @@
     "dependencies": {
         "express": ">=3.x",
         "ejs": "*",
-        "ejdb": "*",
         "less-middleware": "*",
         "socket.io": "*",
         "socket.io-client": "*",
@@ -16,6 +15,10 @@
         "passport": "*",
         "passport.socketio": "*",
         "mongodb": "*",
-        "bcrypt": "*"
+        "bcrypt": "*",
+        "connect-mongo": "*",
+        "moment": "*",
+        "mongojs": "*",
+        "knockout": "*",
     }
 }

@@ -251,6 +251,7 @@ socket.on('init', function (data) {
     else
         location.hash = 'login';
 
+    vm.devices([]);
     data = data || {};
     if(data.devices && data.devices.length > 0) {
         for(var i = 0, il = data.devices.length; i < il; i++) {

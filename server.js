@@ -268,8 +268,8 @@ io.sockets.on('connection', function (socket) {
         updateSession(null, function (err, saved) {
             if(client.session.remove)
                 ko.utils.arrayRemoveItem(clients, client);
+            checkTransmit();
         });
-        checkTransmit();
     });
 
     socket.on('login', function (loginModel, cb) {

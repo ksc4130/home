@@ -529,14 +529,16 @@ ioWorkers.on('connection', function (socket) {
                 };
 
                 devices.push(dev);
-                io.sockets.emit('add', {
-                    id: dev.id,
-                    type: dev.type,
-                    actionType: dev.actionType,
-                    value: dev.value,
-                    trigger: dev.trigger,
-                    isHeat: dev.isHeat,
-                    isCool: dev.isCool
+                ko.utils.arrayForEach(found, function (item) {
+                   item.socket.emit('add', {
+                       id: dev.id,
+                       type: dev.type,
+                       actionType: dev.actionType,
+                       value: dev.value,
+                       trigger: dev.trigger,
+                       isHeat: dev.isHeat,
+                       isCool: dev.isCool
+                   });
                 });
                 return dev;
             });

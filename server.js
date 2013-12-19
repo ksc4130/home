@@ -489,8 +489,10 @@ ioWorkers.on('connection', function (socket) {
     socket.on('initWorker', function (data) {
         if(data.secret === secret) {
             var i,
-                worker = workers[socket.id]  = {},
+                worker = {},
                 workerDev;
+
+            workers[socket.id] = worker;
 
                 worker.socket = socket;
             worker.workerId = data.workerId;

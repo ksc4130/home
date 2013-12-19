@@ -221,7 +221,7 @@ io.sockets.on('connection', function (socket) {
             error: loginModel.error,
             devices: client.session.isAuth && client.session.workers && client.session.workers.length ? ko.utils.arrayFilter(devices, function (device) {
                 return ko.utils.arrayFirst(client.session.workers, function (item) {
-                    console.log('a', item, device);
+
                    return item.workerId === device.workerId;
                 });
             }) : [],
@@ -329,7 +329,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('setTrigger', function (data) {
-        if(!client.isAuth)
+        if(!client.session.isAuth)
             return;
         var device;
         console.log('set trigger', data);
@@ -344,7 +344,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
-        if(!client.isAuth)
+        if(!client.session.isAuth)
             return;
         console.log('change', sessionobj[sessId], yup);
 

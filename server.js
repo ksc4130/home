@@ -417,7 +417,7 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
-        console.log('worker change*************************', data.id, data.value);
+        //console.log('worker change*************************', data.id, data.value);
         for(var i = 0, il = devices.length; i < il; i++) {
             (function (dev) {
                 if(dev.id === data.id) {

@@ -40,7 +40,7 @@ app.use(express.session({
     key: 'kyngster.sid',
     store: sessionStore,
     cookie : {
-        secure : true//,
+        //secure : true//,
         //maxAge: 5184000000 // 2 months
     }
 }));

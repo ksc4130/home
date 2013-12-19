@@ -310,7 +310,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('addWorker', function (data) {
         console.log('*********************************addWorker');
-        if(!client.isAuth) {
+        if(!client.session.isAuth) {
             return;
         }
         console.log('************************addWorker', data);

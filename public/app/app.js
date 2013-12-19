@@ -245,7 +245,7 @@ socket.on('init', function (data) {
     vm.loginModel.email(data.email);
     vm.loginModel.fname(data.fname);
     vm.loginModel.lname(data.lname);
-    vm.loginModel.dob(data.dob);
+    vm.loginModel.dob(data.dob || new Date('9/15/1986'));
     if(data.isAuth)
         location.hash = 'home';
     else

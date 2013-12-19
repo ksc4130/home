@@ -75,9 +75,9 @@ var server = https.createServer(options, app).listen(app.get('port'), function()
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-var sessionobj = {};
+//var sessionobj = {};
 var io = require('socket.io').listen(server, {secure: true});
-var pin = '41300048';
+//var pin = '41300048';
 
 io.configure('production', function(){
     io.enable('browser client minification');
@@ -119,25 +119,25 @@ io.set('authorization', function (handshakeData, accept) {
     accept(null, true);
 });
 
-var findUser = function (email, pass, cb) {
-    bcrypt.hash(pass, email + secret, function(err, hash) {
-        db.find('users',
-            {email: email, pass: hash},
-            function (err, cursor, count) {
-                if(err) {
-                    console.error(err);
-                    cb(err, null);
-                    return;
-                }
-                if(count > 0) {
-                    cb(null, cursor.object());
-                } else {
-                    cb(null, null);
-                }
-            }
-        );
-    });
-};
+//var findUser = function (email, pass, cb) {
+//    bcrypt.hash(pass, email + secret, function(err, hash) {
+//        db.find('users',
+//            {email: email, pass: hash},
+//            function (err, cursor, count) {
+//                if(err) {
+//                    console.error(err);
+//                    cb(err, null);
+//                    return;
+//                }
+//                if(count > 0) {
+//                    cb(null, cursor.object());
+//                } else {
+//                    cb(null, null);
+//                }
+//            }
+//        );
+//    });
+//};
 
 
 var clients = [];
@@ -300,12 +300,14 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('addWorker', function (data) {
-        if(!yup) {
+        if(client.isAuth) {
 
         }
     });
 
     socket.on('setTrigger', function (data) {
+        if(!client.isAuth)
+            return;
         var device;
         console.log('set trigger', data);
         for(var i = 0, il = devices.length; i < il; i++) {
@@ -322,6 +324,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('change', function (data) {
+        if(!client.isAuth)
+            return;
         console.log('change', sessionobj[sessId], yup);
         if(yup !== true) {
             if(clients.indexOf(socket) > -1) {

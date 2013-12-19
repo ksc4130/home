@@ -509,7 +509,7 @@ ioWorkers.on('connection', function (socket) {
             if(found.length)
                 socket.emit('transmit', true);
 
-            console.log(data.workerId);
+            console.log('***********************************************************', data.workerId);
             var devs = ko.utils.arrayMap(data.devices, function (dev) {
                 dev.socketId = socket.id;
                 dev.workerId = data.workerId;

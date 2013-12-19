@@ -220,8 +220,8 @@ io.sockets.on('connection', function (socket) {
             dob: loginModel.dob,
             error: loginModel.error,
             devices: client.session.isAuth && client.session.workers && client.session.workers.length ? ko.utils.arrayFilter(devices, function (device) {
-                console.log('a');
                 return ko.utils.arrayFirst(client.session.workers, function (item) {
+                    console.log('a', item, device);
                    return item.workerId === device.workerId;
                 });
             }) : [],

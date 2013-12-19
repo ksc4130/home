@@ -367,7 +367,7 @@ io.sockets.on('connection', function (socket) {
 //var workerProvider= new WorkerProvider('localhost', 27017);
 var serverWorkers = require('http').Server();
 var ioWorkers = require('socket.io').listen(serverWorkers);
-var workers = {};
+var workers = new function(){return this;};
 var deviceIdCnt = 0;
 
 ioWorkers.configure('production', function(){
@@ -489,33 +489,30 @@ ioWorkers.on('connection', function (socket) {
     socket.on('initWorker', function (data) {
         if(data.secret === secret) {
             var i,
-                worker,
+                worker = workers[socket.id]  = {},
                 workerDev;
 
-            workers[socket.id] = {
-                socket: socket,
-                devices: []
-            };
+                worker.socket = socket;
+            worker.workerId = data.workerId;
+               worker.devices = [];
 
             var found = ko.utils.arrayFilter(clients, function (client) {
-                if(client.session && client.session.workers.length)
-                    return ko.utils.arrayFirst(client.session.workers, function (item) {
-                        return item.workerId === data.workerId;
-                    });
-                else
-                    return false;
+                return ko.utils.arrayFirst(client.session.workers, function (item) {
+                    return item.workerId === worker.workerId;
+                });
             });
-            if(found.length)
+
+            if(found.length > 0)
                 socket.emit('transmit', true);
 
             //console.log('***********************************************************', data.workerId);
             var devs = ko.utils.arrayMap(data.devices, function (dev) {
                 dev.socketId = socket.id;
-                dev.workerId = data.workerId;
+                dev.workerId = worker.workerId;
                 dev.setTrigger = function (trigger) {
-                    if(workers[socket.id]) {
+                    if(worker) {
                         dev.trigger = trigger;
-                        workers[socket.id].socket.emit('setTrigger', {id: dev.id, trigger: trigger});
+                        worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                     }
                 };
 
@@ -534,7 +531,7 @@ ioWorkers.on('connection', function (socket) {
                 return dev;
             });
 
-            workers[socket.id].devices = devs;
+            worker.devices = devs;
 
             socket.emit('devices', devs);
 

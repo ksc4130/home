@@ -240,6 +240,7 @@ io.sockets.on('connection', function (socket) {
     var loginUser = function (err, loginModel, user, cb) {
         if(err || !user) {
             clearSession();
+            loginModel.workers = [];
             loginModel.error = 'Unable to find email and password combo.';
         } else {
             loginModel.error = null;
@@ -248,6 +249,7 @@ io.sockets.on('connection', function (socket) {
             client.session.email = loginModel.email;
             client.session.remember = loginModel.remember || false;
             client.session.workers = user.workers || [];
+            loginModel.workers = client.session.workers;
         }
         loginModel.confirmPassword = null;
         loginModel.password = null;

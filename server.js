@@ -520,7 +520,7 @@ ioWorkers.on('connection', function (socket) {
                 socket.emit('transmit', true);
 
             var devs = ko.utils.arrayMap(data.devices, function (dev) {
-                dev.socketId = sId;
+                dev.socketId = socket.id;
                 dev.setTrigger = function (trigger) {
                     if(workers[socket.id]) {
                         dev.trigger = trigger;

@@ -18,7 +18,7 @@
             <!-- /ko --> <!-- light -->
             <!-- /ko --> <!-- onoff -->
             <!-- ko if: (actionType === 'thermo') -->
-            <div class="tile-btn" data-bind="click: $root.editThermo, css: {'bg-blue': isCool, 'bg-red': isHeat, 'bg-purple': (!isHeat() && !isCool())}">
+            <div class="tile-btn" data-bind="click: $root.editThermo, css: {'bg-blue': isLow, 'bg-red': isHigh, 'bg-purple': (!isHigh() && !isLow())}">
                 <div class="tile-content">
                     <i style="z-index: 2;" class="fa fa-cog"></i>
                     <h2 class="text-center" style="padding-top: 15%;"><!-- ko text: value --><!-- /ko -->&deg;</h2>

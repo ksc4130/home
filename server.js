@@ -434,6 +434,36 @@ ioWorkers.on('connection', function (socket) {
         });
     });
 
+    socket.on('changeControlled', function (data) {
+        var device = ko.utils.arrayFirst(devices, function (item) {
+            return item.id.toString() === data.id.toString()
+        });
+        //console.log('device', device);
+        if(typeof device !== 'undefined' && device !== null) {
+            var w = workers[device.socketId];
+
+            if(w) {
+                w.socket.emit('change', data);
+            }
+        } else
+            console.log("can't find device for id ", data.id);
+    });
+
+    socket.on('toggleControlled', function (data) {
+        var device = ko.utils.arrayFirst(devices, function (item) {
+            return item.id.toString() === data.id.toString()
+        });
+        //console.log('device', device);
+        if(typeof device !== 'undefined' && device !== null) {
+            var w = workers[device.socketId];
+
+            if(w) {
+                w.socket.emit('toggleControlled', data);
+            }
+        } else
+            console.log("can't find device for id ", data.id);
+    });
+
     socket.on('disconnect', function() {
         console.log('worker disconnect!');
 
@@ -476,9 +506,9 @@ ioWorkers.on('connection', function (socket) {
 
             workers[socket.id] = worker;
 
-                worker.socket = socket;
+            worker.socket = socket;
             worker.workerId = data.workerId;
-               worker.devices = [];
+            worker.devices = [];
 
             var found = ko.utils.arrayFilter(clients, function (client) {
                 return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {

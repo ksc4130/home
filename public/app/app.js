@@ -205,8 +205,10 @@ function addDevice(dev) {
     dev.value = ko.observable(dev.value);
     if(dev.actionType === 'thermo') {
         dev.trigger = ko.observable(dev.trigger);
-        dev.isHeat = ko.observable(dev.isHeat);
-        dev.isCool = ko.observable(dev.isCool);
+        dev.highTheshold = ko.observable(dev.highTheshold);
+        dev.lowThreshold = ko.observable(dev.lowThreshold);
+        dev.isHigh = ko.observable(dev.isHigh);
+        dev.isLow = ko.observable(dev.isLow);
     }
 
     vm.devices.push(dev);

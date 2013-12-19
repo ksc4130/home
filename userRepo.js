@@ -11,7 +11,7 @@ module.exports = new function () {
 
     updateUser = function (user, cb) {
         cb = cb || function () {};
-        db.users.update({email: user.email} , user, { upsert: true }, cb);
+        db.users.update({email: user.email} , {$set: user}, cb);
     };
 
     findUser = function (email, password, cb) {

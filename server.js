@@ -442,6 +442,8 @@ ioWorkers.on('connection', function (socket) {
             });
         });
 
+        console.log('******************** clients found', found);
+
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('change', {
                 id: device.id,

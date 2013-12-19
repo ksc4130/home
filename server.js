@@ -401,8 +401,6 @@ ioWorkers.configure('production', function(){
 ioWorkers.on('connection', function (socket) {
 
     socket.emit('initWorker');
-    if(clients.length > 0)
-        socket.emit('transmit', true);
 
     socket.on('thermo', function (data) {
         //console.log('worker thermo*************************', JSON.stringify(data));
@@ -510,23 +508,42 @@ ioWorkers.on('connection', function (socket) {
                 devices: []
             };
 
-            for(i = 0; i < data.devices.length; i++) {
-                (function (sId) {
-                    (function (dev) {
-                        dev.socketId = sId;
-                        dev.setTrigger = function (trigger) {
-                            if(workers[socket.id]) {
-                                dev.trigger = trigger;
-                                workers[socket.id].socket.emit('setTrigger', {id: dev.id, trigger: trigger});
-                            }
-                        };
-                        workers[socket.id].devices.push(dev);
-                        devices.push(dev);
-                        io.sockets.emit('add', [dev]);
-                    }(data.devices[i]));
-                }(socket.id));
-            }
-            socket.emit('devices', workers[socket.id].devices);
+            var found = ko.utils.arrayFilter(clients, function (client) {
+                if(client.session && client.session.workers.length)
+                    return ko.utils.arrayFirst(client.session.workers, function (item) {
+                        return item.workerId === data.id;
+                    });
+                else
+                    return false;
+            });
+            if(found.length)
+                socket.emit('transmit', true);
+
+            var devs = ko.utils.arrayMap(data.devices, function (dev) {
+                dev.socketId = sId;
+                dev.setTrigger = function (trigger) {
+                    if(workers[socket.id]) {
+                        dev.trigger = trigger;
+                        workers[socket.id].socket.emit('setTrigger', {id: dev.id, trigger: trigger});
+                    }
+                };
+
+                devices.push(dev);
+                io.sockets.emit('add', {
+                    id: dev.id,
+                    type: dev.type,
+                    actionType: dev.actionType,
+                    value: dev.value,
+                    trigger: dev.trigger,
+                    isHeat: dev.isHeat,
+                    isCool: dev.isCool
+                });
+                return dev;
+            });
+
+            workers[socket.id].devices = devs;
+
+            socket.emit('devices', devs);
 
 //            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
 //                clients[ic].emit('add', data.devices);

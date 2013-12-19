@@ -521,6 +521,7 @@ ioWorkers.on('connection', function (socket) {
 
             var devs = ko.utils.arrayMap(data.devices, function (dev) {
                 dev.socketId = socket.id;
+                dev.workerId = data.id;
                 dev.setTrigger = function (trigger) {
                     if(workers[socket.id]) {
                         dev.trigger = trigger;

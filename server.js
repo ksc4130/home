@@ -5,6 +5,7 @@ var express = require('express')
     , path = require('path')
     , cookie  = require('cookie')
     , connect = require('connect')
+    , globals = require('./globals')
     , fs = require('fs')
     , bcrypt = require('bcrypt')
     , ko = require('knockout')
@@ -13,7 +14,7 @@ var express = require('express')
     , SessionStore = require('connect-mongo')(express)
     , sessionStore = new SessionStore({db: globals.dbName})
     , moment = require('moment')
-    , globals = require('./globals');
+    , secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';;
 
 
 var options = {

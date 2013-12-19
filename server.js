@@ -217,12 +217,12 @@ io.sockets.on('connection', function (socket) {
             lname: loginModel.lname,
             dob: loginModel.dob,
             error: loginModel.error,
-            devices: client.session.isAuth && loginModel.workers.length > 0 ? ko.util.arrayFilter(devices, function (device) {
+            devices: client.session.isAuth && loginModel.workers && loginModel.workers.length > 0 ? ko.util.arrayFilter(devices, function (device) {
                 return ko.utils.arrayFirst(loginModel.workers, function (item) {
                    return item.workerId === device.workerId;
                 });
             }) : [],
-            workers: loginModel.workers.length > 0 ? ko.utils.arrayMap(loginModel.workers, function (item) {
+            workers: loginModel.workers && loginModel.workers.length > 0 ? ko.utils.arrayMap(loginModel.workers, function (item) {
                 return {_d: item._id, name: item.name};
             }) : []
         };

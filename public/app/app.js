@@ -103,7 +103,8 @@ var Vm = function () {
 
     self.workerModel = {
         name: ko.observable(),
-        workerId: ko.observable()
+        workerId: ko.observable(),
+        error: ko.observable()
     };
 
     self.workers = ko.observableArray([]);

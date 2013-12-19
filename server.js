@@ -94,9 +94,9 @@ io.configure('production', function(){
     ]);
 });
 
-//io.configure('development', function(){
-//    io.set('transports', ['websocket']);
-//});
+io.configure('development', function(){
+    io.set('transports', ['websocket']);
+});
 
 io.set('authorization', function (handshakeData, accept) {
 

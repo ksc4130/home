@@ -80,7 +80,7 @@
         <article class="container">
             <form class="form-signin" data-bind="with: loginModel, event: {'submit': $root.login}" role="form">
                 <h2 class="form-signin-heading text-center">kyngster.com</h2>
-                <input type="text" data-bind="live: email" class="form-control no-bottom" placeholder="Email address" required="" autofocus="">
+                <input type="email" data-bind="live: email" class="form-control no-bottom" placeholder="Email address" required="" autofocus="">
                 <input type="password" data-bind="value: password" class="form-control" placeholder="Password" required="">
                 <span class="text-danger" data-bind="text: error"></span>
 
@@ -106,7 +106,7 @@
         <article class="container">
             <form class="form-signin" data-bind="with: loginModel, event: {'submit': $root.register}" role="form">
                 <h2 class="form-signin-heading text-center">kyngster.com</h2>
-                <input type="text" data-bind="live: email" class="form-control" placeholder="Email address" required="" autofocus="">
+                <input type="email" data-bind="live: email" class="form-control" placeholder="Email address" required="" autofocus="">
                 <input type="password" data-bind="live: password" class="form-control" placeholder="Password" required>
                 <div class="form-group" data-bind="css: {'has-error': passwordsDontMatch}">
                     <input type="password" data-bind="live: confirmPassword" class="form-control" placeholder="Confirm Password" required>

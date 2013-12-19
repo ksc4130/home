@@ -3,7 +3,7 @@ module.exports = new function () {
         ,findUser
         , createUser
         , checkEmail
-        , globals = require('../globals')
+        , globals = require('./globals')
         , bcrypt = require('bcrypt')
         , ko = require('knockout')
         , db = require("mongojs").connect(globals.dbName, globals.collections);

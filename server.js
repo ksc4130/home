@@ -436,13 +436,13 @@ ioWorkers.on('connection', function (socket) {
         device.value = data.value;
 
         var found = ko.utils.arrayFilter(clients, function (client) {
-            return client.session.isAuth && client.session.workers
+            return client.session.isAuth
                 && ko.utils.arrayFirst(client.session.workers, function (item) {
                 return item.workerId === device.workerId;
             });
         });
 
-        console.log('******************** clients found', found);
+        console.log('******************** clients found', found, device.workerId);
 
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('change', {

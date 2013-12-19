@@ -216,7 +216,7 @@ io.sockets.on('connection', function (socket) {
             lname: loginModel.lname,
             dob: loginModel.dob,
             error: loginModel.error,
-            devices: client.isAuth ? devices : []
+            devices: client.session.isAuth ? devices : []
         };
     };
 

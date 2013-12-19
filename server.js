@@ -183,6 +183,7 @@ io.sockets.on('connection', function (socket) {
 
     db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
         if(found) {
+            console.log('found', found);
             found.remove = client.session.remove;
             client.session = found;
         }
@@ -332,12 +333,9 @@ io.sockets.on('connection', function (socket) {
             return;
         var device;
         console.log('set trigger', data);
-        for(var i = 0, il = devices.length; i < il; i++) {
-            if(devices[i].id.toString() === data.id.toString()) {
-                device = devices[i];
-                break;
-            }
-        }
+        device = ko.utils.arrayFirst(devices, function (item) {
+           return item.id.toString() === data.id.toString()
+        });
 
         if(typeof device !== 'undefined' && device !== null) {
             device.setTrigger(data.trigger);
@@ -349,22 +347,13 @@ io.sockets.on('connection', function (socket) {
         if(!client.isAuth)
             return;
         console.log('change', sessionobj[sessId], yup);
-        if(yup !== true) {
-            if(clients.indexOf(socket) > -1) {
-                clients.remove(socket);
-            }
-            socket.emit('yup', false);
-            return;
-        }
+
         var device;
         //console.log(devices, data.id);
         console.log('change a');
-        for(var i = 0, il = devices.length; i < il; i++) {
-            if(devices[i].id.toString() === data.id.toString()) {
-                device = devices[i];
-                break;
-            }
-        }
+        device = ko.utils.arrayFirst(devices, function (item) {
+            return item.id.toString() === data.id.toString()
+        });
         //console.log('device', device);
         if(typeof device !== 'undefined' && device !== null) {
             var w = workers[device.socketId];

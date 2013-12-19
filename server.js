@@ -171,7 +171,7 @@ io.sockets.on('connection', function (socket) {
     };
 
     var checkTransmit = function () {
-        if(ko.utils.first(clients, function (item) {
+        if(ko.utils.arrayFirst(clients, function (item) {
            return item.session.isAuth;
         })) {
             ioWorkers.sockets.emit('transmit', true);

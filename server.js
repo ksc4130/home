@@ -313,14 +313,14 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('addWorker', function (data) {
-        console.log('*********************************addWorker');
         if(!client.session.isAuth) {
             return;
         }
-        console.log('************************addWorker', data);
+
         if(!ko.utils.arrayFirst(client.session.workers, function (item) {
             return item.workerId === data.workerId;
         })) {
+            console.log('************************addWorker', data);
             client.session.workers.push(data);
             updateSession();
             userRepo.updateUser({email: client.session.email, workers: client.session.workers});

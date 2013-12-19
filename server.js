@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
     //tell workers to transmit
 
     var client = ko.utils.arrayFirst(clients, function (item) {
-        return item.sessId.sessId === socket.handshake.sessionID;
+        return item.session.sessId === socket.handshake.sessionID;
     });
 
     if(!client) {

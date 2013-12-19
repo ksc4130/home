@@ -425,7 +425,7 @@ ioWorkers.on('connection', function (socket) {
 
     socket.on('change', function (data) {
         var device = ko.utils.arrayFirst(devices, function (item) {
-            return item.id = data.id;
+            return item.id = data.id && workers[socket.id].workerId === item.workerId;
         });
 
         if(!device) {

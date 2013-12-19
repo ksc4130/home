@@ -436,8 +436,8 @@ ioWorkers.on('connection', function (socket) {
         device.value = data.value;
 
         var found = ko.utils.arrayFilter(clients, function (client) {
+            console.log('********lalal', client.session.workers);
             return client.session.isAuth
-                console.log('********lalal', client.session.workers);
                 && ko.utils.arrayFirst(client.session.workers, function (item) {
                 return item.workerId === device.workerId;
             });

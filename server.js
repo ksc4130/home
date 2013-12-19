@@ -499,7 +499,7 @@ ioWorkers.on('connection', function (socket) {
                worker.devices = [];
 
             var found = ko.utils.arrayFilter(clients, function (client) {
-                return ko.utils.arrayFirst(client.session.workers, function (item) {
+                return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {
                     return item.workerId === worker.workerId;
                 });
             });

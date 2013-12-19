@@ -1,0 +1,25 @@
+<!-- ko view: login -->
+<article class="container">
+    <form class="form-signin" autocomplete="on" data-bind="with: loginModel, event: {'submit': $root.login}" role="form">
+        <h2 class="form-signin-heading text-center">kyngster.com</h2>
+        <input type="email" name="email" data-bind="live: email" class="form-control no-bottom" placeholder="Email address" required="" autofocus="">
+        <input type="password" data-bind="value: password" class="form-control" placeholder="Password" required="">
+        <span class="text-danger" data-bind="text: error"></span>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: remember" value="remember-me"> Remember me
+                </label>
+            </div>
+            <div class="col-lg-6">
+                <label class="checkbox">
+                    <small><a href="#register">Register</a></small>
+                </label>
+            </div>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+</article>
+<!-- /ko -->

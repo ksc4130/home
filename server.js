@@ -5,30 +5,22 @@ var express = require('express')
     , path = require('path')
     , cookie  = require('cookie')
     , connect = require('connect')
-    , globals = require('./globals')
+    , moment = require('moment')
     , fs = require('fs')
-    , bcrypt = require('bcrypt')
     , ko = require('knockout')
-    , db = require("mongojs").connect(globals.dbName, globals.collections)
+    , globals = require('./globals')
     , userRepo = require('./userRepo')
+    , db = require("mongojs").connect(globals.dbName, globals.collections)
     , SessionStore = require('connect-mongo')(express)
     , sessionStore = new SessionStore({db: globals.dbName})
-    , moment = require('moment')
-    , secret = 'Askindl23@146Fscmaijnd523CXVWGN#63@#7efbsd23#$Rb';;
-
+    , clients = []
+    , devices = [];
 
 var options = {
     key: fs.readFileSync('./privatekey.pem'),
     cert: fs.readFileSync('./certificate.pem'),
     requestCert: true
 };
-
-bcrypt.genSalt(10, function(err, salt) {
-    bcrypt.hash('pass', salt, function(err, hash) {
-        console.log('pass', hash);
-    });
-});
-
 
 var app = express();
 var httpApp = express();
@@ -43,12 +35,16 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 
-app.use(express.session({secret: globals.secret, key: 'kyngster.sid', store: sessionStore,
+app.use(express.session({
+    secret: globals.secret,
+    key: 'kyngster.sid',
+    store: sessionStore,
     cookie : {
-        //secure : true//,
+        secure : true//,
         //maxAge: 5184000000 // 2 months
     }
 }));
+
 app.use(app.router);
 app.use(require('less-middleware')({ src: __dirname + '/public' }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -75,9 +71,7 @@ var server = https.createServer(options, app).listen(app.get('port'), function()
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-//var sessionobj = {};
 var io = require('socket.io').listen(server, {secure: true});
-//var pin = '41300048';
 
 io.configure('production', function(){
     io.enable('browser client minification');
@@ -119,35 +113,12 @@ io.set('authorization', function (handshakeData, accept) {
     accept(null, true);
 });
 
-//var findUser = function (email, pass, cb) {
-//    bcrypt.hash(pass, email + secret, function(err, hash) {
-//        db.find('users',
-//            {email: email, pass: hash},
-//            function (err, cursor, count) {
-//                if(err) {
-//                    console.error(err);
-//                    cb(err, null);
-//                    return;
-//                }
-//                if(count > 0) {
-//                    cb(null, cursor.object());
-//                } else {
-//                    cb(null, null);
-//                }
-//            }
-//        );
-//    });
-//};
-
-
-var clients = [];
-var devices = [];
 
 io.sockets.on('connection', function (socket) {
     //tell workers to transmit
 
     var client = ko.utils.arrayFirst(clients, function (item) {
-        return item.sessId === socket.id;
+        return item.sessId.sessId === socket.handshake.sessionID;
     });
 
     if(!client) {
@@ -168,7 +139,14 @@ io.sockets.on('connection', function (socket) {
     var updateSession = function (sess, cb) {
         sess = sess || client.session;
         cb = cb || function () {};
-        db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
+        db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
+            if(err || !found) {
+                db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
+            } else {
+                db.userSessions.update({sessId: client.session.sessId}, {$set: sess}, cb);
+            }
+        });
+
     };
 
     var checkTransmit = function () {
@@ -183,7 +161,6 @@ io.sockets.on('connection', function (socket) {
 
     db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
         if(found) {
-            console.log('found', found);
             found.remove = client.session.remove;
             client.session = found;
         }

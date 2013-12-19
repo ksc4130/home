@@ -1,1 +1,51 @@
-<% include home.html %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kyngster.com</title>
+    <link rel="stylesheet" href="/styles/css/bootstrap.min.css" media="screen" >
+    <link rel="stylesheet" href="/styles/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/styles/css/datepicker.css" media="screen" >
+    <link rel="stylesheet" href="/styles/mere-css/tiles.css">
+    <link rel="stylesheet" href="/styles/mere-css/colors.css">
+    <link rel="stylesheet" href="/styles/css/site.css">
+</head>
+<body>
+
+
+
+<article id="content" style="display: none;">
+    <% include login.html %>
+
+    <% include register.html %>
+
+    <!-- ko if: loginModel.isAuth -->
+
+    <% include mainNav.html %>
+
+    <% include home.html %>
+
+    <% include addWorker.html %>
+
+    <% include thermoModal.html %>
+
+    <!-- /ko -->
+</article>
+
+</body>
+<script type="text/javascript"   src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script type="text/javascript">
+    if (typeof jQuery == 'undefined') {
+        document.write(unescape("%3Cscript src='/scripts/jquery-2.0.3.min.js'" + "%3E%3C/script%3E"));
+    }
+</script>
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/knockout-3.0.0.js"></script>
+<script src="/scripts/knockout.punches.min.js"></script>
+<script src="/scripts/knockout.validation.min.js"></script>
+<script src="/scripts/director.min.js"></script>
+<script src="/scripts/bootstrap-datepicker.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app/app.js"></script>
+</html>

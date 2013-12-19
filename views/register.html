@@ -1,0 +1,39 @@
+<!-- ko view: register -->
+<article class="container">
+    <form class="form-signin" autocomplete="on" data-bind="with: loginModel, event: {'submit': $root.register}" role="form">
+        <h2 class="form-signin-heading text-center">kyngster.com</h2>
+        <input type="email" name="email" data-bind="live: email" class="form-control" placeholder="Email address" required="" autofocus="">
+        <input type="password" data-bind="live: password" class="form-control" placeholder="Password" required>
+        <div class="form-group" data-bind="css: {'has-error': passwordsDontMatch}">
+            <input type="password" data-bind="live: confirmPassword" class="form-control" placeholder="Confirm Password" required>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="FirstName" data-bind="live: fname" class="form-control" placeholder="First Name" required>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="LastName" data-bind="live: lname" class="form-control" placeholder="Last Name" required>
+        </div>
+
+        <div class="form-group">
+            <input type="text" data-bind="datepicker: dob" class="form-control" placeholder="Birth Date" required>
+        </div>
+
+        <span class="text-danger" data-bind="text: error"></span>
+        <div class="row">
+            <div class="col-lg-6">
+                <label class="checkbox">
+                    <input type="checkbox" data-bind="checked: remember" value="remember-me"> Remember me
+                </label>
+            </div>
+            <div class="col-lg-6">
+                <label class="checkbox">
+                    <small><a href="#login">Sign In</a></small>
+                </label>
+            </div>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+</article>
+<!-- /ko -->

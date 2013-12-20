@@ -165,6 +165,7 @@ io.sockets.on('connection', function (socket) {
     };
 
     db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
+
         if(found) {
             console.log('found', found);
             found.remove = client.session.remove;
@@ -189,7 +190,27 @@ io.sockets.on('connection', function (socket) {
                 clients.push(client);
 
             checkTransmit();
-            console.log('sess', client.session);
+
+            client.session.devices = ko.utils.arrayMap(
+                ko.utils.arrayFilter(devices, function (d) {
+                    return typeof
+                        ko.utils.arrayFirst(client.session.workers, function (w) {
+                            return w.workerId === d.workerId;
+                        }) === 'string'
+                }), function (dev) {
+                    return {
+                        id: dev.id,
+                        type: dev.type,
+                        actionType: dev.actionType,
+                        value: dev.value,
+                        trigger: dev.trigger,
+                        threshold: dev.threshold,
+                        highThreshold: dev.highThreshold,
+                        lowThreshold: dev.lowThreshold,
+                        isHigh: dev.isHigh,
+                        isLow: dev.isLow
+                    };
+                });
             socket.emit('init', cleanLoginModel(client.session));
         });
     });
@@ -379,15 +400,20 @@ ioWorkers.on('connection', function (socket) {
             return item.id = data.id;
         });
 
+        console.log('**********************thermo on worker', device.id, device.name);
+
         if(!device) {
             console.log("couldn't find device");
             return;
         }
 
-        device.isHeat = data.isHeat;
-        device.isCool = data.isCool;
+        device.isHigh = data.isHigh;
+        device.isLow = data.isLow;
         device.value = data.value;
         device.trigger = data.trigger;
+        device.threshold = data.threshold;
+        device.highThreshold = data.highThreshold;
+        device.lowThreshold = data.lowThreshold;
 
         var found = ko.utils.arrayFilter(clients, function (client) {
             return client.session.isAuth && client.session.workers
@@ -399,13 +425,13 @@ ioWorkers.on('connection', function (socket) {
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('thermo', {
                 id: device.id,
-                isHigh: device.isHigh,
-                isLow: device.isLow,
                 value: device.value,
                 trigger: device.trigger,
+                threshold: device.threshold,
                 highThreshold: device.highThreshold,
                 lowThreshold: device.lowThreshold,
-                threshold: device.threshold
+                isHigh: device.isHigh,
+                isLow: device.isLow
             });
         });
     });
@@ -533,8 +559,11 @@ ioWorkers.on('connection', function (socket) {
                        actionType: dev.actionType,
                        value: dev.value,
                        trigger: dev.trigger,
-                       isHeat: dev.isHeat,
-                       isCool: dev.isCool
+                       threshold: dev.threshold,
+                       highThreshold: dev.highThreshold,
+                       lowThreshold: dev.lowThreshold,
+                       isHigh: dev.isHigh,
+                       isLow: dev.isLow
                    }]);
                 });
                 return dev;

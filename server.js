@@ -481,23 +481,28 @@ ioWorkers.on('connection', function (socket) {
 //                    if(err) throw err;
 //                });
 //            });
-        var a = [],
-            toRemove = [];
+        var toRemove = ko.utils.arrayFilter(devices, function (item) {
+                return item.workerId === worker.workerId;
+            }),
+            toNotify = ko.utils.arrayFilter(clients, function (item) {
+                return item.session.workerId === worker.workerId;
+            });
 
-        for(var i = 0; i < devices.length; i++) {
-            if(devices[i].socketId !== socket.id) {
-                a.push(devices[i]);
-            } else {
-                toRemove.push(devices[i].id);
-            }
-        }
-        devices = a;
-        workers[socket.id] = null;
-        //console.log('remove clients', clients);
-//        for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
-//            clients[ic].emit('remove', toRemove);
-//        }
-        io.sockets.emit('remove', toRemove);
+        toRemove = ko.utils.arrayMap(toRemove, function (r) {
+            return r.id;
+        });
+
+        ko.utils.arrayForEach(toNotify, function (item) {
+            item.session.socket.emit('remove', toRemove);
+        });
+
+        devices = ko.utils.arrayFilter(devices, function (item) {
+            return item.workerId !== worker.workerId;
+        });
+        delete workers[socket.id];
+        worker = null;
+
+
     });
 
     socket.on('initWorker', function (data) {

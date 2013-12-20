@@ -515,7 +515,6 @@ ioWorkers.on('connection', function (socket) {
             if(found.length > 0)
                 socket.emit('transmit', true);
 
-            //console.log('***********************************************************', data.workerId);
             var devs = ko.utils.arrayMap(data.devices, function (dev) {
                 dev.socketId = socket.id;
                 dev.workerId = worker.workerId;
@@ -525,7 +524,7 @@ ioWorkers.on('connection', function (socket) {
                         worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                     }
                 };
-                //console.log('***********************************************************', data.id);
+
                 devices.push(dev);
                 ko.utils.arrayForEach(found, function (item) {
                    item.socket.emit('add', {
@@ -540,6 +539,9 @@ ioWorkers.on('connection', function (socket) {
                 });
                 return dev;
             });
+
+            console.log('*******************************************', devs.length,
+            ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(devs, function (dd) { return dd.id;})).length);
 
             worker.devices = devs;
 

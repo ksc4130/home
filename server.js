@@ -191,31 +191,36 @@ io.sockets.on('connection', function (socket) {
 
             checkTransmit();
 
-            client.session.devices = ko.utils.arrayMap(
-                ko.utils.arrayFilter(devices, function (d) {
-                    return typeof
-                        ko.utils.arrayFirst(client.session.workers, function (w) {
-                            return w.workerId === d.workerId;
-                        }) === 'string'
-                }), function (dev) {
-                    return {
-                        id: dev.id,
-                        type: dev.type,
-                        actionType: dev.actionType,
-                        value: dev.value,
-                        trigger: dev.trigger,
-                        threshold: dev.threshold,
-                        highThreshold: dev.highThreshold,
-                        lowThreshold: dev.lowThreshold,
-                        isHigh: dev.isHigh,
-                        isLow: dev.isLow
-                    };
-                });
             socket.emit('init', cleanLoginModel(client.session));
         });
     });
 
     var cleanLoginModel = function (loginModel) {
+        var workers = client.session.workers && client.session.workers.length ? ko.utils.arrayMap(client.session.workers, function (item) {
+            return {_id: item._id, name: item.name};
+        }) : [];
+        var devsA = ko.utils.arrayFilter(devices, function (d) {
+            var t = typeof ko.utils.arrayFirst(client.session.workers, function (w) {
+                return w.workerId === d.workerId;
+            });
+            return d.id && t === 'string' && t.trim() !== ''
+        });
+
+        var devs = ko.utils.arrayMap(devs
+            , function (dev) {
+                return {
+                    id: dev.id,
+                    type: dev.type,
+                    actionType: dev.actionType,
+                    value: dev.value,
+                    trigger: dev.trigger,
+                    threshold: dev.threshold,
+                    highThreshold: dev.highThreshold,
+                    lowThreshold: dev.lowThreshold,
+                    isHigh: dev.isHigh,
+                    isLow: dev.isLow
+                };
+            });
         return {
             isAuth:  typeof loginModel.isAuth === 'function' ? loginModel.isAuth() : loginModel.isAuth,
             remember: loginModel.remember,
@@ -224,15 +229,8 @@ io.sockets.on('connection', function (socket) {
             lname: loginModel.lname,
             dob: loginModel.dob,
             error: loginModel.error,
-            devices: client.session.isAuth && client.session.workers && client.session.workers.length ? ko.utils.arrayFilter(devices, function (device) {
-                return ko.utils.arrayFirst(client.session.workers, function (item) {
-
-                   return item.workerId === device.workerId;
-                });
-            }) : [],
-            workers: client.session.workers && client.session.workers.length ? ko.utils.arrayMap(client.session.workers, function (item) {
-                return {_id: item._id, name: item.name};
-            }) : []
+            devices: devs || [],
+            workers: workers
         };
     };
 

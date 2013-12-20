@@ -591,7 +591,7 @@ ioWorkers.on('connection', function (socket) {
 
                  db.devices.save(dev, function (err, saved) {
                      devices.push(dev);
-                     workers.devices.push(dev);
+                     worker.devices.push(dev);
                  });
                  ko.utils.arrayForEach(found, function (item) {
                      item.socket.emit('add', [{

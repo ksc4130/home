@@ -527,7 +527,7 @@ ioWorkers.on('connection', function (socket) {
 
                 devices.push(dev);
                 ko.utils.arrayForEach(found, function (item) {
-                   item.socket.emit('add', {
+                   item.socket.emit('add', [{
                        id: dev.id,
                        type: dev.type,
                        actionType: dev.actionType,
@@ -535,13 +535,10 @@ ioWorkers.on('connection', function (socket) {
                        trigger: dev.trigger,
                        isHeat: dev.isHeat,
                        isCool: dev.isCool
-                   });
+                   }]);
                 });
                 return dev;
             });
-
-            console.log('*******************************************', devs.length,
-            ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(devs, function (dd) { return dd.id;})).length);
 
             worker.devices = devs;
 

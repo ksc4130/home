@@ -203,7 +203,10 @@ var Vm = function () {
 
 function addDevice(dev) {
     dev.value = ko.observable(dev.value);
+    dev.actionType = dev.actionType || '';
+    dev.type = dev.type || '';
     if(dev.actionType === 'thermo') {
+        console.log('is thermo', dev.id, dev.name);
         dev.trigger = ko.observable(dev.trigger);
         dev.highTheshold = ko.observable(dev.highTheshold);
         dev.lowThreshold = ko.observable(dev.lowThreshold);
@@ -249,7 +252,7 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        //console.log('thermo', ko.toJS(dev));
+        console.log('thermo', dev.id, dev.name);
         dev.value(data.value);
         dev.isLow(data.isLow);
         dev.isHigh(data.isHigh);

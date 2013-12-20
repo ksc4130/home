@@ -554,14 +554,12 @@ ioWorkers.on('connection', function (socket) {
                 socket.emit('transmit', true);
 
          db.devices.find({workerId: worker.workerId}, function (err, storeDevs) {
-             var foundAny = true;
              if(err || storeDevs.length <= 0) {
                  storeDevs = data.devices;
-                 foundAny = false;
              }
 
-             var devs = ko.utils.arrayMap(data.devices, function (dev) {
-                 if(!foundAny)
+             var devs = ko.utils.arrayMap(storeDevs, function (dev) {
+                 if(dev.id || dev.id === 0)
                     dev.id = globals.guid();
                  dev.socketId = socket.id;
                  dev.workerId = worker.workerId;

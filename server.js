@@ -576,7 +576,7 @@ ioWorkers.on('connection', function (socket) {
              });
 
              ko.utils.arrayForEach(devs, function (dev) {
-                 if(dev.controls.length > 0) {
+                 if(dev.controls && dev.controls.length > 0) {
                      dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
                          var first = ko.utils.arrayFirst(devs, function (f) {return f.pin === con.pin});
                          return {

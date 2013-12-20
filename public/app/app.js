@@ -217,20 +217,21 @@ function addDevice(dev) {
 socket.on('add', function (data) {
     console.log('add', data);
     if(data && data.length > 0) {
-        for(var i = 0, il = data.length; i < il; i++) {
-            addDevice(data[i]);
-        }
+        ko.utils.arrayForEach(data, function (dev) {
+           addDevice(dev);
+        });
     }
 });
 
 socket.on('remove', function (data) {
     console.log('remove', data);
     if(data && data.length > 0) {
-        for(var i = 0, il = data.length; i < il; i++) {
+        ko.utils.arrayForEach(data, function (id) {
             vm.devices.remove(function (item) {
-                return item.id === data[i];
+                return item.id === id;
             });
-        }
+        });
+
     }
 });
 
@@ -273,9 +274,9 @@ socket.on('init', function (data) {
     vm.devices([]);
     data = data || {};
     if(data.devices && data.devices.length > 0) {
-        for(var i = 0, il = data.devices.length; i < il; i++) {
-            addDevice(data.devices[i]);
-        }
+        ko.utils.arrayForEach(data.devices, function (dev) {
+            addDevice(dev);
+        });
     }
     $('#content').show();
 });

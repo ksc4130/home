@@ -572,6 +572,23 @@ ioWorkers.on('connection', function (socket) {
                      }
                  };
 
+                 return dev;
+             });
+
+             ko.utils.arrayForEach(devs, function (dev) {
+                 if(dev.controls.length > 0) {
+                     dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
+                         var first = ko.utils.arrayFirst(devs, function (f) {return f.pin === con.pin});
+                         return {
+                             workerId: worker.workerId,
+                             id: first.id,
+                             pin: con.pin,
+                             type: con.type,
+                             name: first.name
+                         };
+                     });
+                 }
+
                  db.devices.save(dev, function (err, saved) {
                      devices.push(dev);
                      workers.devices.push(dev);
@@ -591,9 +608,11 @@ ioWorkers.on('connection', function (socket) {
                          isLow: dev.isLow
                      }]);
                  });
-                 return dev;
+
              });
-            //TODO: ???????????may need to be moved
+
+
+             //TODO: ???????????may need to be moved
              socket.emit('devices', devs);
          });
 

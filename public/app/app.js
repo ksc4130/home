@@ -203,13 +203,13 @@ var Vm = function () {
 
 function addDevice(dev) {
     dev.value = ko.observable(dev.value);
-    if(dev.actionType === 'thermo') {
+    //if(dev.actionType === 'thermo') {
         dev.trigger = ko.observable(dev.trigger);
         dev.highTheshold = ko.observable(dev.highTheshold);
         dev.lowThreshold = ko.observable(dev.lowThreshold);
         dev.isHigh = ko.observable(dev.isHigh);
         dev.isLow = ko.observable(dev.isLow);
-    }
+    //}
 
     vm.devices.push(dev);
 }
@@ -245,14 +245,16 @@ socket.on('change', function (data) {
 });
 
 socket.on('thermo', function (data) {
-    ko.utils.arrayForEach(vm.devices(), function (item) {
-        if(data.id === item.id) {
-            item.value(data.value);
-            item.isLow(data.isLow);
-            item.isHigh(data.isHigh);
-            item.trigger(data.trigger);
-        }
+    var dev = ko.utils.arrayFirst(vm.devices(), function (item) {
+        return data.id === item.id;
     });
+    if(dev) {
+        console.log(ko.toJS(dev));
+        dev.value(data.value);
+        dev.isLow(data.isLow);
+        dev.isHigh(data.isHigh);
+        dev.trigger(data.trigger);
+    }
 });
 
 socket.on('init', function (data) {

@@ -558,6 +558,7 @@ ioWorkers.on('connection', function (socket) {
                    item.socket.emit('add', [{
                        id: dev.id,
                        type: dev.type,
+                       name: dev.name,
                        actionType: dev.actionType,
                        value: dev.value,
                        trigger: dev.trigger,

@@ -179,7 +179,15 @@ io.sockets.on('connection', function (socket) {
             client.session.isAuth = false;
             client.session.email = null;
             client.session.remember = false;
+        } else {
+            client.session.devices =  ko.utils.arrayFilter(devices, function (d) {
+                var t = typeof ko.utils.arrayFirst(client.session.workers, function (w) {
+                    return w.workerId === d.workerId;
+                });
+                return d.id && t === 'string' && t.trim() !== ''
+            });
         }
+
         updateSession(null, function (err, saved) {
             if(!found) {
                 updateSession(null, function (err, found) {
@@ -199,15 +207,8 @@ io.sockets.on('connection', function (socket) {
         var workers = client.session.workers && client.session.workers.length ? ko.utils.arrayMap(client.session.workers, function (item) {
             return {_id: item._id, name: item.name};
         }) : [];
-        var devsA = ko.utils.arrayFilter(devices, function (d) {
-            var t = typeof ko.utils.arrayFirst(client.session.workers, function (w) {
-                return w.workerId === d.workerId;
-            });
-            return d.id && t === 'string' && t.trim() !== ''
-        });
 
-        var devs = ko.utils.arrayMap(devs
-            , function (dev) {
+        var devs =  ko.utils.arrayMap(clients.session.devices, function (dev) {
                 return {
                     id: dev.id,
                     type: dev.type,
@@ -221,6 +222,7 @@ io.sockets.on('connection', function (socket) {
                     isLow: dev.isLow
                 };
             });
+
         return {
             isAuth:  typeof loginModel.isAuth === 'function' ? loginModel.isAuth() : loginModel.isAuth,
             remember: loginModel.remember,
@@ -240,6 +242,7 @@ io.sockets.on('connection', function (socket) {
         sess.isAuth = false;
         sess.email = null;
         sess.remember = false;
+        client.session.devices = [];
         client.session.workers = [];
     };
 

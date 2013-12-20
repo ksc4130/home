@@ -248,8 +248,8 @@ socket.on('thermo', function (data) {
     ko.utils.arrayForEach(vm.devices(), function (item) {
         if(data.id === item.id) {
             item.value(data.value);
-            item.isCool(data.isCool);
-            item.isHeat(data.isHeat);
+            item.isLow(data.isLow);
+            item.isHigh(data.isHigh);
             item.trigger(data.trigger);
         }
     });

@@ -156,8 +156,10 @@ io.sockets.on('connection', function (socket) {
         if(ko.utils.arrayFirst(clients, function (item) {
            return item.session.isAuth;
         })) {
+            console.log('transmit', true);
             ioWorkers.sockets.emit('transmit', true);
         } else {
+            console.log('transmit', false);
             ioWorkers.sockets.emit('transmit', false);
         }
     };

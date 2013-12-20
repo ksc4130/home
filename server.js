@@ -208,7 +208,7 @@ io.sockets.on('connection', function (socket) {
             return {_id: item._id, name: item.name};
         }) : [];
 
-        var devs =  ko.utils.arrayMap(clients.session.devices, function (dev) {
+        var devs =  ko.utils.arrayMap(client.session.devices, function (dev) {
                 return {
                     id: dev.id,
                     type: dev.type,

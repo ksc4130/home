@@ -181,10 +181,10 @@ io.sockets.on('connection', function (socket) {
             client.session.remember = false;
         } else {
             client.session.devices =  ko.utils.arrayFilter(devices, function (d) {
-                var t = typeof ko.utils.arrayFirst(client.session.workers, function (w) {
+                var t = ko.utils.arrayFirst(client.session.workers, function (w) {
                     return w.workerId === d.workerId;
                 });
-                return d.id && t === 'string' && t.trim() !== ''
+                return d.id && t
             });
         }
 

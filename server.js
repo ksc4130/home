@@ -402,12 +402,14 @@ ioWorkers.on('connection', function (socket) {
             return item.id = data.id;
         });
 
-        console.log('**********************thermo on worker', data.id, device.id);
 
         if(!device) {
-            console.log("couldn't find device");
+            console.log("************************couldn't find device", data.id);
             return;
         }
+
+        console.log('**********************thermo on worker', data.id, device.id);
+
 
         device.isHigh = data.isHigh;
         device.isLow = data.isLow;

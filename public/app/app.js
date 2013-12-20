@@ -203,13 +203,13 @@ var Vm = function () {
 
 function addDevice(dev) {
     dev.value = ko.observable(dev.value);
-    //if(dev.actionType === 'thermo') {
+    if(dev.actionType === 'thermo') {
         dev.trigger = ko.observable(dev.trigger);
         dev.highTheshold = ko.observable(dev.highTheshold);
         dev.lowThreshold = ko.observable(dev.lowThreshold);
         dev.isHigh = ko.observable(dev.isHigh);
         dev.isLow = ko.observable(dev.isLow);
-    //}
+    }
 
     vm.devices.push(dev);
 }
@@ -231,7 +231,6 @@ socket.on('remove', function (data) {
                 return item.id === id;
             });
         });
-
     }
 });
 
@@ -239,7 +238,7 @@ socket.on('change', function (data) {
     console.log('change');
     ko.utils.arrayForEach(vm.devices(), function (item) {
         if(data.id === item.id) {
-            console.log('change', data.id, item.id, item.value(), data.value);
+            //console.log('change', data.id, item.id, item.value(), data.value);
             item.value(data.value);
         }
     });
@@ -250,7 +249,7 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        console.log('thermo', ko.toJS(dev));
+        //console.log('thermo', ko.toJS(dev));
         dev.value(data.value);
         dev.isLow(data.isLow);
         dev.isHigh(data.isHigh);

@@ -179,7 +179,9 @@ io.sockets.on('connection', function (socket) {
             client.session.isAuth = false;
             client.session.email = null;
             client.session.remember = false;
-        } else {
+        }
+
+        if(client.session.isAuth) {
             client.session.devices =  ko.utils.arrayFilter(devices, function (d) {
                 var t = ko.utils.arrayFirst(client.session.workers, function (w) {
                     return w.workerId === d.workerId;

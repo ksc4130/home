@@ -249,7 +249,7 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        console.log(ko.toJS(dev));
+        console.log('thermo', ko.toJS(dev));
         dev.value(data.value);
         dev.isLow(data.isLow);
         dev.isHigh(data.isHigh);

@@ -399,10 +399,13 @@ ioWorkers.on('connection', function (socket) {
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('thermo', {
                 id: device.id,
-                isHeat: device.isHeat,
-                isCool: device.isCool,
+                isHigh: device.isHigh,
+                isLow: device.isLow,
                 value: device.value,
-                trigger: device.trigger
+                trigger: device.trigger,
+                highThreshold: device.highThreshold,
+                lowThreshold: device.lowThreshold,
+                threshold: device.threshold
             });
         });
     });
@@ -425,8 +428,6 @@ ioWorkers.on('connection', function (socket) {
                 return item.workerId === device.workerId;
             });
         });
-
-        //console.log('******************** clients found', found, device.workerId, device.name, device.id, device.value);
 
         ko.utils.arrayForEach(found, function (item) {
             item.socket.emit('change', {
@@ -469,18 +470,6 @@ ioWorkers.on('connection', function (socket) {
     socket.on('disconnect', function() {
         console.log('worker disconnect!');
 
-        //if(!workers[socket.id])
-            //return;
-
-        //var id = workers[socket.id].id;
-//        workers[socket.id] = null;
-//            workerProvider.findById(id, function (err, w) {
-//                if(err) throw err;
-//                w.socketId = null;
-//                workerProvider.save(w, function (err, ww) {
-//                    if(err) throw err;
-//                });
-//            });
         var toRemove = ko.utils.arrayFilter(devices, function (item) {
                 return item.workerId === worker.workerId;
             }),

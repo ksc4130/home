@@ -186,6 +186,9 @@ io.sockets.on('connection', function (socket) {
                 });
                 return d.id && t
             });
+            console.log('**************************************** distinct devs client sess', client.session.devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(client.session.devices, function (dddd) {
+                return dddd.id;
+            })).length);
         }
 
         updateSession(null, function (err, saved) {

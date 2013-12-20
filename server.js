@@ -561,6 +561,8 @@ ioWorkers.on('connection', function (socket) {
              var devs = ko.utils.arrayMap(storeDevs, function (dev) {
                  if(dev.id || dev.id === 0)
                     dev.id = globals.guid();
+
+                 console.log('*******id', dev.id);
                  dev.socketId = socket.id;
                  dev.workerId = worker.workerId;
                  dev.setTrigger = function (trigger) {

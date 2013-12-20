@@ -553,38 +553,49 @@ ioWorkers.on('connection', function (socket) {
             if(found.length > 0)
                 socket.emit('transmit', true);
 
-            var devs = ko.utils.arrayMap(data.devices, function (dev) {
-                dev.socketId = socket.id;
-                dev.workerId = worker.workerId;
-                dev.setTrigger = function (trigger) {
-                    if(worker) {
-                        dev.trigger = trigger;
-                        worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
-                    }
-                };
+         db.devices.find({workerId: worker.workerId}, function (err, storeDevs) {
+             var foundAny = true;
+             if(err || storeDevs.length <= 0) {
+                 storeDevs = data.devices;
+                 foundAny = false;
+             }
 
-                devices.push(dev);
-                ko.utils.arrayForEach(found, function (item) {
-                   item.socket.emit('add', [{
-                       id: dev.id,
-                       type: dev.type,
-                       name: dev.name,
-                       actionType: dev.actionType,
-                       value: dev.value,
-                       trigger: dev.trigger,
-                       threshold: dev.threshold,
-                       highThreshold: dev.highThreshold,
-                       lowThreshold: dev.lowThreshold,
-                       isHigh: dev.isHigh,
-                       isLow: dev.isLow
-                   }]);
-                });
-                return dev;
-            });
+             var devs = ko.utils.arrayMap(data.devices, function (dev) {
+                 if(!foundAny)
+                    dev.id = globals.guid();
+                 dev.socketId = socket.id;
+                 dev.workerId = worker.workerId;
+                 dev.setTrigger = function (trigger) {
+                     if(worker) {
+                         dev.trigger = trigger;
+                         worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
+                     }
+                 };
 
-            worker.devices = devs;
-
-            socket.emit('devices', devs);
+                 db.devices.save(dev, function (err, saved) {
+                     devices.push(dev);
+                     workers.devices.push(dev);
+                 });
+                 ko.utils.arrayForEach(found, function (item) {
+                     item.socket.emit('add', [{
+                         id: dev.id,
+                         type: dev.type,
+                         name: dev.name,
+                         actionType: dev.actionType,
+                         value: dev.value,
+                         trigger: dev.trigger,
+                         threshold: dev.threshold,
+                         highThreshold: dev.highThreshold,
+                         lowThreshold: dev.lowThreshold,
+                         isHigh: dev.isHigh,
+                         isLow: dev.isLow
+                     }]);
+                 });
+                 return dev;
+             });
+            //TODO: ???????????may need to be moved
+             socket.emit('devices', devs);
+         });
 
 //            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
 //                clients[ic].emit('add', data.devices);

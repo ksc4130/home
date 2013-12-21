@@ -519,7 +519,7 @@ ioWorkers.on('connection', function (socket) {
             });
 
         ko.utils.arrayForEach(toNotify, function (item) {
-            item.socket.emit('remove', ko.utils.remove(toRemove, function (dev) {return dev.id;}));
+            item.socket.emit('remove', ko.utils.arrayMap(toRemove, function (dev) {return dev.id;}));
         });
 
         toRemove = ko.utils.arrayMap(toRemove, function (r) {

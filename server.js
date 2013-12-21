@@ -365,7 +365,9 @@ io.sockets.on('connection', function (socket) {
         });
         console.log('****************************change device', device);
         if(typeof device !== 'undefined' && device !== null) {
-            var w = workers[device.socketId];
+            var w = ko.utils.arrayFirst(workers, function (w) {
+                return w.workerId === device.workerId;
+            });
             console.log('****************************change w', w);
             if(w) {
                 w.socket.emit('change', data);

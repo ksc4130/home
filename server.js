@@ -534,6 +534,12 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('devices', function (data) {
+        var found = ko.utils.arrayFilter(clients, function (client) {
+            return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {
+                return item.workerId === worker.workerId;
+            });
+        });
+
         ko.utils.arrayForEach(data, function (dev) {
             dev.setTrigger = function (trigger) {
                 if(worker) {
@@ -543,16 +549,29 @@ ioWorkers.on('connection', function (socket) {
             };
             devices.push(dev);
             worker.devices.push(dev);
-        });
-
-        var found = ko.utils.arrayFilter(clients, function (client) {
-            return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {
-                return item.workerId === worker.workerId;
+            ko.utils.arrayForEach(found, function (item) {
+                item.socket.emit('add', [{
+                    id: dev.id,
+                    type: dev.type,
+                    name: dev.name,
+                    actionType: dev.actionType,
+                    value: dev.value,
+                    trigger: dev.trigger,
+                    threshold: dev.threshold,
+                    highThreshold: dev.highThreshold,
+                    lowThreshold: dev.lowThreshold,
+                    isHigh: dev.isHigh,
+                    isLow: dev.isLow
+                }]);
             });
         });
 
+
+
         if(found.length > 0)
             socket.emit('transmit', true);
+
+
     });
 
     socket.on('initWorker', function (data) {
@@ -611,21 +630,7 @@ ioWorkers.on('connection', function (socket) {
                  db.devices.save(dev, function (err, saved) {
 
                  });
-                 ko.utils.arrayForEach(found, function (item) {
-                     item.socket.emit('add', [{
-                         id: dev.id,
-                         type: dev.type,
-                         name: dev.name,
-                         actionType: dev.actionType,
-                         value: dev.value,
-                         trigger: dev.trigger,
-                         threshold: dev.threshold,
-                         highThreshold: dev.highThreshold,
-                         lowThreshold: dev.lowThreshold,
-                         isHigh: dev.isHigh,
-                         isLow: dev.isLow
-                     }]);
-                 });
+
 
              });
 

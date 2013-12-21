@@ -126,14 +126,15 @@ var Vm = function () {
             console.log('login cb', loginModel);
             self.loginModel.isAuth(loginModel.isAuth);
             self.loginModel.error(loginModel.error);
+
             if(loginModel.isAuth) {
-                location.hash = 'home';
                 self.devices([]);
-                if(d.devices && d.devices.length > 0) {
-                    ko.utils.arrayForEach(d.devices, function (dev) {
+                if(loginModel.devices && loginModel.devices.length > 0) {
+                    ko.utils.arrayForEach(loginModel.devices, function (dev) {
                         addDevice(dev);
                     });
                 }
+                location.hash = 'home';
                 self.loginModel.password('');
                 if(!self.loginModel.remember()) {
                     self.loginModel.email('');

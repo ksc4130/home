@@ -533,6 +533,7 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('devices', function (data) {
+        console.log(JSON.stringify(data));
         ko.utils.arrayForEach(data, function (dev) {
             devices.push(dev);
             worker.devices.push(dev);

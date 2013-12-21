@@ -276,7 +276,6 @@ io.sockets.on('connection', function (socket) {
             loginModel.workers = client.session.workers;
         }
         setSessionDevices();
-        loginModel.devices = client.session.devices;
         loginModel.confirmPassword = null;
         loginModel.password = null;
         loginModel.isAuth = client.session.isAuth;
@@ -320,7 +319,7 @@ io.sockets.on('connection', function (socket) {
                     loginModel.error = 'Email has already been registered.';
                     loginModel.password = null;
                     loginModel.confirmPassword = null;
-                    loginModel.isAuth = client.isAuth;
+                    loginModel.isAuth = client.session.isAuth;
                     cb(loginModel.error, cleanLoginModel(loginModel));
                 } else {
                     userRepo.createUser({

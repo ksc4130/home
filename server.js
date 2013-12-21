@@ -347,7 +347,7 @@ io.sockets.on('connection', function (socket) {
         if(!client.session.isAuth)
             return;
         var device = ko.utils.arrayFirst(devices, function (item) {
-           return item.id.toString() === data.id.toString()
+           return item && item.id && item.id.toString() === data.id.toString()
         });
 
         if(typeof device !== 'undefined' && device !== null) {

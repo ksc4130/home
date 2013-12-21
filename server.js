@@ -407,7 +407,7 @@ ioWorkers.on('connection', function (socket) {
     socket.on('thermo', function (data) {
         //console.log('worker thermo*************************', JSON.stringify(data));
         var device = ko.utils.arrayFirst(devices, function (item) {
-            return item.id = data.id;
+            return item.id === data.id;
         });
 
 
@@ -533,7 +533,6 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('devices', function (data) {
-        console.log('******************************devices', JSON.stringify(data));
         ko.utils.arrayForEach(data, function (dev) {
             devices.push(dev);
             worker.devices.push(dev);

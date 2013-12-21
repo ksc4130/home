@@ -383,7 +383,7 @@ io.sockets.on('connection', function (socket) {
 //var workerProvider= new WorkerProvider('localhost', 27017);
 var serverWorkers = require('http').Server();
 var ioWorkers = require('socket.io').listen(serverWorkers);
-var workers = new function(){return this;};
+var workers = [];
 var deviceIdCnt = 0;
 
 ioWorkers.configure('production', function(){
@@ -527,7 +527,7 @@ ioWorkers.on('connection', function (socket) {
         devices = ko.utils.arrayFilter(devices, function (item) {
             return item.workerId !== worker.workerId;
         });
-        delete workers[socket.id];
+        ko.utils.arrayRemoveItem(workers, worker);
         worker = null;
 
 
@@ -542,15 +542,11 @@ ioWorkers.on('connection', function (socket) {
 
     socket.on('initWorker', function (data) {
         if(data.secret === globals.secret) {
-            var i,
-                //worker = {},
-                workerDev;
-
-            workers[socket.id] = worker;
-
             worker.socket = socket;
             worker.workerId = data.workerId;
             worker.devices = [];
+
+            workers.push(worker);
 
             var found = ko.utils.arrayFilter(clients, function (client) {
                 return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {

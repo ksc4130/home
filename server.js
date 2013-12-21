@@ -518,16 +518,12 @@ ioWorkers.on('connection', function (socket) {
                 });
             });
 
-        ko.utils.arrayForEach(toNotify, function (item) {
-            item.session.socket.emit('remove', ko.utils.arrayMap(toRemove, function (dev) {return dev.id;}));
-        });
-
         toRemove = ko.utils.arrayMap(toRemove, function (r) {
             return r.id;
         });
 
         ko.utils.arrayForEach(toNotify, function (item) {
-            item.session.socket.emit('remove', toRemove);
+            item.socket.emit('remove', toRemove);
         });
 
         devices = ko.utils.arrayFilter(devices, function (item) {

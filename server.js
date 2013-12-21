@@ -181,20 +181,7 @@ io.sockets.on('connection', function (socket) {
             client.session.remember = false;
         }
 
-        if(client.session.isAuth) {
-            client.session.devices =  ko.utils.arrayFilter(devices, function (d) {
-                var t = ko.utils.arrayFirst(client.session.workers, function (w) {
-                    return w.workerId === d.workerId;
-                });
-                return d.id && t
-            });
-            //console.log('**************************************** distinct devs client sess', client.session.devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(client.session.devices, function (dddd) {
-//                return dddd.id;
-//            })).length);
-            //console.log('**************************************** distinct devs client sess', devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(devices, function (dddd) {
-//                return dddd.id;
-//            })).length);
-        }
+        setSessionDevices();
 
         updateSession(null, function (err, saved) {
             if(!found) {
@@ -210,6 +197,25 @@ io.sockets.on('connection', function (socket) {
             socket.emit('init', cleanLoginModel(client.session));
         });
     });
+
+    var setSessionDevices = function () {
+        if(client.session.isAuth) {
+            client.session.devices =  ko.utils.arrayFilter(devices, function (d) {
+                var t = ko.utils.arrayFirst(client.session.workers, function (w) {
+                    return w.workerId === d.workerId;
+                });
+                return d.id && t
+            });
+            //console.log('**************************************** distinct devs client sess', client.session.devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(client.session.devices, function (dddd) {
+//                return dddd.id;
+//            })).length);
+            //console.log('**************************************** distinct devs client sess', devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(devices, function (dddd) {
+//                return dddd.id;
+//            })).length);
+        } else {
+            client.session.deivces = [];
+        }
+    };
 
     var cleanLoginModel = function (loginModel) {
         var workers = client.session.workers && client.session.workers.length ? ko.utils.arrayMap(client.session.workers, function (item) {
@@ -269,6 +275,8 @@ io.sockets.on('connection', function (socket) {
             client.session.workers = user.workers || [];
             loginModel.workers = client.session.workers;
         }
+        setSessionDevices();
+        loginModel.devices = client.session.devices;
         loginModel.confirmPassword = null;
         loginModel.password = null;
         loginModel.isAuth = client.session.isAuth;
@@ -299,7 +307,7 @@ io.sockets.on('connection', function (socket) {
         checkTransmit();
         updateSession(null, function (err, saved) {
             cb(!err);
-        })
+        });
     });
 
     socket.on('register', function (loginModel, cb) {
@@ -351,7 +359,11 @@ io.sockets.on('connection', function (socket) {
         });
 
         if(typeof device !== 'undefined' && device !== null) {
-            device.setTrigger(data.trigger);
+            var workerCheck = ko.utils.arrayFirst(client.session.workers, function (w) {
+                return w.workerId === device.workerId;
+            });
+            if(workerCheck)
+                device.setTrigger(data.trigger);
         } else
             console.log("can't find device for id ", data.id);
     });
@@ -363,13 +375,16 @@ io.sockets.on('connection', function (socket) {
         var device = ko.utils.arrayFirst(devices, function (item) {
             return item.id && item.id.toString() === data.id.toString()
         });
-        console.log('****************************change device', device);
+        //console.log('****************************change device', device);
         if(typeof device !== 'undefined' && device !== null) {
             var w = ko.utils.arrayFirst(workers, function (w) {
                 return w.workerId === device.workerId;
             });
-            console.log('****************************change w', w);
-            if(w) {
+            var workerCheck = ko.utils.arrayFirst(client.session.workers, function (w) {
+                return w.workerId === device.workerId;
+            });
+            //console.log('****************************change w', w);
+            if(workerCheck && w) {
                 w.socket.emit('change', data);
             }
         } else

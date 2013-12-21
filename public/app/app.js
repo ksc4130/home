@@ -128,6 +128,12 @@ var Vm = function () {
             self.loginModel.error(loginModel.error);
             if(loginModel.isAuth) {
                 location.hash = 'home';
+                self.devices([]);
+                if(data.devices && data.devices.length > 0) {
+                    ko.utils.arrayForEach(data.devices, function (dev) {
+                        addDevice(dev);
+                    });
+                }
                 self.loginModel.password('');
                 if(!self.loginModel.remember()) {
                     self.loginModel.email('');
@@ -146,6 +152,7 @@ var Vm = function () {
                 self.loginModel.isAuth(null);
                 self.loginModel.error(null);
                 self.loginModel.dob(null);
+                self.devices([]);
             }
         });
     };

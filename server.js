@@ -512,9 +512,15 @@ ioWorkers.on('connection', function (socket) {
         var toRemove = ko.utils.arrayFilter(devices, function (item) {
                 return item.workerId === worker.workerId;
             }),
-            toNotify = ko.utils.arrayFilter(clients, function (item) {
-                return item.session.workerId === worker.workerId;
+            toNotify = ko.utils.arrayFilter(clients, function (client) {
+                return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {
+                    return item.workerId === worker.workerId;
+                });
             });
+
+        ko.utils.arrayForEach(toNotify, function (item) {
+            item.socket.emit('remove', ko.utils.remove(toRemove, function (dev) {return dev.id;}));
+        });
 
         toRemove = ko.utils.arrayMap(toRemove, function (r) {
             return r.id;

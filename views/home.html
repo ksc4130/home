@@ -27,6 +27,16 @@
                 </div>
             </div>
             <!-- /ko --> <!-- thermo -->
+            <!-- ko if: (actionType === 'sensor') -->
+            <!-- ko if: type === 'motion' -->
+            <div class="tile" data-bind="css: { 'bg-green': isOn}">
+                <div class="tile-content">
+                    <div data-bind="text: name" class="tile-title"></div>
+                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+                </div>
+            </div>
+            <!-- /ko -->
+            <!-- /ko --> <!-- sensor -->
         </div>
     </div>
     <!-- /ko -->

@@ -544,6 +544,15 @@ ioWorkers.on('connection', function (socket) {
             devices.push(dev);
             worker.devices.push(dev);
         });
+
+        var found = ko.utils.arrayFilter(clients, function (client) {
+            return client.session.isAuth && ko.utils.arrayFirst(client.session.workers, function (item) {
+                return item.workerId === worker.workerId;
+            });
+        });
+
+        if(found.length > 0)
+            socket.emit('transmit', true);
     });
 
     socket.on('initWorker', function (data) {

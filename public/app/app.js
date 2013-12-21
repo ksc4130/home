@@ -129,8 +129,8 @@ var Vm = function () {
             if(loginModel.isAuth) {
                 location.hash = 'home';
                 self.devices([]);
-                if(data.devices && data.devices.length > 0) {
-                    ko.utils.arrayForEach(data.devices, function (dev) {
+                if(d.devices && d.devices.length > 0) {
+                    ko.utils.arrayForEach(d.devices, function (dev) {
                         addDevice(dev);
                     });
                 }

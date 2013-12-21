@@ -360,14 +360,13 @@ io.sockets.on('connection', function (socket) {
         if(!client.session.isAuth)
             return;
 
-        var device;
-        device = ko.utils.arrayFirst(devices, function (item) {
+        var device = ko.utils.arrayFirst(devices, function (item) {
             return item.id && item.id.toString() === data.id.toString()
         });
-        //console.log('device', device);
+        console.log('****************************change device', device);
         if(typeof device !== 'undefined' && device !== null) {
             var w = workers[device.socketId];
-
+            console.log('****************************change w', w);
             if(w) {
                 w.socket.emit('change', data);
             }

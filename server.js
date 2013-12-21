@@ -532,6 +532,13 @@ ioWorkers.on('connection', function (socket) {
 
     });
 
+    socket.on('devices', function (data) {
+        ko.utils.arrayForEach(data, function (dev) {
+            devices.push(dev);
+            worker.devices.push(dev);
+        });
+    });
+
     socket.on('initWorker', function (data) {
         if(data.secret === globals.secret) {
             var i,
@@ -590,8 +597,7 @@ ioWorkers.on('connection', function (socket) {
                  }
 
                  db.devices.save(dev, function (err, saved) {
-                     devices.push(dev);
-                     worker.devices.push(dev);
+
                  });
                  ko.utils.arrayForEach(found, function (item) {
                      item.socket.emit('add', [{

@@ -48,10 +48,11 @@ module.exports = new function () {
         }
         _findDeviceById(device.id, function (err, found) {
             if(!err && found) {
+                delete device._id;
                 db.devices.update({id: device.id} , {$set: device}, cb);
             } else {
                 db.devices.save(device, function (err, saved) {
-                    console.log('saved device seaved._id:', saved._id, 'device._id', device._id);
+                    console.log('saved device saved._id:', saved._id, 'device._id', device._id);
 
                 });
             }

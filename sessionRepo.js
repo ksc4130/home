@@ -42,7 +42,7 @@ module.exports = new function () {
                     if(err || !saved) {
                         cb(err, null);
                     } else {
-                        _findSessionBySessId(found.sessId, cb);
+                        _findSessionBySessId(session.sessId, cb);
                     }
                 });
             }

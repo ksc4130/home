@@ -116,6 +116,20 @@ var Vm = function () {
         });
     };
 
+    self.deviceModel = {
+        name: ko.observable(),
+        worker: ko.observable(),
+        pin: ko.observable(),
+        error: ko.observable()
+    };
+
+    self.addDevice = function () {
+        socket.emit('addWorker', ko.toJS(self.workerModel), function (err, data) {
+            if(!err && data)
+                self.workers.push(data);
+        });
+    };
+
     self.loginModel.passwordsDontMatch = ko.computed(function () {
         return this.password() !== this.confirmPassword()
     }, self.loginModel).extend({throttle: 250});
@@ -213,6 +227,7 @@ function addDevice(dev) {
     dev.value = ko.observable(dev.value);
     dev.actionType = dev.actionType || '';
     dev.type = dev.type || '';
+    console.log(dev);
     if(dev.actionType === 'thermo') {
         console.log('is thermo', dev.id, dev.name, dev.trigger);
         dev.trigger = ko.observable(dev.trigger);

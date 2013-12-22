@@ -1,0 +1,13 @@
+<!-- ko view: addworker-->
+<div class="container">
+    <form class="form-signin" data-bind="with: deviceModel, event: {'submit': $root.addWorker}" role="form">
+        <h2 class="form-signin-heading text-center">Add Worker</h2>
+        <input type="text" data-bind="live: name" class="form-control no-bottom" placeholder="Name" required="" autofocus="">
+        <select data-bind="options: $root.workers, optionsText: name, value: worker"
+        <input type="text" data-bind="live: workerId" class="form-control" placeholder="Worker Id" required="">
+        <span class="text-danger" data-bind="text: error"></span>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+    </form>
+</div>
+<!-- /ko -->

@@ -161,6 +161,7 @@ io.sockets.on('connection', function (socket) {
     sessionRepo.findBySessId(client.session.sessId, function (err, found) {
 
         if(found) {
+            console.log('on connect found', found);
             found.remove = client.session.remove;
             client.session = found;
         }
@@ -252,6 +253,7 @@ io.sockets.on('connection', function (socket) {
             loginModel.workers = [];
             loginModel.error = 'Unable to find email and password combo.';
         } else {
+            console.log('*************good login');
             loginModel.error = null;
             client.session.userId = user._id;
             client.session.isAuth = true;
@@ -264,9 +266,12 @@ io.sockets.on('connection', function (socket) {
         loginModel.confirmPassword = null;
         loginModel.password = null;
         loginModel.isAuth = client.session.isAuth;
-        updateSession();
-        checkTransmit();
-        cb(loginModel.error, cleanLoginModel(loginModel));
+        updateSession(null, function (err, saved) {
+            checkTransmit();
+            cb(loginModel.error, cleanLoginModel(loginModel));
+        });
+
+
     };
 
     socket.on('disconnect', function () {

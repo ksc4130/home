@@ -507,7 +507,7 @@ ioWorkers.on('connection', function (socket) {
 
     socket.on('changeControlled', function (data) {
         var device = ko.utils.arrayFirst(devices, function (item) {
-            return item.id.toString() === data.id.toString()
+            return item && item.id.toString() === data.id.toString()
         });
         //console.log('device', device);
         if(typeof device !== 'undefined' && device !== null) {

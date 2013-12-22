@@ -163,8 +163,9 @@ io.sockets.on('connection', function (socket) {
             found.remove = client.session.remove;
             client.session = found;
         }
-        var secondsDiff = moment().diff(client.session.lastAccess);
+        var secondsDiff = moment().diff(client.session.lastAccess || new Date());
         if(secondsDiff > 360000 && !client.session.remember) {
+            console.log('expired');
             client.session.isAuth = false;
             client.session.userId = null;
             client.session.isAuth = false;
@@ -175,6 +176,7 @@ io.sockets.on('connection', function (socket) {
         setSessionDevices();
         sessionRepo.save(client.session, function (err, saved) {
             if(!found) {
+                console.log('!found on client connect');
                 client.session._id = saved._id;
             }
             if(clients.indexOf(client) <= -1)

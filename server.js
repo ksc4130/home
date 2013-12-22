@@ -267,6 +267,7 @@ io.sockets.on('connection', function (socket) {
         loginModel.confirmPassword = null;
         loginModel.password = null;
         loginModel.isAuth = client.session.isAuth;
+        console.log('************* login', client.session);
         updateSession(null, function (err, saved) {
             checkTransmit();
             cb(loginModel.error, cleanLoginModel(loginModel));

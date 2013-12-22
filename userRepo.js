@@ -69,28 +69,12 @@ module.exports = new function () {
 
     };
 
-    self.findByEmail = function (email, password, cb) {
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(password +  email + globals.secret, salt,  function(err, hash) {
-                console.log('hash', hash, password);
-                self.checkEmail(email,
-                    function (err, found) {
-                        if(err)
-                            console.error(err);
-                        if(err || !found) {
-                            cb(err, found);
-                        }
-                        else {
-                            bcrypt.compare(password +  email + globals.secret, found.password, function(err, res) {
-                                if(!res || err)
-                                    found = null;
-                                cb(err, found);
-                            });
-                        }
-                    }
-                );
-            });
-        });
+    self.findByEmail = function (email, cb) {
+        _findUserByEmail(email, cb);
+    };
+
+    self.findByEmailAndPassword = function (email, password, cb) {
+        _findUserWithPass(email, password, cb);
     };
 
     self.checkEmail = function (email, cb) {

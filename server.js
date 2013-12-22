@@ -120,7 +120,7 @@ io.sockets.on('connection', function (socket) {
     //tell workers to transmit
 
     var client = ko.utils.arrayFirst(clients, function (item) {
-        return item.socketId === socket.id;
+        return item.session.sessId === socket.handshake.sessionID;
     });
 
     if(!client) {
@@ -157,15 +157,16 @@ io.sockets.on('connection', function (socket) {
             ioWorkers.sockets.emit('transmit', false);
         }
     };
+
     sessionRepo.findBySessId(client.session.sessId, function (err, found) {
 
         if(found) {
             found.remove = client.session.remove;
             client.session = found;
         }
-        var secondsDiff = moment().diff(client.session.lastAccess || new Date());
+        var secondsDiff = moment().diff(client.session.lastAccess || moment());
         if(secondsDiff > 360000 && !client.session.remember) {
-            console.log('expired');
+            console.log('***************expired', secondsDiff, client.session.lastAccess);
             client.session.isAuth = false;
             client.session.userId = null;
             client.session.isAuth = false;
@@ -183,7 +184,7 @@ io.sockets.on('connection', function (socket) {
                 clients.push(client);
 
             checkTransmit();
-
+            console.log('after session save on connect', client.session.isAuth);
             socket.emit('init', cleanLoginModel(client.session));
         });
     });
@@ -197,7 +198,7 @@ io.sockets.on('connection', function (socket) {
                 return d.id && t
             });
         } else {
-            client.session.deivces = [];
+            client.session.devices = [];
         }
     };
 

@@ -22,7 +22,7 @@ module.exports = new function () {
     self.update = function (session, cb) {
         cb = cb || function () {};
         if(!session.email) {
-            cb('Must provsessIde sessId in session object as first param to update session', null);
+            cb('Must provide sessId in session object as first param to update session', null);
             return;
         }
         console.log('updating session');
@@ -32,11 +32,12 @@ module.exports = new function () {
     self.save = function (session, cb) {
         cb = cb || function () {};
         if(!session.sessId) {
-            cb('Must provsessIde sessId in session object as first param to update session', null);
+            cb('Must provide sessId in session object as first param to update session', null);
             return;
         }
         _findSessionBySessId(session.sessId, function (err, found) {
             if(!err && found) {
+                console.log('updating session');
                 db.userSessions.update({sessId: session.sessId} , {$set: session}, cb);
             } else {
                 db.userSessions.save(session, function (err, saved) {

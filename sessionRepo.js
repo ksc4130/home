@@ -38,7 +38,10 @@ module.exports = new function () {
         _findSessionBySessId(session.sessId, function (err, found) {
             if(!err && found) {
                 console.log('updating session in save', session);
-                db.userSessions.update({sessId: session.sessId} , {$set: session}, cb);
+                db.userSessions.update({sessId: session.sessId} , {$set: session}, function (err, updated) {
+                    console.log('updated session in save', session, err, updated);
+                    cb(err, updated);
+                });
             } else {
                 db.userSessions.save(session, function (err, saved) {
                     if(err || !saved) {

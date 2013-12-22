@@ -157,7 +157,7 @@ io.sockets.on('connection', function (socket) {
             ioWorkers.sockets.emit('transmit', false);
         }
     };
-    sessionRepo.findById(client.session, function (err, found) {
+    sessionRepo.findBySessId(client.session.sessId, function (err, found) {
 
         if(found) {
             found.remove = client.session.remove;

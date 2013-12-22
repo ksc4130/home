@@ -50,7 +50,7 @@ module.exports = new function () {
 
     };
 
-    self.findById = function (sessId, cb) {
+    self.findBySessId = function (sessId, cb) {
         _findSessionBySessId(sessId, cb);
     };
 

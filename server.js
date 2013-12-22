@@ -647,7 +647,7 @@ ioWorkers.on('connection', function (socket) {
                 ko.utils.arrayForEach(devs, function (dev) {
                     if(dev.controls && dev.controls.length > 0) {
                         dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
-                            var wId = con.workerId || worker.workerId;
+                            var wId = con && con.workerId ? con.workerId : worker.workerId;
                             var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
                                 return item.workerId === wId;
                             });

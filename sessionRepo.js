@@ -25,7 +25,7 @@ module.exports = new function () {
             cb('Must provide sessId in session object as first param to update session', null);
             return;
         }
-        console.log('updating session');
+        console.log('updating session', session);
         db.userSessions.update({sessId: session.sessId} , {$set: session}, cb);
     };
 
@@ -37,14 +37,14 @@ module.exports = new function () {
         }
         _findSessionBySessId(session.sessId, function (err, found) {
             if(!err && found) {
-                console.log('updating session');
+                console.log('updating session in save', session);
                 db.userSessions.update({sessId: session.sessId} , {$set: session}, cb);
             } else {
                 db.userSessions.save(session, function (err, saved) {
                     if(err || !saved) {
                         cb(err, null);
                     } else {
-                        console.log('saved new session');
+                        console.log('saved new session in save', session);
                         _findSessionBySessId(session.sessId, cb);
                     }
                 });
@@ -57,16 +57,16 @@ module.exports = new function () {
         _findSessionBySessId(sessId, cb);
     };
 
-    self.create = function (session, cb) {
-        self.save(session,
-            function (err, saved) {
-                if(err)
-                    console.error(err);
-
-                cb(err, saved);
-            }
-        );
-    };
+//    self.create = function (session, cb) {
+//        self.save(session,
+//            function (err, saved) {
+//                if(err)
+//                    console.error(err);
+//
+//                cb(err, saved);
+//            }
+//        );
+//    };
 
     return self;
 };

@@ -25,6 +25,7 @@ module.exports = new function () {
             cb('Must provsessIde sessId in session object as first param to update session', null);
             return;
         }
+        console.log('updating session');
         db.userSessions.update({sessId: session.sessId} , {$set: session}, cb);
     };
 
@@ -42,6 +43,7 @@ module.exports = new function () {
                     if(err || !saved) {
                         cb(err, null);
                     } else {
+                        console.log('saved new session');
                         _findSessionBySessId(session.sessId, cb);
                     }
                 });

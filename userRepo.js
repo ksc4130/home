@@ -1,20 +1,75 @@
 module.exports = new function () {
     var self = this
         ,findUser
-        , createUser
-        , checkEmail
-        , updateUser
+        , _findUserWithPass
+        , _findUserByEmail
         , globals = require('./globals')
         , bcrypt = require('bcrypt')
         , ko = require('knockout')
         , db = require("mongojs").connect(globals.dbName, globals.collections);
 
-    updateUser = function (user, cb) {
+    _findUserWithPass = function (email, password, cb) {
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(password +  email + globals.secret, salt,  function(err, hash) {
+                console.log('hash', hash, password);
+                _findUserByEmail(email,
+                    function (err, found) {
+                        if(err)
+                            console.error(err);
+                        if(err || !found) {
+                            cb(err, found);
+                        }
+                        else {
+                            bcrypt.compare(password +  email + globals.secret, found.password, function(err, res) {
+                                if(!res || err)
+                                    found = null;
+                                cb(err, found);
+                            });
+                        }
+                    }
+                );
+            });
+        });
+    };
+
+    _findUserByEmail = function (email, cb) {
+        db.users.findOne(
+            {email: email},
+            function (err, found) {
+                if(err)
+                    console.error(err);
+
+                cb(err, found);
+            }
+        );
+    };
+
+    self.update = function (user, cb) {
         cb = cb || function () {};
+        if(!user.email) {
+            cb('Must provide email in user object as first param to update user', null);
+            return;
+        }
         db.users.update({email: user.email} , {$set: user}, cb);
     };
 
-    findUser = function (email, password, cb) {
+    self.save = function (user, cb) {
+        cb = cb || function () {};
+        if(!user.email) {
+            cb('Must provide email in user object as first param to update user', null);
+            return;
+        }
+        _findUserByEmail(user.email, function (err, found) {
+            if(!err && found) {
+                db.users.update({email: user.email} , {$set: user}, cb);
+            } else {
+                db.users.save(user, cb);
+            }
+        });
+
+    };
+
+    self.findByEmail = function (email, password, cb) {
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(password +  email + globals.secret, salt,  function(err, hash) {
                 console.log('hash', hash, password);
@@ -38,19 +93,11 @@ module.exports = new function () {
         });
     };
 
-    checkEmail = function (email, cb) {
-        db.users.findOne(
-            {email: email},
-            function (err, found) {
-                if(err)
-                    console.error(err);
-
-                cb(err, found);
-            }
-        );
+    self.checkEmail = function (email, cb) {
+        _findUserByEmail(email, cb);
     };
 
-    createUser = function (user, cb) {
+    self.create = function (user, cb) {
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(user.password +  user.email + globals.secret, salt, function(err, hash) {
                 user.password = hash;
@@ -67,9 +114,5 @@ module.exports = new function () {
         });
     };
 
-    self.findUser = findUser;
-    self.createUser = createUser;
-    self.checkEmail = checkEmail;
-    self.updateUser = updateUser;
     return self;
 };

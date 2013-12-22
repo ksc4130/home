@@ -10,6 +10,8 @@ var express = require('express')
     , ko = require('knockout')
     , globals = require('./globals')
     , userRepo = require('./userRepo')
+    , sessionRepo = require('./sessionRepo')
+    , deviceRepo = require('./deviceRepo')
     , db = require("mongojs").connect(globals.dbName, globals.collections)
     , SessionStore = require('connect-mongo')(express)
     , sessionStore = new SessionStore({db: globals.dbName})
@@ -141,15 +143,7 @@ io.sockets.on('connection', function (socket) {
     var updateSession = function (sess, cb) {
         sess = sess || client.session;
         cb = cb || function () {};
-        db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
-//        db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
-//            if(err || !found) {
-//                db.userSessions.update({sessId: client.session.sessId}, sess, { upsert: true }, cb);
-//            } else {
-//                db.userSessions.update({sessId: client.session.sessId}, {$set: sess}, cb);
-//            }
-//        });
-
+        sessionRepo.save(sess, cb);
     };
 
     var checkTransmit = function () {
@@ -163,17 +157,14 @@ io.sockets.on('connection', function (socket) {
             ioWorkers.sockets.emit('transmit', false);
         }
     };
-
-    db.userSessions.findOne({sessId: client.session.sessId}, function (err, found) {
+    sessionRepo.findById(client.session, function (err, found) {
 
         if(found) {
-            console.log('found', found);
             found.remove = client.session.remove;
             client.session = found;
         }
         var secondsDiff = moment().diff(client.session.lastAccess);
         if(secondsDiff > 360000 && !client.session.remember) {
-            console.log('expired');
             client.session.isAuth = false;
             client.session.userId = null;
             client.session.isAuth = false;
@@ -182,12 +173,9 @@ io.sockets.on('connection', function (socket) {
         }
 
         setSessionDevices();
-
-        updateSession(null, function (err, saved) {
+        sessionRepo.save(client.session, function (err, saved) {
             if(!found) {
-                updateSession(null, function (err, found) {
-                    client.session._id = found._id;
-                });
+                client.session._id = saved._id;
             }
             if(clients.indexOf(client) <= -1)
                 clients.push(client);
@@ -206,12 +194,6 @@ io.sockets.on('connection', function (socket) {
                 });
                 return d.id && t
             });
-            //console.log('**************************************** distinct devs client sess', client.session.devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(client.session.devices, function (dddd) {
-//                return dddd.id;
-//            })).length);
-            //console.log('**************************************** distinct devs client sess', devices.length, ko.utils.arrayGetDistinctValues(ko.utils.arrayMap(devices, function (dddd) {
-//                return dddd.id;
-//            })).length);
         } else {
             client.session.deivces = [];
         }
@@ -343,12 +325,39 @@ io.sockets.on('connection', function (socket) {
         if(!ko.utils.arrayFirst(client.session.workers, function (item) {
             return item.workerId === data.workerId;
         })) {
-            console.log('************************addWorker', data);
             client.session.workers.push(data);
             updateSession();
+            checkTransmit()
             userRepo.updateUser({email: client.session.email, workers: client.session.workers});
         }
     });
+
+//    socket.on('addDevice', function (data) {
+//        if(!client.session.isAuth) {
+//            return;
+//        }
+//
+//        var worker = ko.utils.arrayFirst(workers, function (w) {
+//            return w.workerId === data.workerId;
+//        });
+//
+//        if(!worker) {
+//            console.log("couldn't find worker when adding device");
+//            return;
+//        }
+//
+//        if(!ko.utils.arrayFirst(client.session.workers, function (item) {
+//            return item.workerId === data.workerId;
+//        })) {
+//            console.log("user doesn't owner worker so can't add device");
+//            return;
+//        }
+//
+//        client.session.devices.push(data);
+//        updateSession();
+//        checkTransmit();
+//        userRepo.update({email: client.session.email, workers: client.session.workers});
+//    });
 
     socket.on('setTrigger', function (data) {
         if(!client.session.isAuth)
@@ -430,17 +439,13 @@ ioWorkers.on('connection', function (socket) {
             console.log("************************couldn't find device", data.id);
             return;
         }
-
-        //console.log('**********************thermo on worker', data.id, device.id, device.name);
-
-
         device.isHigh = data.isHigh;
         device.isLow = data.isLow;
         device.value = data.value;
-        device.trigger = data.trigger;
-        device.threshold = data.threshold;
-        device.highThreshold = data.highThreshold;
-        device.lowThreshold = data.lowThreshold;
+        device.trigger = data.trigger || device.trigger;
+        device.threshold = data.threshold || device.threshold;
+        device.highThreshold = data.highThreshold || device.highThreshold;
+        device.lowThreshold = data.lowThreshold || device.lowThreshold;
 
         var found = ko.utils.arrayFilter(clients, function (client) {
             return client.session.isAuth && client.session.workers
@@ -506,6 +511,7 @@ ioWorkers.on('connection', function (socket) {
     });
 
     socket.on('toggleControlled', function (data) {
+        console.log('toggleControlled for ', data);
         var device = ko.utils.arrayFirst(devices, function (item) {
             return item.id.toString() === data.id.toString()
         });
@@ -546,7 +552,6 @@ ioWorkers.on('connection', function (socket) {
         ko.utils.arrayRemoveItem(workers, worker);
         worker = null;
 
-
     });
 
     socket.on('devices', function (data) {
@@ -582,8 +587,6 @@ ioWorkers.on('connection', function (socket) {
             });
         });
 
-
-
         if(found.length > 0)
             socket.emit('transmit', true);
 
@@ -606,59 +609,54 @@ ioWorkers.on('connection', function (socket) {
 
             if(found.length > 0)
                 socket.emit('transmit', true);
+        deviceRepo.findByWorkerId(worker.workerId, function (err, storeDevs) {
+            if(err || storeDevs.length <= 0) {
+                storeDevs = data.devices;
+            }
 
-         db.devices.find({workerId: worker.workerId}, function (err, storeDevs) {
-             if(err || storeDevs.length <= 0) {
-                 storeDevs = data.devices;
-             }
+            var devs = ko.utils.arrayMap(storeDevs, function (dev) {
+                if(!dev.id || dev.id === 0) {
+                    dev.id = dev._id;
+                }
 
-             var devs = ko.utils.arrayMap(storeDevs, function (dev) {
-                 if(!dev.id || dev.id === 0)
-                    dev.id = globals.guid();
+                dev.socketId = socket.id;
+                dev.workerId = worker.workerId;
+                dev.setTrigger = function (trigger) {
+                    if(worker) {
+                        dev.trigger = trigger;
+                        worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
+                    }
+                };
 
-                 console.log('*******id', dev.id);
-                 dev.socketId = socket.id;
-                 dev.workerId = worker.workerId;
-                 dev.setTrigger = function (trigger) {
-                     if(worker) {
-                         dev.trigger = trigger;
-                         worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
-                     }
-                 };
+                return dev;
+            });
 
-                 return dev;
-             });
+            ko.utils.arrayForEach(devs, function (dev) {
+                if(dev.controls && dev.controls.length > 0) {
+                    dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
+                        var wId = con.workerId || worker.workerId;
+                        var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
+                            return item.workerId === wId;
+                        });
+                        var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) ||f.pin === con.pin) && f.workerId === wId;});
 
-             ko.utils.arrayForEach(devs, function (dev) {
-                 if(dev.controls && dev.controls.length > 0) {
-                     dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
-                         var wId = con.workerId || worker.workerId;
-                         var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
-                              return item.workerId === wId;
-                         });
-                         var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) ||f.pin === con.pin) && f.workerId === wId;});
-
-                         return {
-                             workerId: wId,
-                             id: first.id,
-                             pin: con.pin,
-                             type: con.type,
-                             name: first.name
-                         };
-                     });
-                 }
-
-                 db.devices.save(dev, function (err, saved) {
-
-                 });
+                        return {
+                            workerId: wId,
+                            id: first.id,
+                            pin: con.pin,
+                            type: con.type,
+                            name: first.name
+                        };
+                    });
+                }
+                deviceRepo.save(dev);
+            });
 
 
-             });
+            //TODO: ???????????may need to be moved
+            socket.emit('devices', devs);
+        });//end deviceRepo.findByWorkerId
 
-
-             //TODO: ???????????may need to be moved
-             socket.emit('devices', devs);
-         });
 
 //            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {
 //                clients[ic].emit('add', data.devices);

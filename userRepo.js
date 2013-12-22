@@ -73,7 +73,7 @@ module.exports = new function () {
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(password +  email + globals.secret, salt,  function(err, hash) {
                 console.log('hash', hash, password);
-                checkEmail(email,
+                self.checkEmail(email,
                     function (err, found) {
                         if(err)
                             console.error(err);

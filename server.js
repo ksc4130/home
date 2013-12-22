@@ -199,6 +199,7 @@ io.sockets.on('connection', function (socket) {
                 });
                 return d.id && t
             });
+            console.log('devices on connect', client.session.devices);
         } else {
             client.session.devices = [];
         }
@@ -619,56 +620,58 @@ ioWorkers.on('connection', function (socket) {
 
             if(found.length > 0)
                 socket.emit('transmit', true);
-        deviceRepo.findByWorkerId(worker.workerId, function (err, storeDevs) {
-            if(err || storeDevs.length <= 0) {
-                storeDevs = data.devices;
-            }
 
-            var devs = ko.utils.arrayMap(storeDevs, function (dev) {
-                if(!dev.id || dev.id === 0) {
-                    dev.id = dev._id;
+            deviceRepo.findByWorkerId(worker.workerId, function (err, storeDevs) {
+                console.log('***********storedDevs', storeDevs);
+                if(err || storeDevs.length <= 0) {
+                    storeDevs = data.devices;
                 }
 
-                dev.socketId = socket.id;
-                dev.workerId = worker.workerId;
-                dev.setTrigger = function (trigger) {
-                    if(worker) {
-                        dev.trigger = trigger;
-                        worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
+                var devs = ko.utils.arrayMap(storeDevs, function (dev) {
+                    if(!dev.id || dev.id === 0) {
+                        dev.id = dev._id;
                     }
-                };
 
-                return dev;
-            });
-
-            ko.utils.arrayForEach(devs, function (dev) {
-                if(dev.controls && dev.controls.length > 0) {
-                    dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
-                        var wId = con.workerId || worker.workerId;
-                        var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
-                            return item.workerId === wId;
-                        });
-                        var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) || f.pin === con.pin);});
-                        if(!first) {
-                            console.log('error parsing controls', wId, con, first);
-                            return null;
+                    dev.socketId = socket.id;
+                    dev.workerId = worker.workerId;
+                    dev.setTrigger = function (trigger) {
+                        if(worker) {
+                            dev.trigger = trigger;
+                            worker.socket.emit('setTrigger', {id: dev.id, trigger: trigger});
                         }
-                        return {
-                            workerId: wId,
-                            id: first.id,
-                            pin: con.pin,
-                            type: con.type,
-                            name: first.name
-                        };
-                    });
-                }
-                deviceRepo.save(dev);
-            });
+                    };
+
+                    return dev;
+                });
+
+                ko.utils.arrayForEach(devs, function (dev) {
+                    if(dev.controls && dev.controls.length > 0) {
+                        dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
+                            var wId = con.workerId || worker.workerId;
+                            var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
+                                return item.workerId === wId;
+                            });
+                            var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) || f.pin === con.pin);});
+                            if(!first) {
+                                console.log('error parsing controls', wId, con, first);
+                                return null;
+                            }
+                            return {
+                                workerId: wId,
+                                id: first.id,
+                                pin: con.pin,
+                                type: con.type,
+                                name: first.name
+                            };
+                        });
+                    }
+                    deviceRepo.save(dev);
+                });
 
 
-            //TODO: ???????????may need to be moved
-            socket.emit('devices', devs);
-        });//end deviceRepo.findByWorkerId
+                //TODO: ???????????may need to be moved
+                socket.emit('devices', devs);
+            });//end deviceRepo.findByWorkerId
 
 
 //            for(var ic = 0, ilc = clients.length; ic < ilc; ic++) {

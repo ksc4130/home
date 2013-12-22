@@ -280,7 +280,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('login', function (loginModel, cb) {
-        userRepo.findByEmail(loginModel.email, loginModel.password,
+        userRepo.findByEmailAndPassword(loginModel.email, loginModel.password,
             function (err, user) {
                 loginUser(err, loginModel, user, cb);
             });

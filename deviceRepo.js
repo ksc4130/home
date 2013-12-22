@@ -51,6 +51,7 @@ module.exports = new function () {
                 delete device._id;
                 db.devices.update({id: device.id} , {$set: device}, cb);
             } else {
+                delete device._id;
                 db.devices.save(device, function (err, saved) {
                     console.log('saved device saved._id:', saved._id, 'device._id', device._id);
 

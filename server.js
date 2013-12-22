@@ -628,9 +628,10 @@ ioWorkers.on('connection', function (socket) {
                 }
 
                 var devs = ko.utils.arrayMap(storeDevs, function (dev) {
-                    if(!dev.id || dev.id === 0) {
-                        dev.id = dev._id;
-                    }
+                    dev.id = dev._id;
+//                    if(!dev.id || dev.id === 0) {
+//                        dev.id = dev._id;
+//                    }
 
                     dev.socketId = socket.id;
                     dev.workerId = worker.workerId;
@@ -665,7 +666,9 @@ ioWorkers.on('connection', function (socket) {
                             };
                         });
                     }
-                    deviceRepo.save(dev);
+                    deviceRepo.save(dev, function (err, ddd) {
+                        console.log('device repo save', err, ddd);
+                    });
                 });
 
 

@@ -214,7 +214,7 @@ function addDevice(dev) {
     dev.actionType = dev.actionType || '';
     dev.type = dev.type || '';
     if(dev.actionType === 'thermo') {
-        console.log('is thermo', dev.id, dev.name);
+        console.log('is thermo', dev.id, dev.name, dev.trigger);
         dev.trigger = ko.observable(dev.trigger);
         dev.highTheshold = ko.observable(dev.highTheshold);
         dev.lowThreshold = ko.observable(dev.lowThreshold);

@@ -51,7 +51,6 @@ module.exports = new function () {
     };
 
     self.findById = function (sessId, cb) {
-        console.log('hash', hash, password);
         _findSessionBySessId(sessId, cb);
     };
 

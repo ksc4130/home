@@ -227,7 +227,7 @@ function addDevice(dev) {
     dev.value = ko.observable(dev.value);
     dev.actionType = dev.actionType || '';
     dev.type = dev.type || '';
-    console.log(dev);
+    console.log('add device', dev.name, dev);
     if(dev.actionType === 'thermo') {
         console.log('is thermo', dev.id, dev.name, dev.trigger);
         dev.trigger = ko.observable(dev.trigger);

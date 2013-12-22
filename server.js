@@ -199,7 +199,7 @@ io.sockets.on('connection', function (socket) {
                 });
                 return d.id && t
             });
-            console.log('devices on connect', client.session.devices);
+            console.log('devices on connect', client.session.devices, devices);
         } else {
             client.session.devices = [];
         }

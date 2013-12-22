@@ -277,7 +277,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('login', function (loginModel, cb) {
-        userRepo.findUser(loginModel.email, loginModel.password,
+        userRepo.findByEmail(loginModel.email, loginModel.password,
             function (err, user) {
                 loginUser(err, loginModel, user, cb);
             });
@@ -304,7 +304,7 @@ io.sockets.on('connection', function (socket) {
                     loginModel.isAuth = client.session.isAuth;
                     cb(loginModel.error, cleanLoginModel(loginModel));
                 } else {
-                    userRepo.createUser({
+                    userRepo.create({
                         email: loginModel.email,
                         password: loginModel.password,
                         fname: loginModel.fname,
@@ -328,7 +328,7 @@ io.sockets.on('connection', function (socket) {
             client.session.workers.push(data);
             updateSession();
             checkTransmit()
-            userRepo.updateUser({email: client.session.email, workers: client.session.workers});
+            userRepo.save({email: client.session.email, workers: client.session.workers});
         }
     });
 

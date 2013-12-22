@@ -632,9 +632,14 @@ ioWorkers.on('connection', function (socket) {
              ko.utils.arrayForEach(devs, function (dev) {
                  if(dev.controls && dev.controls.length > 0) {
                      dev.controls = ko.utils.arrayMap(dev.controls, function (con) {
-                         var first = ko.utils.arrayFirst(devs, function (f) {return f.pin === con.pin});
+                         var wId = con.workerId || worker.workerId;
+                         var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
+                              return item.workerId === wId;
+                         });
+                         var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) ||f.pin === con.pin) && f.workerId === wId;});
+
                          return {
-                             workerId: worker.workerId,
+                             workerId: wId,
                              id: first.id,
                              pin: con.pin,
                              type: con.type,

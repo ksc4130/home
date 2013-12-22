@@ -141,6 +141,7 @@ io.sockets.on('connection', function (socket) {
     }
 
     var updateSession = function (sess, cb) {
+        console.log('update session', sess);
         sess = sess || client.session;
         cb = cb || function () {};
         sessionRepo.save(sess, cb);

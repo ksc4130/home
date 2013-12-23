@@ -628,10 +628,10 @@ ioWorkers.on('connection', function (socket) {
                 }
 
                 var devs = ko.utils.arrayMap(storeDevs, function (dev) {
-                    dev.id = dev._id;
-//                    if(!dev.id || dev.id === 0) {
-//                        dev.id = dev._id;
-//                    }
+                    ///dev.id = dev._id;
+                    if(!dev.id || dev.id === 0) {
+                        dev.id = globals.guid();
+                    }
 
                     dev.socketId = socket.id;
                     dev.workerId = worker.workerId;

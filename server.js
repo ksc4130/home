@@ -657,7 +657,7 @@ ioWorkers.on('connection', function (socket) {
                             var conDevs = wId === worker.workerId ? devs :  ko.utils.arrayFilter(devices, function (item) {
                                 return item.workerId === wId;
                             });
-                            var first = ko.utils.arrayFirst(conDevs, function (f) {return ((f.id && f.id === con.id ) || f.pin === con.pin);});
+                            var first = ko.utils.arrayFirst(conDevs, function (f) {return (f && con && (f.id && f.id === con.id ) || f.pin === con.pin);});
                             if(!first) {
                                 console.log('error parsing controls', wId, con, first);
                                 return null;

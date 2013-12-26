@@ -275,7 +275,7 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        dev.highTheshold(data.highThreshold || dev.highThreshold);
+        dev.highThreshold(data.highThreshold || dev.highThreshold);
         dev.lowThreshold(data.lowThreshold || dev.lowThreshold);
         dev.value(data.value || dev.value);
         dev.isLow(data.isLow || dev.isLow);

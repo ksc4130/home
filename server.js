@@ -14,7 +14,11 @@ var express = require('express')
     , deviceRepo = require('./deviceRepo')
     , db = require("mongojs").connect(globals.dbUrl, globals.collections)
     , SessionStore = require('connect-mongo')(express)
-    , sessionStore = new SessionStore({db: globals.dbUrl})
+    , sessionStore = new SessionStore({
+        username: 'dbUser',
+        password: 'Lala!!4130',
+        db: globals.dbName
+    })
     , clients = []
     , devices = [];
 

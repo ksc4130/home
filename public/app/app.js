@@ -275,12 +275,12 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        dev.highThreshold(data.highThreshold || dev.highThreshold);
-        dev.lowThreshold(data.lowThreshold || dev.lowThreshold);
-        dev.value(data.value || dev.value);
-        dev.isLow(data.isLow || dev.isLow);
-        dev.isHigh(data.isHigh || dev.isHigh);
-        dev.trigger(data.trigger || dev.trigger);
+        dev.highThreshold(data.highThreshold || dev.highThreshold());
+        dev.lowThreshold(data.lowThreshold || dev.lowThreshold());
+        dev.value(data.value || dev.value());
+        dev.isLow(data.isLow || dev.isLow());
+        dev.isHigh(data.isHigh || dev.isHigh());
+        dev.trigger(data.trigger || dev.trigger());
     }
 });
 

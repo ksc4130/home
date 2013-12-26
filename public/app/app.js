@@ -231,7 +231,7 @@ function addDevice(dev) {
     if(dev.actionType === 'thermo') {
         console.log('is thermo', dev.id, dev.name, dev.trigger);
         dev.trigger = ko.observable(dev.trigger);
-        dev.highTheshold = ko.observable(dev.highTheshold);
+        dev.highThreshold = ko.observable(dev.highThreshold);
         dev.lowThreshold = ko.observable(dev.lowThreshold);
         dev.isHigh = ko.observable(dev.isHigh);
         dev.isLow = ko.observable(dev.isLow);
@@ -275,11 +275,12 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        console.log('thermo', dev.id, dev.name);
-        dev.value(data.value);
-        dev.isLow(data.isLow);
-        dev.isHigh(data.isHigh);
-        dev.trigger(data.trigger);
+        dev.highTheshold(data.highThreshold || dev.highThreshold);
+        dev.lowThreshold(data.lowThreshold || dev.lowThreshold);
+        dev.value(data.value || dev.value);
+        dev.isLow(data.isLow || dev.isLow);
+        dev.isHigh(data.isHigh || dev.isHigh);
+        dev.trigger(data.trigger || dev.trigger);
     }
 });
 

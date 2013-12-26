@@ -12,7 +12,7 @@ var express = require('express')
     , userRepo = require('./userRepo')
     , sessionRepo = require('./sessionRepo')
     , deviceRepo = require('./deviceRepo')
-    , db = require("mongojs").connect(globals.dbName, globals.collections)
+    , db = require("mongojs").connect(globals.dbUrl, globals.collections)
     , SessionStore = require('connect-mongo')(express)
     , sessionStore = new SessionStore({db: globals.dbName})
     , clients = []
@@ -92,6 +92,7 @@ io.configure('production', function(){
 
 io.configure('development', function(){
     io.set('transports', ['websocket']);
+    io.set('log level', 1);
 });
 
 io.set('authorization', function (handshakeData, accept) {

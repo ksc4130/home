@@ -4,7 +4,7 @@ module.exports = new function () {
         , globals = require('./globals')
         , bcrypt = require('bcrypt')
         , ko = require('knockout')
-        , db = require("mongojs").connect(globals.dbName, globals.collections);
+        , db = require("mongojs").connect(globals.dbUrl, globals.collections);
 
 
     _findDeviceById = function (id, cb) {

@@ -281,6 +281,7 @@ socket.on('thermo', function (data) {
         dev.isLow(data.isLow || dev.isLow());
         dev.isHigh(data.isHigh || dev.isHigh());
         dev.trigger(data.trigger || dev.trigger());
+        console.log('after thermo dev:', ko.toJS(dev), 'in:', data);
     }
 });
 

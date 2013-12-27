@@ -275,12 +275,12 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        dev.highThreshold(data.highThreshold || dev.highThreshold());
-        dev.lowThreshold(data.lowThreshold || dev.lowThreshold());
-        dev.value(data.value || dev.value());
-        dev.isLow(data.isLow || dev.isLow());
-        dev.isHigh(data.isHigh || dev.isHigh());
-        dev.trigger(data.trigger || dev.trigger());
+        dev.highThreshold(typeof data.highThreshold !== 'undefined' ? data.highThreshold : dev.highThreshold());
+        dev.lowThreshold(typeof data.lowThreshold !== 'undefined' ? data.lowThreshold : dev.lowThreshold());
+        dev.value(typeof data.value !=='undefined' ? data.value : dev.value());
+        dev.isLow(typeof data.isLow !=='undefined' ? data.isLow : dev.isLow());
+        dev.isHigh(typeof data.isHigh !=='undefined' ? data.isHigh : dev.isHigh());
+        dev.trigger(typeof data.trigger !=='undefined' ? data.trigger : dev.trigger());
         console.log('after thermo dev:', ko.toJS(dev), 'in:', data);
     }
 });

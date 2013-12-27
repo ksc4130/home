@@ -275,13 +275,19 @@ socket.on('thermo', function (data) {
         return data.id === item.id;
     });
     if(dev) {
-        dev.highThreshold(typeof data.highThreshold !== 'undefined' ? data.highThreshold : dev.highThreshold());
-        dev.lowThreshold(typeof data.lowThreshold !== 'undefined' ? data.lowThreshold : dev.lowThreshold());
-        dev.value(typeof data.value !=='undefined' ? data.value : dev.value());
-        dev.isLow(typeof data.isLow !=='undefined' ? data.isLow : dev.isLow());
-        dev.isHigh(typeof data.isHigh !=='undefined' ? data.isHigh : dev.isHigh());
-        dev.trigger(typeof data.trigger !=='undefined' ? data.trigger : dev.trigger());
-        console.log('after thermo dev:', ko.toJS(dev), 'in:', data);
+        if(typeof data.highThreshold !== 'undefined')
+            dev.highThreshold(data.highThreshold);
+        if(typeof data.lowThreshold !== 'undefined')
+            dev.lowThreshold(data.lowThreshold);
+        if(typeof data.value !=='undefined')
+            dev.value(data.value);
+        if(typeof data.isLow !=='undefined')
+            dev.isLow(data.isLow);
+        if(typeof data.isHigh !=='undefined')
+            dev.isHigh(data.isHigh);
+        if(typeof data.trigger !=='undefined')
+        dev.trigger(data.trigger);
+        //console.log('after thermo dev:', ko.toJS(dev), 'in:', data);
     }
 });
 

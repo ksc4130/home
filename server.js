@@ -95,8 +95,18 @@ io.configure('production', function(){
 });
 
 io.configure('development', function(){
-    io.set('transports', ['websocket']);
+    io.enable('browser client minification');
+    io.enable('browser client etag');
+    io.enable('browser client gzip');
     io.set('log level', 1);
+
+    io.set('transports', [
+        'websocket'
+        , 'flashsocket'
+        , 'htmlfile'
+        , 'xhr-polling'
+        , 'jsonp-polling'
+    ]);
 });
 
 io.set('authorization', function (handshakeData, accept) {

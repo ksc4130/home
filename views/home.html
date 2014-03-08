@@ -35,8 +35,17 @@
                     <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
                 </div>
             </div>
-            <!-- /ko -->
+            <!-- /ko --> <!-- motion -->
+            <!-- ko if: type === 'fan' -->
+            <div class="tile" data-bind="css: { 'bg-green': value() === 1}">
+                <div class="tile-content">
+                    <div data-bind="text: name" class="tile-title"></div>
+                    <!--<p style="margin-top: .5em; margin-bottom: -.25em;" class="text-center" data-bind="text: name"></p>-->
+                </div>
+            </div>
+            <!-- /ko --><!-- fan -->
             <!-- /ko --> <!-- sensor -->
+
         </div>
     </div>
     <!-- /ko -->
